@@ -275,7 +275,7 @@
 			resultsLyr.removeAll();
 			params.where = "CNTY_NAME = " + "'" + name +"'";
 			if (choice === "Land Management") {
-				var callback = getLMResults;
+				callback = getLMResults;
 
 			} else if (choice === "Land Cover") {
 				console.log("Yep.  Land Cover.");
@@ -383,7 +383,7 @@
 							width: .1
 						}			
 					});
-					return feature
+					return feature;
 				}
 			});
 			resultsLyr.addMany(peakResults); 
@@ -403,56 +403,56 @@
 				if (perRng > 0) {
 					var clr = '';
 					if (g.AGNCY_NAME == 'BIA') {
-						var clr = '#ed6f60';
+						clr = '#ed6f60';
 					} else if (g.AGNCY_NAME == 'BLM') {
-						var clr = '#e81014';
+						clr = '#e81014';
 					} else if (g.AGNCY_NAME == 'BOR') {
-						var clr = '#b59bbf';
+						clr = '#b59bbf';
 					} else if (g.AGNCY_NAME == 'COE') {
-						var clr = '#B1CC91';
+						clr = '#B1CC91';
 					} else if (g.AGNCY_NAME == 'DOE') {
-						var clr = '#7DD7E3';
+						clr = '#7DD7E3';
 					} else if (g.AGNCY_NAME == 'DOI') {
-						var clr = '#f77a2d';
+						clr = '#f77a2d';
 					} else if (g.AGNCY_NAME == 'FAA') {
-						var clr = '#8ca4b8';
+						clr = '#8ca4b8';
 					} else if (g.AGNCY_NAME == 'GSA') {
-						var clr = '#78adad';
+						clr = '#78adad';
 					} else if (g.AGNCY_NAME == 'HSTRCWTR') {
-						var clr = '#2892c7';
+						clr = '#2892c7';
 					} else if (g.AGNCY_NAME == 'IR') {
-						var clr = '#fccf51';
+						clr = '#fccf51';
 					} else if (g.AGNCY_NAME == 'LU_DOI') {
-						var clr = '#fcba47';
+						clr = '#fcba47';
 					} else if (g.AGNCY_NAME == 'LU_USDA') {
-						var clr = '#c6d986';
+						clr = '#c6d986';
 					} else if (g.AGNCY_NAME == 'MIL') {
-						var clr = '#f56325';
+						clr = '#f56325';
 					} else if (g.AGNCY_NAME == 'NPS') {
-						var clr = '#f24d1f';
+						clr = '#f24d1f';
 					} else if (g.AGNCY_NAME == 'NWR') {
-						var clr = '#a0c29b';
+						clr = '#a0c29b';
 					} else if (g.AGNCY_NAME == 'PRIVATE') {
-						var clr = '#fa8d34';
+						clr = '#fa8d34';
 					} else if (g.AGNCY_NAME == 'STATE') {
-						var clr = '#ed361a';
+						clr = '#ed361a';
 					} else if (g.AGNCY_NAME == 'STATEFG') {
-						var clr = '#fafa64';
+						clr = '#fafa64';
 					} else if (g.AGNCY_NAME == 'STATEOTH') {
-						var clr = '#60a3b5';
+						clr = '#60a3b5';
 					} else if (g.AGNCY_NAME == 'STATEPR') {
-						var clr = '#fce75b';
+						clr = '#fce75b';
 					} else if (g.AGNCY_NAME == 'USFS') {
-						var clr = '#fca43f';
+						clr = '#fca43f';
 					} else {
-						var clr = '#E81014';
+						clr = '#E81014';
 					}
 					results += "<tr><td class='dlegend' style='background-color:"+ clr +";'>&nbsp;</td><td>" + g.AGNCY_NAME + "</td><td>" + perRng + "</td><td>" + perCty + "</td><td>" + g.GIS_ACRES + "</td></tr>";
 				} else {
 					continue;
 				}
 			}
-			var county = g.CNTY_NAME;
+			var county = g.CNTY_NAME; // We're using 'g' out of scope?
 			fixHeading(county);
 			$(".tableDiv").html("<table id='table' class='table' cellspacing='0'>" + tbHead + "<tbody>" + results + "</tbody></table>");
 			
@@ -474,7 +474,7 @@
 				$('#valSelect').change(function() {
 					doQuery(this.value, choice);
 				});
-				view.on("click", function(evt){getCounty(evt.mapPoint, choice)});
+				view.on("click", function(evt){getCounty(evt.mapPoint, choice);});
 		}
 		
 		// Based on nav menu, load a corresponding results page
@@ -533,7 +533,7 @@
 
 		function init() {
 			var loading = dom.byId("loadingImg");
-			if (view.ready == false){
+			if (view.ready === false){
 				on(view, "update-start", showLoading);
 			} else {
 				on(view, "update-end", hideLoading);
