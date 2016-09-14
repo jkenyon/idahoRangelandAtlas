@@ -1,102 +1,4 @@
-
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
-  <title>Clip Rangeland Raster and Get Raster Attributes</title>
-
-  <style>
-    html,
-    body,
-    #viewDiv {
-      padding: 0;
-      margin: 0;
-      height: 100%;
-      width: 100%;
-    }
-    
-    #optionsDiv {
-      background-color: dimgray;
-      color: white;
-      z-index: 23;
-      position: absolute;
-      top: 0px;
-      right: 0px;
-      padding: 0px 0px 0px 10px;
-      border-bottom-left-radius: 5px;
-      max-width: 350px;
-    }
-    
-    .esri-popup .esri-popup-header .esri-title {
-      font-size: 18px;
-      font-weight: bolder;
-    }
-    
-    .esri-popup .esri-popup-body .esri-popup-content {
-      font-size: 14px;
-    }
-    
-    
-    
-    
-        #sidebar {
-      z-index: 99;
-      position: absolute;
-      top: 0;
-      right: 200;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      width: 420px;
-    }
-
-    #text {
-      color: white;
-      padding: 3%;
-    }
-
-    #raTable {
-      font-size: 16px;
-      font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-      border-collapse: collapse;
-      border-spacing: 0;
-      width: 100%;
-      background-color: #fff;
-      color: black;
-    }
-
-    #raTable caption {
-      margin-bottom: 6px;
-      color: white;
-      font-weight: bolder;
-    }
-
-    #raTable table, th, td {
-      border: 1px solid white;
-    }
-
-    #raTable th {
-      padding: 4px;
-      background-color: #4CAF50;
-      color: white;
-    }
-
-    #raTable tr:nth-child(even) {
-      background-color: #dffae0;
-    }
-
-    #raTable td {
-      padding: 4px;
-    }
-
-    
-    
-  </style>
-
-  <link rel="stylesheet" href="https://js.arcgis.com/4.0/esri/css/main.css">
-  <script src="https://js.arcgis.com/4.0/"></script>
-
-  <script>
+function fasterFunc(tmp){ 
     require([
       "esri/Map",
       "esri/views/MapView",
@@ -138,7 +40,7 @@
 
       // Create graphics layer and symbol to use for displaying the results of query  
       var resultsLyr = new GraphicsLayer();
-      var foo = new Graphic; // Foo?
+      var foo = new Graphic(); // Foo?
 
       
       /*****************************************************************
@@ -261,49 +163,4 @@
       });
     
     });
-  </script>
-</head>
-
-<body>
-  <div id="viewDiv"></div>
-  <div id="optionsDiv">
-    <h2>Idaho Counties</h2>
-    <select id="attSelect">
-      <option value="NAME">Name</option>
-    </select>
-    <select id="signSelect">
-      <option value="=">is</option>
-
-    </select>
-    <select id="valSelect">
-      <option value="LATAH COUNTY">LATAH COUNTY</option>
-    <option value="BONNER COUNTY">BONNER COUNTY</option>
-    <option value="BOUNDARY COUNTY">BOUNDARY COUNTY</option>
-    <option value="KOOTENAI COUNTY">KOOTENAI COUNTY</option>
-    <option value="NEZ PERCE COUNTY">NEZ PERCE COUNTY</option>
-    </select>
-    <br>
-    <br>
-    <button id="doBtn">Zoom to County</button>
-    <br>
-    <p><span id="printResults"></span></p>
-  </div>
-    <div id="viewDiv">
-    <div id="sidebar">
-      <div id="text">
-        <table id="raTable">
-          <caption>Raster Attributes</caption>
-          <tr>
-            <th>Management Agency</th>
-            <th>% of Rangeland</th>
-            <th>% of County</th>
-            <th>Acreage (acres)</th>
-          </tr>
-        </table>
-      </div>
-    </div>
-  </div>
-  
-</body>
-
-</html>
+}
