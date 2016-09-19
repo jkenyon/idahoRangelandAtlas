@@ -295,9 +295,11 @@
 			qCnty.returnGeometry = false;
 			qCnty.outFields = ["NAME"];
 			qCnty.geometry = evt;
+			
 			countyLayer.queryFeatures(qCnty).then(function(results){
-				doQuery(results.features[0].attributes.NAME, selection);
-				$('#valSelect').val('Choose a County...');
+				fasterFunc("CNTY_NAME = '" + results.features[0].attributes.NAME + "'");
+				//doQuery(results.features[0].attributes.NAME, selection);
+				//$('#valSelect').val('Choose a County...');
 				console.log(results);
 			}).otherwise(promiseRejected);
 		}
