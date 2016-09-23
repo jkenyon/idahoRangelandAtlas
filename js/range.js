@@ -259,9 +259,9 @@
 		});
 		
 		// Land Management Web Service (also Land Cover)
-		var qTask = new QueryTask({
+/*		var qTask = new QueryTask({
 				url: "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/idaho_rangeland_2011/MapServer/0"
-			});
+			});*/
 		
 		// General parameters for any query
 		var params = new Query({
@@ -280,7 +280,7 @@
 			} else if (choice === "Land Cover") {
 				console.log("Yep.  Land Cover.");
 			}
-			qTask.execute(params).then(callback).otherwise(promiseRejected);
+			//qTask.execute(params).then(callback).otherwise(promiseRejected);
 /*			var boss = new UniqueValueRenderer({
 				uniqueValueInfos: [{ 
 					value: name,
@@ -297,7 +297,7 @@
 			qCnty.geometry = evt;
 			
 			countyLayer.queryFeatures(qCnty).then(function(results){
-				fasterFunc("CNTY_NAME = '" + results.features[0].attributes.NAME + "'");
+				fasterFunc("CNTY_NAME = '" + results.features[0].attributes.NAME + "'", map);
 				//doQuery(results.features[0].attributes.NAME, selection);
 				//$('#valSelect').val('Choose a County...');
 				console.log(results);

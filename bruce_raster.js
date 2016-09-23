@@ -1,5 +1,5 @@
-function fasterFunc(tmp){ 
-    require([
+function fasterFunc(tmp, map){ 
+require([
       "esri/Map",
       "esri/views/MapView",
       "esri/layers/GraphicsLayer",
@@ -23,7 +23,7 @@ function fasterFunc(tmp){
 
       // URL to counties 
       var countiesUrl =
-    "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/ira_2014_county_boundaries/MapServer/0";
+    "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/idaho_rangeland_2011/MapServer/0";
 
       // Define the popup content for each result    
       var popupTemplate = { // autocasts as new PopupTemplate()
@@ -87,7 +87,6 @@ function fasterFunc(tmp){
         doQuery();
       // Called each time the promise is resolved    
       function getResults(response) {
-
         // Loop through each of the results and assign a symbol and PopupTemplate
         // to each so they may be visualized on the map
         var featureResults = arrayUtils.map(response.features, function(
@@ -97,7 +96,9 @@ function fasterFunc(tmp){
         });
         
          // animate to the results after they are added to the map  
-        view.goTo(featureResults);
+        //view.goTo(featureResults);
+        console.log("featureResults:");
+        console.log(featureResults);
           
         var clipRF = new RasterFunction({
           functionName: "Clip",
@@ -112,9 +113,9 @@ function fasterFunc(tmp){
           url: "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/bruce_test6/ImageServer",
           renderingRule: clipRF,
         });
-      
+      console.log("1");
         map.layers.add(layer);
-      
+      console.log("2");
         var rasterAttributes;
         layer.then(function() {
           rasterAttributes = layer.rasterAttributeTable.features;
@@ -150,17 +151,6 @@ function fasterFunc(tmp){
       // Call doQuery() each time the button is clicked    
       //on(dom.byId("doBtn"), "click", doQuery);
     
-      var map = new Map({
-        basemap: "topo",
-        layers: [resultsLyr] // add graphics layer to the map
-      });
-
-      var view = new MapView({
-        map: map,
-        container: "viewDiv",
-        center: [-114, 45],
-        zoom: 6
-      });
     
     });
 }
