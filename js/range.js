@@ -5,7 +5,6 @@
 	
 	Written by Bruce Godfrey and Jeremy Kenyon, Univ. of Idaho, 2016
 	
-	Cached SMA/NLCD Join Layer: https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/idaho_rangeland_2011_tiled/MapServer
 */
 	require([
 		"esri/Map",
@@ -13,22 +12,25 @@
 		"esri/views/MapView",
 		"esri/layers/FeatureLayer",
 		"esri/layers/GraphicsLayer",
-		"esri/layers/TileLayer",
+		"esri/layers/ImageryLayer",
 		"esri/tasks/QueryTask",
 		"esri/tasks/support/Query",
 		"esri/symbols/SimpleFillSymbol",
-		"esri/renderers/SimpleRenderer",
 		"esri/renderers/UniqueValueRenderer",
+		"esri/layers/support/RasterFunction",
 		"esri/Graphic",
 		"dojo/_base/array",
 		"dojo/dom",
 		"dojo/on",
+        "dojo/_base/html",
+        "dojo/_base/lang",
 		"dojo/domReady!"
-	], function (Map, esriConfig, MapView, FeatureLayer, GraphicsLayer, TileLayer, QueryTask, Query, SimpleFillSymbol, SimpleRenderer, UniqueValueRenderer, Graphic, arrayUtils, dom, on, ready) {
+	], function (Map, esriConfig, MapView, FeatureLayer, GraphicsLayer, ImageryLayer, QueryTask, Query, SimpleFillSymbol, UniqueValueRenderer, RasterFunction, Graphic, arrayUtils, dom, on, html, lang) {
 		
-		// Fixes CORS problems
-		esriConfig.request.corsDetection = false;
-	
+		// Fixes CORS problems.  Must include both on testweb.
+		esriConfig.request.corsDetection = false;
+		esriConfig.request.corsEnabledServers.push("gis-sandbox.northwestknowledge.net");
+		
 		var hid = new UniqueValueRenderer({
 			field: "NAME",
 			defaultSymbol: new SimpleFillSymbol({
@@ -37,231 +39,21 @@
 		});
 				
 		//Creates county boundaries layer
-		var countyLayer = new FeatureLayer({
+		var countyLyr = new FeatureLayer({
 			url: "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/ira_2014_county_boundaries/MapServer/0",
 			id: "counties",
 			outFields: ['*'],
 			opacity: 0.7,
 			renderer: hid
 		});
-		
+
 		//Sets up graphics layer to be drawn in response to queries
-		var resultsLyr = new GraphicsLayer({
-			opacity: 0.7
-		});
-		
-		var cacheLyr = new TileLayer({
-			url: "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/idaho_rangeland_2011_tiled/MapServer",
-			opacity: 0.7
-		});
-		
-		// Basic map with above layers
-		var map = new Map({
-			basemap: "topo",
-			layers: [countyLayer, resultsLyr]
-		});
-		
-		// Basic view parameters for the map
-		var view = new MapView({
-			container: "mapCanvas",
-			map: map,
-			center: [-115, 45.6],
-			zoom: 7
-		});
-		
-		var blm = new SimpleFillSymbol({
-			color: [232, 16, 20, .9],
-			style: "solid",
-			outline: {  // autocasts as esri/symbols/SimpleLineSymbol
-				color: "gray",
-				width: .1
-			}			
-		});
-
-		var priv = new SimpleFillSymbol({
-			color: [250, 141, 52, .9],
-			style: "solid",
-			outline: {  // autocasts as esri/symbols/SimpleLineSymbol
-				color: "gray",
-				width: .1
-			}			
-		});
-
-		var usfs = new SimpleFillSymbol({
-			color: [252, 164, 63, .9],
-			style: "solid",
-			outline: {  // autocasts as esri/symbols/SimpleLineSymbol
-				color: "gray",
-				width: .1
-			}			
-		});
-		
-		var bia = new SimpleFillSymbol({
-			color: [231, 237, 111, .9],
-			style: "solid",
-			outline: {  // autocasts as esri/symbols/SimpleLineSymbol
-				color: "gray",
-				width: .1
-			}			
-		});
-		
-		var bor = new SimpleFillSymbol({
-			color: [71, 155, 191, .9],
-			style: "solid",
-			outline: {  // autocasts as esri/symbols/SimpleLineSymbol
-				color: "gray",
-				width: .1
-			}			
-		});
-		
-		var coe = new SimpleFillSymbol({
-			color: [177, 204, 145, .9],
-			style: "solid",
-			outline: {  // autocasts as esri/symbols/SimpleLineSymbol
-				color: "gray",
-				width: .1
-			}			
-		});
-		
-		var doe = new SimpleFillSymbol({
-			color: [215, 227, 125, .9],
-			style: "solid",
-			outline: {  // autocasts as esri/symbols/SimpleLineSymbol
-				color: "gray",
-				width: .1
-			}			
-		});
-		
-		var doi = new SimpleFillSymbol({
-			color: [247, 122, 45, .9],
-			style: "solid",
-			outline: {  // autocasts as esri/symbols/SimpleLineSymbol
-				color: "gray",
-				width: .1
-			}			
-		});
-		
-		var faa = new SimpleFillSymbol({
-			color: [140, 184, 164, .9],
-			style: "solid",
-			outline: {  // autocasts as esri/symbols/SimpleLineSymbol
-				color: "gray",
-				width: .1
-			}			
-		});
-		
-		var gsa = new SimpleFillSymbol({
-			color: [120, 173, 173, .9],
-			style: "solid",
-			outline: {  // autocasts as esri/symbols/SimpleLineSymbol
-				color: "gray",
-				width: .1
-			}			
-		});
-		
-		var hstrcwtr = new SimpleFillSymbol({
-			color: [40, 146, 199, .9],
-			style: "solid",
-			outline: {  // autocasts as esri/symbols/SimpleLineSymbol
-				color: "gray",
-				width: .1
-			}			
-		});
-
-		var ir = new SimpleFillSymbol({
-			color: [252, 207, 81, .9],
-			style: "solid",
-			outline: {  // autocasts as esri/symbols/SimpleLineSymbol
-				color: "gray",
-				width: .1
-			}			
-		});
-
-		var lu_doi = new SimpleFillSymbol({
-			color: [252, 186, 71, .9],
-			style: "solid",
-			outline: {  // autocasts as esri/symbols/SimpleLineSymbol
-				color: "gray",
-				width: .1
-			}			
-		});
-
-		var lu_usda = new SimpleFillSymbol({
-			color: [198, 217, 134, .9],
-			style: "solid",
-			outline: {  // autocasts as esri/symbols/SimpleLineSymbol
-				color: "gray",
-				width: .1
-			}			
-		});
-
-		var mil = new SimpleFillSymbol({
-			color: [245, 99, 37, .9],
-			style: "solid",
-			outline: {  // autocasts as esri/symbols/SimpleLineSymbol
-				color: "gray",
-				width: .1
-			}			
-		});
-
-		var nps = new SimpleFillSymbol({
-			color: [242, 77, 31, .9],
-			style: "solid",
-			outline: {  // autocasts as esri/symbols/SimpleLineSymbol
-				color: "gray",
-				width: .1
-			}			
-		});
-
-		var nwr = new SimpleFillSymbol({
-			color: [160, 194, 155, .9],
-			style: "solid",
-			outline: {  // autocasts as esri/symbols/SimpleLineSymbol
-				color: "gray",
-				width: .1
-			}			
-		});
-
-		var state = new SimpleFillSymbol({
-			color: [237, 54, 26, .9],
-			style: "solid",
-			outline: {  // autocasts as esri/symbols/SimpleLineSymbol
-				color: "gray",
-				width: .1
-			}			
-		});		
-		
-		var statefg = new SimpleFillSymbol({
-			color: [250, 250, 100, .9],
-			style: "solid",
-			outline: {  // autocasts as esri/symbols/SimpleLineSymbol
-				color: "gray",
-				width: .1
-			}			
-		});
-		
-		var stateoth = new SimpleFillSymbol({
-			color: [96, 163, 181, .9],
-			style: "solid",
-			outline: {  // autocasts as esri/symbols/SimpleLineSymbol
-				color: "gray",
-				width: .1
-			}			
-		});
-		
-		var statepr = new SimpleFillSymbol({
-			color: [252, 231, 91, .9],
-			style: "solid",
-			outline: {  // autocasts as esri/symbols/SimpleLineSymbol
-				color: "gray",
-				width: .1
-			}			
-		});
-		
+		var foo = new Graphic;
+	
 		// Land Management Web Service (also Land Cover)
-/*		var qTask = new QueryTask({
-				url: "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/idaho_rangeland_2011/MapServer/0"
-			});*/
+		var qTask = new QueryTask({
+			url: "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/ira_2014_county_boundaries/MapServer/0",
+		});
 		
 		// General parameters for any query
 		var params = new Query({
@@ -271,36 +63,26 @@
 	
 		// Performs a general query resolving county name and some data
 		function doQuery(name, choice) {
-			var callback = null;
-			resultsLyr.removeAll();
-			params.where = "CNTY_NAME = " + "'" + name +"'";
+			var clbk = null;
+			map.removeAll();
+			map.add(countyLyr);
+			params.where = "NAME=" + "'" + name +"'";
 			if (choice === "Land Management") {
-				var callback = getLMResults;
-
+				var clbk = getLMResults;
 			} else if (choice === "Land Cover") {
-				console.log("Yep.  Land Cover.");
+				var clbk = getLCResults;
 			}
-			//qTask.execute(params).then(callback).otherwise(promiseRejected);
-/*			var boss = new UniqueValueRenderer({
-				uniqueValueInfos: [{ 
-					value: name,
-					symbol: new SimpleFillSymbol ({ color: [255,255,255,1]})
-				}]
-			}); 
-			map.add(cacheLyr); */
+			qTask.execute(params).then(clbk).otherwise(promiseRejected);
 		}
 		
 		function getCounty(evt, selection) {
 			var qCnty = new Query();
-			qCnty.returnGeometry = false;
+			qCnty.returnGeometry = true;
 			qCnty.outFields = ["NAME"];
 			qCnty.geometry = evt;
-			
-			countyLayer.queryFeatures(qCnty).then(function(results){
-				fasterFunc("CNTY_NAME = '" + results.features[0].attributes.NAME + "'", map);
-				//doQuery(results.features[0].attributes.NAME, selection);
-				//$('#valSelect').val('Choose a County...');
-				console.log(results);
+			countyLyr.queryFeatures(qCnty).then(function(results){
+				doQuery(results.features[0].attributes.NAME, selection);
+				$('#valSelect').val('Choose a County...');
 			}).otherwise(promiseRejected);
 		}
 		
@@ -311,172 +93,225 @@
 			$(".resultHead").html("<h3>"+ hE +"</h3>");
 		}
 
-		
 		//This returns and renders Land Management Results
 		function getLMResults(response) {
+			var featureResults = arrayUtils.map(response.features, function(feature) {
+					foo = feature;
+					console.log(foo);
+					return feature;
+			});
+
+			view.goTo(featureResults);
 			
-			var peakResults = arrayUtils.map(response.features, function(feature) {
-				if (feature.attributes.AGNCY_NAME === "BLM") {
-					feature.symbol = blm;
-					return feature;
-				} else if (feature.attributes.AGNCY_NAME === "PRIVATE") {
-					feature.symbol = priv;
-					return feature;
-				} else if (feature.attributes.AGNCY_NAME === "USFS") {
-					feature.symbol = usfs;
-					return feature;
-				} else if (feature.attributes.AGNCY_NAME === "BIA") {
-					feature.symbol = bia;
-					return feature;
-				} else if (feature.attributes.AGNCY_NAME === "BOR") {
-					feature.symbol = bor;
-					return feature;
-				} else if (feature.attributes.AGNCY_NAME === "COE") {
-					feature.symbol = coe;
-					return feature;
-				} else if (feature.attributes.AGNCY_NAME === "DOE") {
-					feature.symbol = doe;
-					return feature;					
-				} else if (feature.attributes.AGNCY_NAME === "DOI") {
-					feature.symbol = doi;
-					return feature;
-				} else if (feature.attributes.AGNCY_NAME === "FAA") {
-					feature.symbol = faa;
-					return feature;
-				} else if (feature.attributes.AGNCY_NAME === "HSTRCWTR") {
-					feature.symbol = hstrcwtr;
-					return feature;
-				} else if (feature.attributes.AGNCY_NAME === "IR") {
-					feature.symbol = ir;
-					return feature;
-				} else if (feature.attributes.AGNCY_NAME === "LU_DOI") {
-					feature.symbol = lu_doi;
-					return feature;
-				} else if (feature.attributes.AGNCY_NAME === "LU_USDA") {
-					feature.symbol = lu_usda;
-					return feature;	
-				} else if (feature.attributes.AGNCY_NAME === "MIL") {
-					feature.symbol = mil;
-					return feature;	
-				} else if (feature.attributes.AGNCY_NAME === "NPS") {
-					feature.symbol = nps;
-					return feature;	
-				} else if (feature.attributes.AGNCY_NAME === "NWR") {
-					feature.symbol = nwr;
-					return feature;	
-				} else if (feature.attributes.AGNCY_NAME === "STATE") {
-					feature.symbol = state;
-					return feature;	
-				} else if (feature.attributes.AGNCY_NAME === "STATEFG") {
-					feature.symbol = statefg;
-					return feature;		
-				} else if (feature.attributes.AGNCY_NAME === "STATEOTH") {
-					feature.symbol = stateoth;
-					return feature;	
-				} else if (feature.attributes.AGNCY_NAME === "STATEPR") {
-					feature.symbol = statepr;
-					return feature;					
-				} else {
-					feature.symbol = new SimpleFillSymbol({
-						color: [232, 16, 20, .9],
-						style: "solid",
-						outline: { 
-							color: "gray",
-							width: .1
-						}			
-					});
-					return feature
+			var clipRF = new RasterFunction({
+				functionName: "Clip",
+				functionArguments: {
+					ClippingGeometry : foo.geometry,		//a polygon or envelope
+					ClippingType : 1,								//int (1= clippingOutside, 2=clippingInside), use 1 to keep image inside of the geometry
+					raster: "$$"
 				}
 			});
-			resultsLyr.addMany(peakResults); 
-			view.goTo(peakResults);
 			
-			// Data Table
-			
-			var tbHead = "<thead><tr><th class='header legend'></th><th class='header'>Manager</th><th class='header' >% of Rangeland</th><th class='header' >% of County</th><th class='header' >Acreage (in acres)</th></tr></thead>";
-			var results = "";
-			console.log(peakResults);
-			
-			
-			for (i=0;i<peakResults.length;i++) {
-				var g = peakResults[i].attributes;
-				var perRng = g.PEROFRNG.toFixed(2);
-				var perCty = g.PEROFCNTY.toFixed(2);
-				if (perRng > 0) {
-					var clr = '';
-					if (g.AGNCY_NAME == 'BIA') {
-						var clr = '#ed6f60';
-					} else if (g.AGNCY_NAME == 'BLM') {
-						var clr = '#e81014';
-					} else if (g.AGNCY_NAME == 'BOR') {
-						var clr = '#b59bbf';
-					} else if (g.AGNCY_NAME == 'COE') {
-						var clr = '#B1CC91';
-					} else if (g.AGNCY_NAME == 'DOE') {
-						var clr = '#7DD7E3';
-					} else if (g.AGNCY_NAME == 'DOI') {
-						var clr = '#f77a2d';
-					} else if (g.AGNCY_NAME == 'FAA') {
-						var clr = '#8ca4b8';
-					} else if (g.AGNCY_NAME == 'GSA') {
-						var clr = '#78adad';
-					} else if (g.AGNCY_NAME == 'HSTRCWTR') {
-						var clr = '#2892c7';
-					} else if (g.AGNCY_NAME == 'IR') {
-						var clr = '#fccf51';
-					} else if (g.AGNCY_NAME == 'LU_DOI') {
-						var clr = '#fcba47';
-					} else if (g.AGNCY_NAME == 'LU_USDA') {
-						var clr = '#c6d986';
-					} else if (g.AGNCY_NAME == 'MIL') {
-						var clr = '#f56325';
-					} else if (g.AGNCY_NAME == 'NPS') {
-						var clr = '#f24d1f';
-					} else if (g.AGNCY_NAME == 'NWR') {
-						var clr = '#a0c29b';
-					} else if (g.AGNCY_NAME == 'PRIVATE') {
-						var clr = '#fa8d34';
-					} else if (g.AGNCY_NAME == 'STATE') {
-						var clr = '#ed361a';
-					} else if (g.AGNCY_NAME == 'STATEFG') {
-						var clr = '#fafa64';
-					} else if (g.AGNCY_NAME == 'STATEOTH') {
-						var clr = '#60a3b5';
-					} else if (g.AGNCY_NAME == 'STATEPR') {
-						var clr = '#fce75b';
-					} else if (g.AGNCY_NAME == 'USFS') {
-						var clr = '#fca43f';
-					} else {
-						var clr = '#E81014';
-					}
-					results += "<tr><td class='dlegend' style='background-color:"+ clr +";'>&nbsp;</td><td>" + g.AGNCY_NAME + "</td><td>" + perRng + "</td><td>" + perCty + "</td><td>" + g.GIS_ACRES + "</td></tr>";
-				} else {
-					continue;
-				}
-			}
-			var county = g.CNTY_NAME;
-			fixHeading(county);
-			$(".tableDiv").html("<table id='table' class='table' cellspacing='0'>" + tbHead + "<tbody>" + results + "</tbody></table>");
-			
-			$(function(){
-				$('#table').tablesorter({
-					sortList: [[2,1]]
-				}); 
+			var imgMLyr = new ImageryLayer({
+			    url: "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/bruce_test8/ImageServer",
+				opacity: 0.8,
+                renderingRule: clipRF,
+				pixelFilter: null
 			});
-			
+			map.add(imgMLyr);
+
+			var rasterAttributes = null;
+			imgMLyr.then(function() {
+				rasterAttributes = imgMLyr.rasterAttributeTable.features;
+				fields = rasterAttributes.filter(function(item, i){
+					var className = item.attributes.cnty_name;
+					return className === foo.attributes.NAME;
+				});
+				
+				var tbHead = "<thead><tr><th class='header legend'></th><th class='header'>Manager</th><th class='header' >% of Rangeland</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
+				var results = "";
+				
+				var county = foo.attributes.NAME;
+				fixHeading(county);
+				console.log(fields);
+				for (i=0;i<fields.length;i++) {
+					var g = fields[i].attributes;
+					var perRng = g.per_rng.toFixed(2);
+					var perCty = g.per_cnty.toFixed(2);
+					if (perRng > 0) {
+						if (g.sma_name == "PRIVATE") {
+							var clr = "#ffffff";
+							var sma = "Private";
+						} else if (g.sma_name == "USFS") {
+							var clr = "#DDF8DE";
+							var sma = "US Forest Service";
+						} else if (g.sma_name == "BLM") {
+							var clr = "#ffe49c";
+							var sma = "Bureau of Land Management";
+						} else if (g.sma_name == "STATEPR") {
+							var clr = "#c4e5f5";
+							var sma = "State Parks & Rec";
+						} else if (g.sma_name == "STATE") {
+							var clr = "#A4C2D2";
+							var sma = "State Dept. of Lands";
+						} else if (g.sma_name == "STATEOTH") {
+							var clr = "#c4e5f5";
+							var sma = "State, Other";
+						} else if (g.sma_name == "STATEFG") {
+							var clr = "#A4C2D2";
+							var sma = "State Fish & Game";
+						} else if (g.sma_name == "HSTRCWTR") {
+							var clr = "#006CB2";
+							var sma = "Unsurveyed Water";
+						} else if (g.sma_name == "BIA") {
+							var clr = "#E9D0B7";
+							var sma = "Bureau of Indian Affairs";
+						} else if (g.sma_name == "IR") {
+							var clr = "#ffc68e";
+							var sma = "American Indian Reservation";
+						} else if (g.sma_name == "NPS") {
+							var clr = "#d9d3f4";
+							var sma = "National Park Service";
+						} else if (g.sma_name == "DOE") {
+							var clr = "#E9D0B7";
+							var sma = "Dept. of Energy";
+						} else if (g.sma_name == "MIL") {
+							var clr = "#FBCCFE";
+							var sma = "US Military";
+						} else if (g.sma_name == "BOR") {
+							var clr = "#FFF7C9";
+							var sma = "Bureau of Reclamation";
+						} else {
+							var clr = "#000000";
+							var sma = g.sma_name;
+						}
+						results += "<tr><td class='dlegend' style='background-color:"+ clr +";'>&nbsp;</td><td>" + sma + "</td><td>" + perRng + "</td><td>" + perCty + "</td><td>" + g.area_ac.toFixed(2) + "</td></tr>";
+				    } else {
+						continue;
+				    }
+				}
+
+				$(".tableDiv").html("<table id='table' class='table' cellspacing='0'>" + tbHead + "<tbody>" + results + "</tbody></table>");
+				
+				$(function(){
+					$('#table').tablesorter({
+						sortList: [[2,1]]
+					}); 
+				});	
+			});
 		} //close getLMResults
+
+		function getLCResults(response){
+			var featureLCResults = arrayUtils.map(response.features, function(feature) {
+				foo = feature;
+				return feature;
+			});
+				
+			view.goTo(featureLCResults);
+			
+			function colorize(pixelData) {
+				pixelBlock = pixelData.pixelBlock;
+				var numPixels = pixelBlock.width * pixelBlock.height;
+				var rBand = [];
+				var gBand = [];
+				var bBand = [];
+				for (i = 0; i < numPixels; i++) {
+					// Sets a color between blue (coldest) and red (warmest) in each band
+					rBand[i] = 0;
+					gBand[i] = 0;
+					bBand[i] = 0;
+				  }
+				pixelData.pixelBlock.pixels = [rBand, gBand, bBand];				
+			} // end colorize
+			
+			
+			var clipCRF = new RasterFunction({
+				functionName: "Clip",
+				functionArguments: {
+					ClippingGeometry : foo.geometry,		//a polygon or envelope
+					ClippingType : 1,								//int (1= clippingOutside, 2=clippingInside), use 1 to keep image inside of the geometry
+					raster: "$$"
+				}
+			});
+			
+			var imgLyr = new ImageryLayer({
+			    url: "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/bruce_test8/ImageServer",
+				opacity: 0.7,
+                renderingRule: clipCRF,
+				pixelFilter: colorize
+			});
+			map.add(imgLyr);
+
+			var rasterAttributes = null;
+			imgLyr.then(function() {
+				rasterAttributes = imgLyr.rasterAttributeTable.features;
+				
+				fields = rasterAttributes.filter(function(item, i){
+					var className = item.attributes.cnty_name;
+					return className === foo.attributes.NAME;
+				});
+				
+				console.log(rasterAttributes);
+				var totId = 0;
+				for (i=0;i<rasterAttributes.length;i++) {
+					totId += rasterAttributes[i].attributes.area_ac;
+				}
+				console.log(rasterAttributes.length);
+				console.log(totId);
+				console.log(totId / 44);
+				
+				var tbHead = "<thead><tr><th class='header'>Total Rangeland (acres)</th><th class='header' >% of County</th><th class='header' ></th></tr></thead>";
+				var results = "";
+				
+				var county = foo.attributes.NAME;
+				fixHeading(county);
+				console.log(fields);
+				var totA = 0;
+				var totPC = 0;
+				for (i=0;i<fields.length;i++) {
+					var g = fields[i].attributes;
+					totA += g.area_ac;
+					totPC += g.per_cnty
+				}
+				var perCty = totPC.toFixed(2);
+				var total = totA.toFixed(2);
+				results += "<tr><td>Total County Rangeland (acres)</td><td>" + total + "</td></tr><tr><td>Percent of County Acreage</td><td>" + perCty + "</td></tr>";
+				$(".tableDiv").html("<br /><table id='table' class='table' cellspacing='0'><tbody>" + results + "</tbody></table>");
+				
+				$(function(){
+					$('#table').tablesorter({
+						sortList: [[2,1]]
+					}); 
+				});	
+			});
+		} //close getLCResults
+		
+		
+		// Basic map with above layers
+		var map = new Map({
+			basemap: "streets",
+			layers: [countyLyr]
+		});
+				
+		// Basic view parameters for the map
+		var view = new MapView({
+			container: "mapCanvas",
+			map: map,
+			center: [-115, 45.6],
+			zoom: 7
+		});
 		
 		// General response to query failures
 		function promiseRejected(err) {
 			console.error("Promise rejected: ", err.message);
 		}
-		
+				
 		// Turns on querying by drop-down and by map click
 		function activateOptions(choice) {
-				$('#valSelect').change(function() {
-					doQuery(this.value, choice);
-				});
-				view.on("click", function(evt){getCounty(evt.mapPoint, choice)});
+			$('#valSelect').change(function() {
+				doQuery(this.value, choice);
+			});
+			var mapClick = view.on("click", function(evt){getCounty(evt.mapPoint, choice)});
 		}
 		
 		// Based on nav menu, load a corresponding results page
@@ -507,7 +342,8 @@
 		
 		function reset() {
 			$('.left-region').children('#descMore').addClass('collapse');
-			resultsLyr.removeAll();
+			map.removeAll();
+			map.add(countyLyr);
 			view.goTo({
 				center: [-115, 45.6],
 				zoom: 7
@@ -521,11 +357,15 @@
 			}
 		}
 		
+		function reload() {
+			location.reload();
+		}
+		
 		// Reset the results page and map and return to the menu page
-		$(".back-btn").click(reset);
+		$(".back-btn").click(reload);
 		
 		// Create the dropdown menu for the map		
-		var cts = ['ADA', 'ADAMS', 'BANNOCK', 'BEAR LAKE', 'BENEWAH', 'BINGHAM', 'BLAINE', 'BONNER', 'BONNEVILLE', 'BOUNDARY', 'BUTTE', 'CAMAS', 'CANYON', 'CARIBOU', 'CASSIA', 'CLARK', 'CLEARWATER', 'CUSTER', 'ELMORE', 'FRANKLIN', 'FREMONT', 'GEM', 'GOODING', 'IDAHO', 'JEFFERSON', 'JEROME', 'KOOTENAI', 'LATAH', 'LEMHI', 'LEWIS', 'LINCOLN', 'MADISON', 'MINIDOKA', 'NEZ PERCE', 'ONEIDA', 'OWYHEE', 'PAYETTE', 'POWER', 'SHOSHONE', 'TETON', 'TWIN FALLS', 'VALLEY', 'WASHINGTON'];
+		var cts = ['ADA', 'ADAMS', 'BANNOCK', 'BEAR LAKE', 'BENEWAH', 'BINGHAM', 'BLAINE', 'BOISE', 'BONNER', 'BONNEVILLE', 'BOUNDARY', 'BUTTE', 'CAMAS', 'CANYON', 'CARIBOU', 'CASSIA', 'CLARK', 'CLEARWATER', 'CUSTER', 'ELMORE', 'FRANKLIN', 'FREMONT', 'GEM', 'GOODING', 'IDAHO', 'JEFFERSON', 'JEROME', 'KOOTENAI', 'LATAH', 'LEMHI', 'LEWIS', 'LINCOLN', 'MADISON', 'MINIDOKA', 'NEZ PERCE', 'ONEIDA', 'OWYHEE', 'PAYETTE', 'POWER', 'SHOSHONE', 'TETON', 'TWIN FALLS', 'VALLEY', 'WASHINGTON'];
 
 		var sct = "<option>Choose a County...</option>";
 		for (i=0;i<cts.length;i++) {
