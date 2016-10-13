@@ -1,189 +1,193 @@
 /* For ESRI Javascript API 4.0
-	
-	Query and draw results based on data from ArcGIS Server, both on
-	a map and in the various visualizations.
-	
-	Written by Bruce Godfrey and Jeremy Kenyon, Univ. of Idaho, 2016
+
+Query and draw results based on data from ArcGIS Server, both on
+a map and in the various visualizations.
+
+Written by Bruce Godfrey and Jeremy Kenyon, Univ. of Idaho, 2016
 	
 */
-	require([
-		"esri/Map",
-		"esri/config",
-		"esri/views/MapView",
-		"esri/layers/FeatureLayer",
-		"esri/layers/GraphicsLayer",
-		"esri/layers/ImageryLayer",
-		"esri/tasks/QueryTask",
-		"esri/tasks/support/Query",
-		"esri/symbols/SimpleFillSymbol",
-		"esri/renderers/UniqueValueRenderer",
-		"esri/layers/support/RasterFunction",
-		"esri/Graphic",
-		"dojo/_base/array",
-		"dojo/dom",
-		"dojo/on",
-        "dojo/_base/html",
-        "dojo/_base/lang",
-		"dojo/domReady!"
-	], function (Map, esriConfig, MapView, FeatureLayer, GraphicsLayer, ImageryLayer, QueryTask, Query, SimpleFillSymbol, UniqueValueRenderer, RasterFunction, Graphic, arrayUtils, dom, on, html, lang) {
-		
-		// Fixes CORS problems.  Must include both on testweb.
-		esriConfig.request.corsDetection = false;
-		esriConfig.request.corsEnabledServers.push("gis-sandbox.northwestknowledge.net");
-		
-		var hid = new UniqueValueRenderer({
-			field: "NAME",
-			defaultSymbol: new SimpleFillSymbol({
-				color: [255,255,255,0]
-			})
-		});
+  require([
+    "esri/Map",
+    "esri/config",
+    "esri/views/MapView",
+    "esri/layers/FeatureLayer",
+    "esri/layers/GraphicsLayer",
+    "esri/layers/ImageryLayer",
+    "esri/tasks/QueryTask",
+    "esri/tasks/support/Query",
+    "esri/symbols/SimpleFillSymbol",
+    "esri/renderers/UniqueValueRenderer",
+    "esri/layers/support/RasterFunction",
+    "esri/Graphic",
+    "dojo/_base/array",
+    "dojo/dom",
+    "dojo/on",
+    "dojo/_base/html",
+    "dojo/_base/lang",
+    "dojo/domReady!"
+  ], function (Map, esriConfig, MapView, FeatureLayer, GraphicsLayer, ImageryLayer, QueryTask, Query, SimpleFillSymbol, UniqueValueRenderer, RasterFunction, Graphic, arrayUtils, dom, on, html, lang) {
+    // Fixes CORS problems.
+    esriConfig.request.corsDetection = false;
+    esriConfig.request.corsEnabledServers.push("gis-sandbox.northwestknowledge.net");
+	  
+    // Creates the style for the county boundary layer
+    var hid = new UniqueValueRenderer({
+      field: "NAME",
+      defaultSymbol: new SimpleFillSymbol({
+        color: [255,255,255,0]
+      })
+    });
+    
+    //Creates county boundaries layer
+    var countyLyr = new FeatureLayer({
+      url: "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/ira_2014_county_boundaries/MapServer/0",
+      id: "counties",
+      outFields: ['*'],
+      opacity: 0.7,
+      renderer: hid
+    });
+
+    //Sets up graphics layer to be drawn in response to queries
+    var foo = new Graphic;
+
+    // Establish query based on county geometry
+    var qTask = new QueryTask({
+      url: "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/ira_2014_county_boundaries/MapServer/0",
+    });
+
+    // General parameters for the query
+    var params = new Query({
+      returnGeometry: true,
+      outFields: ["*"]
+    });
+
+    // Performs a general query resolving county name and some data
+    function doQuery(name, choice) {
+      var clbk = null;
+      map.removeAll();
+      map.add(countyLyr); //need to keep the county layer available
+      params.where = "NAME=" + "'" + name +"'";
+      
+      //Enables same query, different topics
+      if (choice === "Land Management") {
+        var clbk = getLMResults; 
+      } else if (choice === "Land Cover") {
+        var clbk = getLCResults;
+      }
+      qTask.execute(params).then(clbk).otherwise(promiseRejected);
+    }
+
+    // Enables querying a county/data by map click
+    function getCounty(evt, selection) {
+      var qCnty = new Query();
+      qCnty.returnGeometry = true;
+      qCnty.outFields = ["NAME"];
+      qCnty.geometry = evt;
+      countyLyr.queryFeatures(qCnty).then(function(results){
+        doQuery(results.features[0].attributes.NAME, selection);
+	$('#valSelect').val('Choose a County...');
+      }).otherwise(promiseRejected);
+    }
+
+    // County Names are in caps.  Converts them to Title Case for display.
+    function fixHeading(head) {
+      var h = head.toLowerCase();
+      var hE = h.toTitleCase();
+      $(".resultHead").html("<h3>"+ hE +"</h3>");
+    }
+
+    //This returns and renders Land management data
+    function getLMResults(response) {
+      var featureResults = arrayUtils.map(response.features, function(feature) {
+        foo = feature;
+        return feature;
+      });
+     
+      view.goTo(featureResults);
+
+      // Clips the image to only the county geometry
+      var clipRF = new RasterFunction({
+        functionName: "Clip",
+        functionArguments: {
+          ClippingGeometry : foo.geometry,  //a polygon or envelope
+	  ClippingType : 1,  //int (1= clippingOutside, 2=clippingInside), use 1 to keep image inside of the geometry
+          raster: "$$"
+        }
+      });
+
+     // Creates image layer with the clip
+     var imgMLyr = new ImageryLayer({
+       url: "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/bruce_test8/ImageServer",
+       opacity: 0.8,
+       renderingRule: clipRF,
+       pixelFilter: null
+     });
+	    
+     map.add(imgMLyr);
+	    
+     var rasterAttributes = null;
+     imgMLyr.then(function() {
+       rasterAttributes = imgMLyr.rasterAttributeTable.features;
+       fields = rasterAttributes.filter(function(item, i){
+         var className = item.attributes.cnty_name;
+	 return className === foo.attributes.NAME;
+       });
 				
-		//Creates county boundaries layer
-		var countyLyr = new FeatureLayer({
-			url: "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/ira_2014_county_boundaries/MapServer/0",
-			id: "counties",
-			outFields: ['*'],
-			opacity: 0.7,
-			renderer: hid
-		});
-
-		//Sets up graphics layer to be drawn in response to queries
-		var foo = new Graphic;
-	
-		// Land Management Web Service (also Land Cover)
-		var qTask = new QueryTask({
-			url: "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/ira_2014_county_boundaries/MapServer/0",
-		});
-		
-		// General parameters for any query
-		var params = new Query({
-			returnGeometry: true,
-			outFields: ["*"]
-		});
-	
-		// Performs a general query resolving county name and some data
-		function doQuery(name, choice) {
-			var clbk = null;
-			map.removeAll();
-			map.add(countyLyr);
-			params.where = "NAME=" + "'" + name +"'";
-			if (choice === "Land Management") {
-				var clbk = getLMResults;
-			} else if (choice === "Land Cover") {
-				var clbk = getLCResults;
-			}
-			qTask.execute(params).then(clbk).otherwise(promiseRejected);
-		}
-		
-		function getCounty(evt, selection) {
-			var qCnty = new Query();
-			qCnty.returnGeometry = true;
-			qCnty.outFields = ["NAME"];
-			qCnty.geometry = evt;
-			countyLyr.queryFeatures(qCnty).then(function(results){
-				doQuery(results.features[0].attributes.NAME, selection);
-				$('#valSelect').val('Choose a County...');
-			}).otherwise(promiseRejected);
-		}
-		
-		// County Names are in Caps.  This converts them to Title Case for display.
-		function fixHeading(head) {
-			var h = head.toLowerCase();
-			var hE = h.toTitleCase();
-			$(".resultHead").html("<h3>"+ hE +"</h3>");
-		}
-
-		//This returns and renders Land Management Results
-		function getLMResults(response) {
-			var featureResults = arrayUtils.map(response.features, function(feature) {
-					foo = feature;
-					console.log(foo);
-					return feature;
-			});
-
-			view.goTo(featureResults);
-			
-			var clipRF = new RasterFunction({
-				functionName: "Clip",
-				functionArguments: {
-					ClippingGeometry : foo.geometry,		//a polygon or envelope
-					ClippingType : 1,								//int (1= clippingOutside, 2=clippingInside), use 1 to keep image inside of the geometry
-					raster: "$$"
-				}
-			});
-			
-			var imgMLyr = new ImageryLayer({
-			    url: "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/bruce_test8/ImageServer",
-				opacity: 0.8,
-                renderingRule: clipRF,
-				pixelFilter: null
-			});
-			map.add(imgMLyr);
-
-			var rasterAttributes = null;
-			imgMLyr.then(function() {
-				rasterAttributes = imgMLyr.rasterAttributeTable.features;
-				fields = rasterAttributes.filter(function(item, i){
-					var className = item.attributes.cnty_name;
-					return className === foo.attributes.NAME;
-				});
+      var tbHead = "<thead><tr><th class='header legend'></th><th class='header'>Manager</th><th class='header' >% of Rangeland</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
+      var results = "";
 				
-				var tbHead = "<thead><tr><th class='header legend'></th><th class='header'>Manager</th><th class='header' >% of Rangeland</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
-				var results = "";
-				
-				var county = foo.attributes.NAME;
-				fixHeading(county);
-				console.log(fields);
-				for (i=0;i<fields.length;i++) {
-					var g = fields[i].attributes;
-					var perRng = g.per_rng.toFixed(2);
-					var perCty = g.per_cnty.toFixed(2);
-					if (perRng > 0) {
-						if (g.sma_name == "PRIVATE") {
-							var clr = "#ffffff";
-							var sma = "Private";
-						} else if (g.sma_name == "USFS") {
-							var clr = "#DDF8DE";
-							var sma = "US Forest Service";
-						} else if (g.sma_name == "BLM") {
-							var clr = "#ffe49c";
-							var sma = "Bureau of Land Management";
-						} else if (g.sma_name == "STATEPR") {
-							var clr = "#c4e5f5";
-							var sma = "State Parks & Rec";
-						} else if (g.sma_name == "STATE") {
-							var clr = "#A4C2D2";
-							var sma = "State Dept. of Lands";
-						} else if (g.sma_name == "STATEOTH") {
-							var clr = "#c4e5f5";
-							var sma = "State, Other";
-						} else if (g.sma_name == "STATEFG") {
-							var clr = "#A4C2D2";
-							var sma = "State Fish & Game";
-						} else if (g.sma_name == "HSTRCWTR") {
-							var clr = "#006CB2";
-							var sma = "Unsurveyed Water";
-						} else if (g.sma_name == "BIA") {
-							var clr = "#E9D0B7";
-							var sma = "Bureau of Indian Affairs";
-						} else if (g.sma_name == "IR") {
-							var clr = "#ffc68e";
-							var sma = "American Indian Reservation";
-						} else if (g.sma_name == "NPS") {
-							var clr = "#d9d3f4";
-							var sma = "National Park Service";
-						} else if (g.sma_name == "DOE") {
-							var clr = "#E9D0B7";
-							var sma = "Dept. of Energy";
-						} else if (g.sma_name == "MIL") {
-							var clr = "#FBCCFE";
-							var sma = "US Military";
-						} else if (g.sma_name == "BOR") {
-							var clr = "#FFF7C9";
-							var sma = "Bureau of Reclamation";
-						} else {
-							var clr = "#000000";
-							var sma = g.sma_name;
+      var county = foo.attributes.NAME;
+      fixHeading(county);
+      for (i=0;i<fields.length;i++) {
+        var g = fields[i].attributes;
+	var perRng = g.per_rng.toFixed(2);
+	var perCty = g.per_cnty.toFixed(2);
+	if (perRng > 0) {
+	  if (g.sma_name == "PRIVATE") {
+	    var clr = "#ffffff";
+	    var sma = "Private";
+	  } else if (g.sma_name == "USFS") {
+	    var clr = "#DDF8DE";
+	    var sma = "US Forest Service";
+	  } else if (g.sma_name == "BLM") {
+	    var clr = "#ffe49c";
+	    var sma = "Bureau of Land Management";
+	  } else if (g.sma_name == "STATEPR") {
+	    var clr = "#c4e5f5";
+	    var sma = "State Parks & Rec";
+	  } else if (g.sma_name == "STATE") {
+	    var clr = "#A4C2D2";
+	    var sma = "State Dept. of Lands";
+	  } else if (g.sma_name == "STATEOTH") {
+	    var clr = "#c4e5f5";
+	    var sma = "State, Other";
+	  } else if (g.sma_name == "STATEFG") {
+	    var clr = "#A4C2D2";
+	    var sma = "State Fish & Game";
+	  } else if (g.sma_name == "HSTRCWTR") {
+	    var clr = "#006CB2";
+	    var sma = "Unsurveyed Water";
+	  } else if (g.sma_name == "BIA") {
+	    var clr = "#E9D0B7";
+	    var sma = "Bureau of Indian Affairs";
+	  } else if (g.sma_name == "IR") {
+	    var clr = "#ffc68e";
+	    var sma = "American Indian Reservation";
+	  } else if (g.sma_name == "NPS") {
+	    var clr = "#d9d3f4";
+	    var sma = "National Park Service";
+	  } else if (g.sma_name == "DOE") {
+	    var clr = "#E9D0B7";
+	    var sma = "Dept. of Energy";
+	  } else if (g.sma_name == "MIL") {
+	    var clr = "#FBCCFE";
+	    var sma = "US Military";
+	  } else if (g.sma_name == "BOR") {
+	    var clr = "#FFF7C9";
+	    var sma = "Bureau of Reclamation";
+	  } else {
+	    var clr = "#000000";
+	    var sma = g.sma_name;
 						}
 						results += "<tr><td class='dlegend' style='background-color:"+ clr +";'>&nbsp;</td><td>" + sma + "</td><td>" + perRng + "</td><td>" + perCty + "</td><td>" + g.area_ac.toFixed(2) + "</td></tr>";
 				    } else {
