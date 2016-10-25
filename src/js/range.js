@@ -320,7 +320,7 @@ Written by Bruce Godfrey and Jeremy Kenyon, Univ. of Idaho, 2016
 		
 		// Based on nav menu, load a corresponding results page
 		function loadResultsPage(selection) {	
-			fetch('./resultsPages.json').then(function(response) {
+			fetch('../data/resultsPages.json').then(function(response) {
 				return response.json();
 			}).then(function(sheep) {
 				for (var i = 0; i < sheep.pages.length; i++) {

@@ -11,6 +11,7 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
 
+    // for minifying javascript files
     uglify: {
       build: {
         src: 'src/js/*.js',
@@ -18,6 +19,7 @@ module.exports = function(grunt) {
       }
     },
 
+    // for minifying css files
     cssmin: {
       build: {
         files: {
