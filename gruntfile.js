@@ -3,10 +3,7 @@
 */
 
 module.exports = function(grunt) {
-  debug = false;
-
   
-
   // Different configuration for the project
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
