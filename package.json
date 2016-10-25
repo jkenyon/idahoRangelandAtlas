@@ -1,0 +1,27 @@
+{
+  "name": "idaho-rangeland-atlas",
+  "version": "1.0.0",
+  "description": "idaho rangeland atlas web application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jkenyon/idahoRangelandAtlas.git"
+  },
+  "author": "koffi anderson koffi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jkenyon/idahoRangelandAtlas/issues"
+  },
+  "homepage": "https://github.com/jkenyon/idahoRangelandAtlas#readme",
+  "keywords": [
+    "idaho",
+    "rangeland",
+    "atlas",
+    "web",
+    "application",
+    "app"
+  ]
+}
