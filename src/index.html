@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta charset="utf-8">
 	<meta name="robots" content="noindex">
 	<meta name="googlebot" content="noindex">
@@ -9,42 +10,39 @@
 	<title>Idaho Rangeland Atlas - Draft</title>
 
 	<link rel="stylesheet" type='text/css' href="./css/range.css" />
+	<link rel="stylesheet" type='text/css' href="./css/sidenav.css" />
+	<link rel="stylesheet" type='text/css' href="./css/header.css" />
 	<link rel="stylesheet" type='text/css' href="https://js.arcgis.com/4.0/esri/css/main.css" />
 	<link rel="stylesheet" type='text/css' href="https://fonts.googleapis.com/css?family=PT+Sans" />
 	<link rel="stylesheet" type='text/css' href="./css/bootstrap.min.css" />
+
 	
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 	<script type="text/javascript" src="https://js.arcgis.com/4.0/"></script>
+	
 </head>
 
 <body>
 	<div class="header">
 		<span class="menu-icon">
-			<span class="glyphicon glyphicon-th" aria-hidden="true"></span>
+			<span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true" onclick="toggleSideNav()"></span>
 		</span>
+		
 		<span class="title">Idaho Rangeland Atlas</span>
 	</div><!-- /header -->
 
-	<div id="metadata-menu" class="menu hide">
-			<div class="menu-left">
-				<ul class="menu-list">
-					<li><a onclick="menuClick(this.text)">About the Project</a></li>
-					<li><a onclick="menuClick(this.text)">Data and Methods</a></li>
-					<li><a onclick="menuClick(this.text)">Technical Details</a></li>
-					<li><a onclick="menuClick(this.text)">Accuracy and Disclaimer</a></li>
-					<li><a onclick="menuClick(this.text)">Contact Us</a></li>
-				</ul>
-				<div class="menu-footer">
-					<img src="./img/rc_logo.png" />
-					<img src="./img/dds_logo.png" />
-				</div>
-			</div>
-			<div class="menu-right">
-				<br />
-				<h3 class="menu-heading"></h3>
-				<br />
-				<div class="menu-content"></div>
-			</div>
+	<div id="sidenav-left" class="sidenav">
+		<ul>
+			<li><a onclick="sidenavOpen(text)">About the Project</a></li>
+			<li><a onclick="sidenavOpen(text)">Data and Methods</a></li>
+			<li><a onclick="sidenavOpen(text)">Technical Details</a></li>
+			<li><a onclick="sidenavOpen(text)">Accuracy and Disclaimer</a></li>
+			<li><a onclick="sidenavOpen(text)">Contact Us</a></li>
+		</ul>
+		<!--<div class="sidenav-footer">
+			<img src="./img/dds_logo.png"  class="rc_logo"/>
+			<img src="./img/rc_logo.png" class="rc_logo"/>			
+		</div>-->
 	</div><!-- /metadata-menu -->
 	
 	<div id="main-content-area" class="main show">
@@ -95,6 +93,7 @@
 		</div>
 	</div><!-- /main-content-area -->
 
+	<script type="text/javascript" src="./js/sidenav.js"></script>
 	<script type="text/javascript" src="./js/range.js"></script>
 	<script type="text/javascript" src="./js/jquery.tablesorter.min.js"></script>
 	<script type="text/javascript" src="./js/bootstrap.min.js"></script>
@@ -119,8 +118,6 @@
 				$('.nav-main').removeClass('show').addClass('hide');
 			}
 		});
-	</script>
-	<script type="text/javascript" src="./js/menu.js"></script>
 	<!-- Loading Icon from loading.io -->
 </body>
 </html>
