@@ -2,7 +2,7 @@
   height: 100%;
   width: 0;
   position: fixed;
-  z-index: 2;
+  z-index: 20;
   top: 0;
   left: 0;
   background-color: #111;
@@ -23,19 +23,24 @@
 .sidenav a:hover,
 .offcanvas a:focus {
   color: #f1f1f1;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 .sidenav .closebtn {
   position: absolute;
   top: 0;
-  right: 25px;
-  font-size: 36px;
-  margin-left: 50px;
+  float: left;
+  font-size: 60px;
+  margin-left: 3% auto;;
 }
-
+.sidenav .closebtn:hover {
+  cursor: pointer;
+  color: #f1f1f1;
+}
 .sidenav-footer {
   position: fixed;
-  bottom: 0%;  
+  bottom: 0%;
   left: 0%;
   right: 0%;
   font-size: 50px;

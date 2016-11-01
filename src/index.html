@@ -16,108 +16,131 @@
 	<link rel="stylesheet" type='text/css' href="https://fonts.googleapis.com/css?family=PT+Sans" />
 	<link rel="stylesheet" type='text/css' href="./css/bootstrap.min.css" />
 
-	
+
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 	<script type="text/javascript" src="https://js.arcgis.com/4.0/"></script>
-	
+
 </head>
 
 <body>
-	<div class="header">
-		<span class="menu-icon">
-			<span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true" onclick="toggleSideNav()"></span>
-		</span>
-		
-		<span class="title">Idaho Rangeland Atlas</span>
-	</div><!-- /header -->
+	<!-- Header -->
+	<header class="header">
+		<!-- Header toggle icon  -->
+		<div id="headerToggle">
+			<span class="header-icon">
+				<span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true" onclick="toggleSideNav()"></span>
+			</span>
+		</div>
 
-	<div id="sidenav-left" class="sidenav">
+		<div class="top">
+			<!-- Logo -->
+			<div id="logo">
+				<h1 class="title">Idaho Rangeland Atlas</span>
+			</div>
+
+			<!-- Nav  -->
+			<nav id="sidenav-left" class="sidenav">
+				<span class="closebtn" onclick="toggleSideNav()">&times;</span>
+				<ul>
+					<li><a href="pages/about.html" onclick="sidenavOpen(text)">About the Project</a></li>
+					<li><a onclick="sidenavOpen(text)">Data and Methods</a></li>
+					<li><a onclick="sidenavOpen(text)">Technical Details</a></li>
+					<li><a onclick="sidenavOpen(text)">Accuracy and Disclaimer</a></li>
+					<li><a onclick="sidenavOpen(text)">Contact Us</a></li>
+				</ul>
+
+			</nav>
+		</div>
+
+		<div class="bottom">
+			<!-- <div class="sidenav-footer">
+				<img src="./img/dds_logo.png"  class="rc_logo"/>
+				<img src="./img/rc_logo.png" class="rc_logo"/>
+			</div> -->
+		</div>
+	</header>
+
+
+
+	<!-- Main -->
+	<div id="main">
+
+		<!-- Intro  -->
+		<section id="intro">
+
+		</section>
+
+		<!-- Map menu  -->
+		<section id="map-menu">
+
+		</section>
+
+		<!-- Map  -->
+		<aside id="map">
+
+		</aside>
+
+		<!-- About -->
+		<section id="about">
+			<div class="container">
+				<header>
+					<h2>About Us</h2>
+				</header>
+				<p>
+					The Idaho Rangeland Atlas is a collaboration of the University of Idaho Library and the University of Idaho Rangeland Center.  Its purpose is to provide simple, clear information about Idaho's rangelands using open, accessible web technologies.  Leveraging the University of Idaho's investements in geospatial data and infrastructure enable us to present this information.  We believe that if an Idaho citizen wants to understand the basic facts of rangeland ecology and space in our state, those facts should be available without the need to engage in advanced analysis or obtain new skills.<br /><br />The lack of an aggregating resource, like a statistical abstract, adds time to process of discovery and delays the ability of users to move on, either to advanced research questions, as they have to answer and prove more fundamental ones first, or to other tasks based on the information that they now have.  Given the increasing accessibility of web-based geospatial processing, and the improvement in technology to provide rich, informative, web-based queries of spatial data, the opportunity exists to re-invent the statistical abstract for natural resource and agricultural questions, providing a simple interface to gather facts about the state of Idaho’s rangelands.
+				</p>
+			</div>
+		</section>
+
+		<!-- Contact -->
+		<section id="contact">
+			<div class="container">
+				<header>
+					<h2>Contact</h2>
+				</header>
+				<p>
+					Any questions or comments should be directed to either Jeremy Kenyon (jkenyon@uidaho.edu) or Bruce Godfrey (bgodfrey@uidaho.edu).
+				</p>
+			</div>
+		</section>
+
+		<!-- Technical Details -->
+		<section id="technical">
+			<div class="container">
+				<header>
+					<h2>Technical Details</h2>
+				</header>
+				<p>
+					All application development uses a combination of HTML5, CSS3, and Javascript.  The geoprocessing uses ESRI’s ArcGIS Javascript API.  Our goal is to use basic, open W3C-endorsed web technologies that are supported by all web browsers and require no additional add-ins, plug-ins, or special software.  All work will be done on software/hardware provided by the University of Idaho Library Data & Digital Services Department and INSIDE Idaho.
+				</p>
+			</div>
+		</section>
+	</div>
+
+	<!-- Accuracy and Disclaimer -->
+	<section id="disclaimer">
+		<div class="container">
+			<header>
+				<h2>Accuracy and Disclaimer</h2>
+			</header>
+			<p>Not sure what to say here yet.</p>
+		</div>
+	</section>
+</div>
+
+	<!-- Footer -->
+	<div id="footer">
 		<ul>
-			<li><a onclick="sidenavOpen(text)">About the Project</a></li>
-			<li><a onclick="sidenavOpen(text)">Data and Methods</a></li>
-			<li><a onclick="sidenavOpen(text)">Technical Details</a></li>
-			<li><a onclick="sidenavOpen(text)">Accuracy and Disclaimer</a></li>
-			<li><a onclick="sidenavOpen(text)">Contact Us</a></li>
+			<li>&copy; Idaho Range Atlas All rights reserved.</li>
 		</ul>
-		<!--<div class="sidenav-footer">
-			<img src="./img/dds_logo.png"  class="rc_logo"/>
-			<img src="./img/rc_logo.png" class="rc_logo"/>			
-		</div>-->
-	</div><!-- /metadata-menu -->
-	
-	<div id="main-content-area" class="main show">
+	</div>
 
-		<div class="nav-main show">
-			<h3 class="heading">Welcome to the Idaho Rangeland Atlas</h3>
-			<div class="nav-text"><p>Select a topic below</p></div>
-			<div class="item-row">
-				<div class="butn">
-					<span class="nav-item glyphicon glyphicon-leaf" aria-hidden="true"></span><br />
-					<span class="butn-text">Land Cover</span>
-				</div>
-				<div class="butn">
-						<span class="nav-item glyphicon glyphicon-user" aria-hidden="true"></span><br />
-						<span class="butn-text">Land Management</span>
-				</div>
-			</div>
-		</div>
-	
-		<div class="left-region hide">
-			<br />
-			<span class="back-btn glyphicon glyphicon-share-alt"></span>
-			<h3 class="heading"></h3>
-			<div class="description"></div>
-			<div class="read-btn">
-				<a href="#descMore" data-toggle="collapse" style="color: white; text-decoration: none;">Read More...</a>
-			</div>
-			<br />
-			<div id="descMore" class="collapse"></div>
-			<br />
-			<div class="resultBox">
-				<span class="resultHead"></span>
-				<div class="tableDiv">
-					<div class="instruct">
-						<p>Select a county on the right</p>
-					</div>
-				</div>
-			</div>
-			<div class="footer">
-				<br /><br />
-			</div>
-		</div>
-		<div class="map">
-			<div class="county"><select id="valSelect" class="cntySel"></select></div>
-			<div id="mapCanvas">
-				<img id="loadingImg" src="img/gears.gif" style="position:relative; left: 40%; top: 40%; z-index:100;" />
-			</div>
-		</div>
-	</div><!-- /main-content-area -->
-
+	<!-- Scripts -->
 	<script type="text/javascript" src="./js/sidenav.js"></script>
 	<script type="text/javascript" src="./js/range.js"></script>
 	<script type="text/javascript" src="./js/jquery.tablesorter.min.js"></script>
 	<script type="text/javascript" src="./js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="./js/jquery.custom-scrollbar.js"></script>
-	
-	<script type="text/javascript">
-		$("#more").collapse('toggle');
-		
-		$(".menu-icon").click(function() {
-			if ($('.menu').hasClass('hide')) {
-				$('.main').removeClass('show').addClass('hide');
-				$('.menu').removeClass('hide').addClass('show');
-			} else if ($('.menu').hasClass('show')) {
-				$('.main').removeClass('hide').addClass('show');
-				$('.menu').removeClass('show').addClass('hide');
-			}
-		});
-		
-		$(".nav-item").click(function() {
-			if ($('.nav-main').hasClass('show')) {
-				$('.left-region').removeClass('hide').addClass('show');
-				$('.nav-main').removeClass('show').addClass('hide');
-			}
-		});
-	<!-- Loading Icon from loading.io -->
+
 </body>
 </html>
