@@ -1,0 +1,10 @@
+/*
+makes sure that the padding and border are included in the total width and height of the elements
+*/
+/** {
+  box-sizing: border-box;
+}*/
+
+#mapCanvas {
+  max-height: 420px;
+}

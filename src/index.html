@@ -9,12 +9,13 @@
 	<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
 	<title>Idaho Rangeland Atlas - Draft</title>
 
-	<link rel="stylesheet" type='text/css' href="./css/range.css" />
-	<link rel="stylesheet" type='text/css' href="./css/sidenav.css" />
-	<link rel="stylesheet" type='text/css' href="./css/header.css" />
 	<link rel="stylesheet" type='text/css' href="https://js.arcgis.com/4.0/esri/css/main.css" />
 	<link rel="stylesheet" type='text/css' href="https://fonts.googleapis.com/css?family=PT+Sans" />
 	<link rel="stylesheet" type='text/css' href="./css/bootstrap.min.css" />
+	<link rel="stylesheet" type='text/css' href="css/w3.css" />
+	<link rel="stylesheet" type='text/css' href="css/main.css" />
+	<script type="text/javascript" src="js/range.js"></script>
+
 
 
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
@@ -24,40 +25,36 @@
 
 <body>
 	<!-- Header -->
-	<header class="header">
+	<header id="header" class="w3-container  w3-dark-grey">
 		<!-- Header toggle icon  -->
-		<div id="headerToggle">
-			<span class="header-icon">
-				<span class="glyphicon glyphicon-menu-hamburger" aria-hidden="true" onclick="toggleSideNav()"></span>
+		<div id="headerToggle" class="w3-section">
+			<span>
+				<i class="glyphicon glyphicon-menu-hamburger w3-xlarge" aria-hidden="true" onclick="toggleSideNav()"></i>
 			</span>
 		</div>
 
 		<div class="top">
 			<!-- Logo -->
-			<div id="logo">
-				<h1 class="title">Idaho Rangeland Atlas</span>
+			<div id="logo" class="w3-display-container">
+				<h1 class="w3-margin-0 w3-display-right">Idaho Rangeland Atlas</span>
 			</div>
 
 			<!-- Nav  -->
-			<nav id="sidenav-left" class="sidenav">
-				<span class="closebtn" onclick="toggleSideNav()">&times;</span>
-				<ul>
-					<li><a href="pages/about.html" onclick="sidenavOpen(text)">About the Project</a></li>
-					<li><a onclick="sidenavOpen(text)">Data and Methods</a></li>
-					<li><a onclick="sidenavOpen(text)">Technical Details</a></li>
-					<li><a onclick="sidenavOpen(text)">Accuracy and Disclaimer</a></li>
-					<li><a onclick="sidenavOpen(text)">Contact Us</a></li>
+			<nav id="sidenav-left">
+				<!-- <span class="closebtn" onclick="toggleSideNav()">&times;</span> -->
+				<ul class="w3-ul w3-large w3-text-blue">
+						<li class="w3-border-0"><a href="#" >Map</a></li>
+					<li class="w3-border-0"><a href="#" >About the Project</a></li>
+					<li class="w3-border-0"><a href="#">Data and Methods</a></li>
+					<li class="w3-border-0"><a href="#">Technical Details</a></li>
+					<li class="w3-border-0"><a href="#">Accuracy and Disclaimer</a></li>
+					<li class="w3-border-0"><a href="#">Contact Us</a></li>
 				</ul>
 
 			</nav>
 		</div>
 
-		<div class="bottom">
-			<!-- <div class="sidenav-footer">
-				<img src="./img/dds_logo.png"  class="rc_logo"/>
-				<img src="./img/rc_logo.png" class="rc_logo"/>
-			</div> -->
-		</div>
+
 	</header>
 
 
@@ -65,25 +62,36 @@
 	<!-- Main -->
 	<div id="main">
 
-		<!-- Intro  -->
-		<section id="intro">
-
-		</section>
-
-		<!-- Map menu  -->
-		<section id="map-menu">
-
-		</section>
 
 		<!-- Map  -->
-		<aside id="map">
+		<section id="map" class="w3-row">
+			<!-- Map menu  -->
+			<div id="map-menu" class="w3-third w3-container">
+				<div>
+					<h3>Welcome to the Idaho Rangeland Atlas</h3>
+					<div><p>Select a topic below</p></div>
+						<div>
+							<span class="nav-item glyphicon glyphicon-leaf" aria-hidden="true"></span><br />
+							<span class="butn-text">Land Cover</span>
+						</div>
+						<div>
+								<span class="nav-item glyphicon glyphicon-user" aria-hidden="true"></span><br />
+								<span class="butn-text">Land Management</span>
+						</div>
+				</div>
+			</div>
+			<div id="map-content" class="w3-twothird w3-container">
+				<div id="mapCanvas" class="w3-margin-top">
+					<img id="loadingImg" src="img/gears.gif" style="position:relative; left: 40%; top: 40%; z-index:100;" />
+				</div>
 
-		</aside>
+			</div>
+		</section>
 
 		<!-- About -->
 		<section id="about">
-			<div class="container">
-				<header>
+			<div class="w3-container">
+				<header class="w3-center">
 					<h2>About Us</h2>
 				</header>
 				<p>
@@ -94,8 +102,8 @@
 
 		<!-- Contact -->
 		<section id="contact">
-			<div class="container">
-				<header>
+			<div class="w3-container">
+				<header class="w3-center">
 					<h2>Contact</h2>
 				</header>
 				<p>
@@ -106,33 +114,50 @@
 
 		<!-- Technical Details -->
 		<section id="technical">
-			<div class="container">
+			<div class="w3-container">
 				<header>
-					<h2>Technical Details</h2>
+					<h2 class="w3-center">Technical Details</h2>
 				</header>
 				<p>
 					All application development uses a combination of HTML5, CSS3, and Javascript.  The geoprocessing uses ESRI’s ArcGIS Javascript API.  Our goal is to use basic, open W3C-endorsed web technologies that are supported by all web browsers and require no additional add-ins, plug-ins, or special software.  All work will be done on software/hardware provided by the University of Idaho Library Data & Digital Services Department and INSIDE Idaho.
 				</p>
 			</div>
 		</section>
-	</div>
 
-	<!-- Accuracy and Disclaimer -->
-	<section id="disclaimer">
-		<div class="container">
-			<header>
-				<h2>Accuracy and Disclaimer</h2>
-			</header>
-			<p>Not sure what to say here yet.</p>
-		</div>
-	</section>
-</div>
+		<!-- Data -->
+		<section id="data">
+			<div class="w3-container">
+				<header class="w3-center">
+					<h2>Data</h2>
+				</header>
+				<p>
+					Data is obtained from available federal sources.<br /><br />Land Cover:  Land cover estimates are derived from the National Land Cover Database (NLCD) 2011 using values 52 (Shrub/Scrub) and 71(Grassland/Herbaceous).  The NLCD is a national products based on a classification of 2011 Landsat satellite imagery of the United States.  It is developed by the Multi-Resoultion Land Characteristics Consortium and available from the <a href="http://www.mrlc.gov/nlcd2011.php">USGS</a>.<br /><br />Land Management:  Land management information is obtained from the Bureau of Land Management\'s Surface Management Agency, which shows who manages the lands of the United States.  The data is available from the <a href="http://www.geocommunicator.gov/GeoComm/services.htm#Download">BLM</a>.<br /><br />Processing:  Using a geoprocessing model in ArcGIS 10.4, we identified the two areas classified as rangeland.  These choices were verified with the UI Rangeland Center as the best two choices to represent rangeland land cover.  Land management data was obtained by identifying the intersection between the land cover and land management data.
+				</p>
+			</div>
+		</section>
+
+		<!-- Accuracy and Disclaimer -->
+		<section id="disclaimer">
+			<div class="w3-container">
+				<header class="w3-center">
+					<h2>Accuracy and Disclaimer</h2>
+				</header>
+				<p>Not sure what to say here yet.</p>
+			</div>
+		</section>
+	</div>
 
 	<!-- Footer -->
 	<div id="footer">
-		<ul>
-			<li>&copy; Idaho Range Atlas All rights reserved.</li>
-		</ul>
+		<div class="w3-container w3-blue-grey w3-center">
+			<p class="w3-text-ligth-grey">
+				&copy; Idaho Range Atlas All rights reserved.
+			</p>
+			<!-- <div class="w3-display-container">
+				<img src="./img/dds_logo.png"  class="w3-image w3-right"/>
+				<img src="./img/rc_logo.png" class="w3-image w3-left"/>
+			</div> -->
+		</div>
 	</div>
 
 	<!-- Scripts -->
