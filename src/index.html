@@ -22,10 +22,10 @@
 
 <body>
 	<!-- Header -->
-	<div id="header">
+	<div id="header" class="fixed w3-margin-bottom">
 		<!-- Navbar top-->
 		<div id="navbar-top" class="w3-container w3-dark-grey w3-navbar w3-card-4">
-			<div class="w3-left w3-hide-large w3-hide-medium">
+			<div class="w3-left w3-hide-large">
 				<span>
 					<i id="menu-toggle" class="glyphicon glyphicon-menu-hamburger w3-xlarge w3-margin-top" aria-hidden="true"></i>
 				</span>
@@ -36,14 +36,14 @@
 		</div>
 
 			<!-- Navbar bottom  -->
-		<div id="navbar-bottom" class="w3-card-2 w3-container w3-light-grey w3-hide-small">
+		<div id="navbar-bottom" class="w3-card-2 w3-container w3-light-grey w3-hide-small w3-hide-medium">
 			<ul class="w3-navbar w3-large w3-text-blue">
-				<li><a href="#" >Map</a></li>
-				<li><a href="#" >About the Project</a></li>
-				<li><a href="#">Data and Methods</a></li>
-				<li><a href="#">Technical Details</a></li>
-				<li><a href="#">Accuracy and Disclaimer</a></li>
-				<li><a href="#">Contact Us</a></li>
+				<li><a href="#map" class="w3-hover-white w3-center">Map</a></li>
+				<li><a href="#about" class="w3-hover-white">About the Project</a></li>
+				<li><a href="#data" class="w3-hover-white w3-center">Data and Methods</a></li>
+				<li><a href="#technical" class="w3-hover-white w3-center">Technical Details</a></li>
+				<li><a href="#disclaimer" class="w3-hover-white w3-center">Accuracy and Disclaimer</a></li>
+				<li><a href="#contact" class="w3-hover-white w3-center">Contact Us</a></li>
 			</ul>
 
 		</div>
@@ -66,7 +66,7 @@
 				<div>
 					<h3>Welcome to the Idaho Rangeland Atlas</h3>
 					<p>Select a topic below</p>
-					<div class="w3-row w3-middle">
+					<div class="w3-row">
 						<div class="w3-half">
 							<span class="glyphicon glyphicon-leaf w3-hover-opacity" aria-hidden="true"></span><br />
 							<span>Land Cover</span>
@@ -156,7 +156,7 @@
 	</div>
 
 	<!-- Scripts -->
-	<script type="text/javascript" src="./js/nav.js"></script>
+	<script type="text/javascript" src="./js/header.js"></script>
 	<script type="text/javascript" src="./js/range.js"></script>
 	<script type="text/javascript" src="./js/jquery.tablesorter.min.js"></script>
 	<script type="text/javascript" src="./js/bootstrap.min.js"></script>

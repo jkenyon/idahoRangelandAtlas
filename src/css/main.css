@@ -1,20 +1,22 @@
+
 /*
-makes sure that the padding and border are included in the total width and height of the elements
+  Main
 */
-/** {
-  box-sizing: border-box;
-}*/
+#main{
+  padding-top: 6%;
+}
 
 #mapCanvas {
-  max-height: 420px;
+  max-height: 620px;
 }
 .logo {
-  max-height:90px;
+  max-height:300px;
+  max-width: 250px;
 }
-.fixed-navbar {
+.fixed {
   position: fixed;
   top: 0px auto;
-  margin-top: 0px auto;
+  /*margin-top: 0px auto;*/
   width: 100%;
   z-index: 100;
 }
