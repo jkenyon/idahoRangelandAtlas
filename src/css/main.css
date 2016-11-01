@@ -8,3 +8,13 @@ makes sure that the padding and border are included in the total width and heigh
 #mapCanvas {
   max-height: 420px;
 }
+.logo {
+  max-height:90px;
+}
+.fixed-navbar {
+  position: fixed;
+  top: 0px auto;
+  margin-top: 0px auto;
+  width: 100%;
+  z-index: 100;
+}

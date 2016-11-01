@@ -14,9 +14,6 @@
 	<link rel="stylesheet" type='text/css' href="./css/bootstrap.min.css" />
 	<link rel="stylesheet" type='text/css' href="css/w3.css" />
 	<link rel="stylesheet" type='text/css' href="css/main.css" />
-	<script type="text/javascript" src="js/range.js"></script>
-
-
 
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 	<script type="text/javascript" src="https://js.arcgis.com/4.0/"></script>
@@ -25,61 +22,63 @@
 
 <body>
 	<!-- Header -->
-	<header id="header" class="w3-container  w3-dark-grey">
-		<!-- Header toggle icon  -->
-		<div id="headerToggle" class="w3-section">
-			<span>
-				<i class="glyphicon glyphicon-menu-hamburger w3-xlarge" aria-hidden="true" onclick="toggleSideNav()"></i>
-			</span>
-		</div>
-
-		<div class="top">
-			<!-- Logo -->
-			<div id="logo" class="w3-display-container">
-				<h1 class="w3-margin-0 w3-display-right">Idaho Rangeland Atlas</span>
+	<div id="header">
+		<!-- Navbar top-->
+		<div id="navbar-top" class="w3-container w3-dark-grey w3-navbar w3-card-4">
+			<div class="w3-left w3-hide-large w3-hide-medium">
+				<span>
+					<i id="menu-toggle" class="glyphicon glyphicon-menu-hamburger w3-xlarge w3-margin-top" aria-hidden="true"></i>
+				</span>
 			</div>
-
-			<!-- Nav  -->
-			<nav id="sidenav-left">
-				<!-- <span class="closebtn" onclick="toggleSideNav()">&times;</span> -->
-				<ul class="w3-ul w3-large w3-text-blue">
-						<li class="w3-border-0"><a href="#" >Map</a></li>
-					<li class="w3-border-0"><a href="#" >About the Project</a></li>
-					<li class="w3-border-0"><a href="#">Data and Methods</a></li>
-					<li class="w3-border-0"><a href="#">Technical Details</a></li>
-					<li class="w3-border-0"><a href="#">Accuracy and Disclaimer</a></li>
-					<li class="w3-border-0"><a href="#">Contact Us</a></li>
-				</ul>
-
-			</nav>
+			<div class="w3-right">
+					<h1>Idaho Rangeland Atlas</h1>
+			</div>
 		</div>
 
+			<!-- Navbar bottom  -->
+		<div id="navbar-bottom" class="w3-card-2 w3-container w3-light-grey w3-hide-small">
+			<ul class="w3-navbar w3-large w3-text-blue">
+				<li><a href="#" >Map</a></li>
+				<li><a href="#" >About the Project</a></li>
+				<li><a href="#">Data and Methods</a></li>
+				<li><a href="#">Technical Details</a></li>
+				<li><a href="#">Accuracy and Disclaimer</a></li>
+				<li><a href="#">Contact Us</a></li>
+			</ul>
 
-	</header>
+		</div>
+
+	</div>
 
 
 
 	<!-- Main -->
 	<div id="main">
-
+		<div class="w3-row w3-container">
+			<img src="./img/dds_logo.png"  class="w3-image w3-half logo"/>
+			<img src="./img/rc_logo.png" class="w3-image w3-half logo"/>
+		</div>
 
 		<!-- Map  -->
 		<section id="map" class="w3-row">
 			<!-- Map menu  -->
-			<div id="map-menu" class="w3-third w3-container">
+			<div id="map-menu" class="w3-third w3-container w3-center">
 				<div>
 					<h3>Welcome to the Idaho Rangeland Atlas</h3>
-					<div><p>Select a topic below</p></div>
-						<div>
-							<span class="nav-item glyphicon glyphicon-leaf" aria-hidden="true"></span><br />
-							<span class="butn-text">Land Cover</span>
+					<p>Select a topic below</p>
+					<div class="w3-row w3-middle">
+						<div class="w3-half">
+							<span class="glyphicon glyphicon-leaf w3-hover-opacity" aria-hidden="true"></span><br />
+							<span>Land Cover</span>
 						</div>
-						<div>
-								<span class="nav-item glyphicon glyphicon-user" aria-hidden="true"></span><br />
-								<span class="butn-text">Land Management</span>
+						<div class="w3-half">
+								<span class="glyphicon glyphicon-user w3-hover-opacity" aria-hidden="true"></span><br />
+								<span>Land Management</span>
 						</div>
+					</div>
 				</div>
 			</div>
+			<!-- Map content -->
 			<div id="map-content" class="w3-twothird w3-container">
 				<div id="mapCanvas" class="w3-margin-top">
 					<img id="loadingImg" src="img/gears.gif" style="position:relative; left: 40%; top: 40%; z-index:100;" />
@@ -153,15 +152,11 @@
 			<p class="w3-text-ligth-grey">
 				&copy; Idaho Range Atlas All rights reserved.
 			</p>
-			<!-- <div class="w3-display-container">
-				<img src="./img/dds_logo.png"  class="w3-image w3-right"/>
-				<img src="./img/rc_logo.png" class="w3-image w3-left"/>
-			</div> -->
 		</div>
 	</div>
 
 	<!-- Scripts -->
-	<script type="text/javascript" src="./js/sidenav.js"></script>
+	<script type="text/javascript" src="./js/nav.js"></script>
 	<script type="text/javascript" src="./js/range.js"></script>
 	<script type="text/javascript" src="./js/jquery.tablesorter.min.js"></script>
 	<script type="text/javascript" src="./js/bootstrap.min.js"></script>
