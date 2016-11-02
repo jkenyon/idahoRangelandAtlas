@@ -9,20 +9,21 @@
 	<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
 	<title>Idaho Rangeland Atlas - Draft</title>
 
+	<!-- Updated from 4.0 to 4.1 -->
 	<link rel="stylesheet" type='text/css' href="https://js.arcgis.com/4.0/esri/css/main.css" />
-	<link rel="stylesheet" type='text/css' href="https://fonts.googleapis.com/css?family=PT+Sans" />
+	<script type="text/javascript" src="https://js.arcgis.com/4.0/"></script>
+
 	<link rel="stylesheet" type='text/css' href="./css/bootstrap.min.css" />
 	<link rel="stylesheet" type='text/css' href="css/w3.css" />
 	<link rel="stylesheet" type='text/css' href="css/main.css" />
 
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-	<script type="text/javascript" src="https://js.arcgis.com/4.0/"></script>
 
 </head>
 
 <body>
 	<!-- Header -->
-	<div id="header" class="fixed w3-margin-bottom">
+	<div id="header" class="w3-row w3-margin-bottom fixed">
 		<!-- Navbar top-->
 		<div id="navbar-top" class="w3-container w3-dark-grey w3-navbar w3-card-4">
 			<div class="w3-left w3-hide-large">
@@ -64,7 +65,7 @@
 			<!-- Map menu  -->
 			<div id="map-menu" class="w3-third w3-container w3-center">
 				<div>
-					<h3>Welcome to the Idaho Rangeland Atlas</h3>
+					<span class="w3-large">Welcome to the Idaho Rangeland Atlas</span>
 					<p>Select a topic below</p>
 					<div class="w3-row">
 						<div class="w3-half">
@@ -88,7 +89,7 @@
 		</section>
 
 		<!-- About -->
-		<section id="about">
+		<section id="about" class="w3-row">
 			<div class="w3-container">
 				<header class="w3-center">
 					<h2>About Us</h2>
@@ -100,7 +101,7 @@
 		</section>
 
 		<!-- Contact -->
-		<section id="contact">
+		<section id="contact" class="w3-row">
 			<div class="w3-container">
 				<header class="w3-center">
 					<h2>Contact</h2>
@@ -112,7 +113,7 @@
 		</section>
 
 		<!-- Technical Details -->
-		<section id="technical">
+		<section id="technical" class="w3-row">
 			<div class="w3-container">
 				<header>
 					<h2 class="w3-center">Technical Details</h2>
@@ -124,7 +125,7 @@
 		</section>
 
 		<!-- Data -->
-		<section id="data">
+		<section id="data" class="w3-row">
 			<div class="w3-container">
 				<header class="w3-center">
 					<h2>Data</h2>
@@ -136,7 +137,7 @@
 		</section>
 
 		<!-- Accuracy and Disclaimer -->
-		<section id="disclaimer">
+		<section id="disclaimer" class="w3-row">
 			<div class="w3-container">
 				<header class="w3-center">
 					<h2>Accuracy and Disclaimer</h2>
@@ -147,7 +148,7 @@
 	</div>
 
 	<!-- Footer -->
-	<div id="footer">
+	<div id="footer" class="w3-row-padding">
 		<div class="w3-container w3-blue-grey w3-center">
 			<p class="w3-text-ligth-grey">
 				&copy; Idaho Range Atlas All rights reserved.
@@ -156,7 +157,7 @@
 	</div>
 
 	<!-- Scripts -->
-	<script type="text/javascript" src="./js/header.js"></script>
+	<script type="text/javascript" src="./js/main.js"></script>
 	<script type="text/javascript" src="./js/range.js"></script>
 	<script type="text/javascript" src="./js/jquery.tablesorter.min.js"></script>
 	<script type="text/javascript" src="./js/bootstrap.min.js"></script>

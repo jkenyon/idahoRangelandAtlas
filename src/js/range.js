@@ -4,7 +4,7 @@ Query and draw results based on data from ArcGIS Server, both on
 a map and in the various visualizations.
 
 Written by Bruce Godfrey and Jeremy Kenyon, Univ. of Idaho, 2016
-	
+
 */
 require([
 	"esri/Map",
@@ -19,13 +19,16 @@ require([
 	"esri/renderers/UniqueValueRenderer",
 	"esri/layers/support/RasterFunction",
 	"esri/Graphic",
+	"esri/widgets/Search",
+	"esri/widgets/Compass",
+	"esri/widgets/Locate",
 	"dojo/_base/array",
 	"dojo/dom",
 	"dojo/on",
 	"dojo/_base/html",
 	"dojo/_base/lang",
 	"dojo/domReady!"
-], function (Map, esriConfig, MapView, FeatureLayer, GraphicsLayer, ImageryLayer, QueryTask, Query, SimpleFillSymbol, UniqueValueRenderer, RasterFunction, Graphic, arrayUtils, dom, on, html, lang) {
+], function (Map, esriConfig, MapView, FeatureLayer, GraphicsLayer, ImageryLayer, QueryTask, Query, SimpleFillSymbol, UniqueValueRenderer, RasterFunction, Graphic, Search, Compass, Locate, arrayUtils, dom, on, html, lang) {
 	// Fixes CORS problems.
 	esriConfig.request.corsDetection  = false;
 	esriConfig.request.corsEnabledServers.push("gis-sandbox.northwestknowledge.net");
@@ -142,8 +145,8 @@ require([
 				var g = fields[i].attributes;
 				var perRng = g.per_rng.toFixed(2);
 				var perCty = g.per_cnty.toFixed(2);
-				
-				// TODO remove repeating variable declaration and change if statements to switch statement. 
+
+				// TODO remove repeating variable declaration and change if statements to switch statement.
 				if (perRng > 0) {
 					if (g.sma_name == "PRIVATE") {
 						var clr = "#ffffff";
@@ -311,6 +314,37 @@ require([
 		zoom: 7
 	});
 
+	/* WIDGETS FOR MAP */
+
+	// Input search for querying
+	var searchWidget = new Search({
+		view: view
+	});
+	searchWidget.startup();
+	view.ui.add(searchWidget, {
+		position: "top-left",
+		index: 0
+	});
+
+	// Compass
+	var compassWidget = new Compass({
+		view: view
+	});
+	compassWidget.startup();
+	view.ui.add(compassWidget, {
+		position: "bottom-right",
+		index: 0
+	});
+
+	// Get user current location
+	var locateWidget = new Locate({
+		view: view
+	});
+	locateWidget.startup();
+	view.ui.add(locateWidget, {
+		position: "bottom-right",
+	});
+
 	// General response to query failures
 	function promiseRejected(err) {
 		console.error("Promise rejected: ", err.message);
@@ -376,7 +410,7 @@ require([
 	// Reset the results page and map and return to the menu page
 	$(".back-btn").click(reload);
 
-	// Create the dropdown menu for the map		
+	// Create the dropdown menu for the map
 	var cts = ['ADA', 'ADAMS', 'BANNOCK', 'BEAR LAKE', 'BENEWAH', 'BINGHAM', 'BLAINE', 'BOISE', 'BONNER', 'BONNEVILLE', 'BOUNDARY', 'BUTTE', 'CAMAS', 'CANYON', 'CARIBOU', 'CASSIA', 'CLARK', 'CLEARWATER', 'CUSTER', 'ELMORE', 'FRANKLIN', 'FREMONT', 'GEM', 'GOODING', 'IDAHO', 'JEFFERSON', 'JEROME', 'KOOTENAI', 'LATAH', 'LEMHI', 'LEWIS', 'LINCOLN', 'MADISON', 'MINIDOKA', 'NEZ PERCE', 'ONEIDA', 'OWYHEE', 'PAYETTE', 'POWER', 'SHOSHONE', 'TETON', 'TWIN FALLS', 'VALLEY', 'WASHINGTON'];
 
 	var sct = "<option>Choose a County...</option>";
