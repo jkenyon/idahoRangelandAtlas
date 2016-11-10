@@ -1,167 +1,213 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta charset="utf-8">
-	<meta name="robots" content="noindex">
-	<meta name="googlebot" content="noindex">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
-	<title>Idaho Rangeland Atlas - Draft</title>
+  <meta charset="utf-8">
+  <meta name="robots" content="noindex">
+  <meta name="googlebot" content="noindex">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Idaho Rangeland Atlas - Draft</title>
 
-	<!-- Updated from 4.0 to 4.1 -->
-	<link rel="stylesheet" type='text/css' href="https://js.arcgis.com/4.0/esri/css/main.css" />
-	<script type="text/javascript" src="https://js.arcgis.com/4.0/"></script>
 
-	<link rel="stylesheet" type='text/css' href="./css/bootstrap.min.css" />
-	<link rel="stylesheet" type='text/css' href="css/w3.css" />
-	<link rel="stylesheet" type='text/css' href="css/main.css" />
+  <!-- Make custom available on dojo CDN-->
+  <script>var dojoConfig = {
+    parseOnLoad: true,
+    packages: [{
+      "name": "my",
+      "location": location.pathname.replace(/\/[^/]+$/, "") + "/js/my"
+    }]
+  };
+  </script>
 
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+  <!--Esri Api -->
+  <link rel="stylesheet" href="https://js.arcgis.com/4.1/esri/css/main.css">
+  <script src="https://js.arcgis.com/4.1/"></script>
+
+  <link rel="stylesheet" type='text/css' href="./css/bootstrap.min.css"/>
+  <!--<link rel="stylesheet" type='text/css' href="css/w3.css" />-->
+  <link rel="stylesheet" type='text/css' href="css/main.css"/>
+
+  <!--<script src="//ajax.googleapis.com/ajax/libs/dojo/1.11.2/dojo/dojo.js"></script>-->
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+
 
 </head>
 
 <body>
-	<!-- Header -->
-	<div id="header" class="w3-row w3-margin-bottom fixed">
-		<!-- Navbar top-->
-		<div id="navbar-top" class="w3-container w3-dark-grey w3-navbar w3-card-4">
-			<div class="w3-left w3-hide-large">
-				<span>
-					<i id="menu-toggle" class="glyphicon glyphicon-menu-hamburger w3-xlarge w3-margin-top" aria-hidden="true"></i>
-				</span>
-			</div>
-			<div class="w3-right">
-					<h1>Idaho Rangeland Atlas</h1>
-			</div>
-		</div>
+<!-- Header -->
+<nav class="navbar navbar-inverse navbar-fixed-top">
 
-			<!-- Navbar bottom  -->
-		<div id="navbar-bottom" class="w3-card-2 w3-container w3-light-grey w3-hide-small w3-hide-medium">
-			<ul class="w3-navbar w3-large w3-text-blue">
-				<li><a href="#map" class="w3-hover-white w3-center">Map</a></li>
-				<li><a href="#about" class="w3-hover-white">About the Project</a></li>
-				<li><a href="#data" class="w3-hover-white w3-center">Data and Methods</a></li>
-				<li><a href="#technical" class="w3-hover-white w3-center">Technical Details</a></li>
-				<li><a href="#disclaimer" class="w3-hover-white w3-center">Accuracy and Disclaimer</a></li>
-				<li><a href="#contact" class="w3-hover-white w3-center">Contact Us</a></li>
-			</ul>
+  <div class="navbar-header">
+    <a href="#map" class="navbar-brand">Idaho Range Atlas</a>
+    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+            aria-controls="navbar">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+  </div>
+  <div id="navbar" class="navbar-collapse collapse">
+    <ul class="nav navbar-nav text-center">
+      <li><a href="#map">Map</a></li>
+      <li><a href="#about">About the Project</a></li>
+      <li><a href="#data">Data and Methods</a></li>
+      <li><a href="#technical">Technical Details</a></li>
+      <li><a href="#disclaimer">Accuracy and Disclaimer</a></li>
+      <li><a href="#contact">Contact Us</a></li>
+    </ul>
+  </div>
+</nav>
 
-		</div>
+<!-- Main -->
+<div id="main" class="container-fluid padding-top">
 
-	</div>
+  <!-- Map  -->
+  <section id="map" class="row">
+    <!-- Map menu  -->
+    <div id="map-menu" class="col-sm-4 col-md-3">
+      <div class="text-center">
+        <strong>Welcome to the Idaho Rangeland Atlas</strong>
+        <p>Select a topic below</p>
+        <div class="row">
+          <div class="col-xs-6">
+            <div class="butn">
+              <span class="glyphicon glyphicon-leaf w3-hover-opacity" aria-hidden="true"></span><br/>
+              <span>Land Cover</span>
+            </div>
+          </div>
+          <div class="col-xs-6">
+            <div class="butn">
+              <span class="glyphicon glyphicon-user w3-hover-opacity" aria-hidden="true"></span><br/>
+              <span>Land Management</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Map content -->
+    <div id="map-content" class="col-sm-8 col-md-9 col-md-push-0">
+      <div id="mapCanvas"></div>
+      <!--<img id="loadingImg" src="img/gears.gif" style="position:relative; left: 40%; top: 40%; z-index:100;"/>-->
+    </div>
+  </section>
+
+  <section id="main-content">
+
+    <!-- Technical Details -->
+    <section id="technical">
+      <div class="">
+        <header class="text-center">
+          <h2>Technical Details</h2>
+        </header>
+        <p>
+          All application development uses a combination of HTML5, CSS3, and Javascript. The geoprocessing uses ESRI’s
+          ArcGIS Javascript API. Our goal is to use basic, open W3C-endorsed web technologies that are supported by all
+          web browsers and require no additional add-ins, plug-ins, or special software. All work will be done on
+          software/hardware provided by the University of Idaho Library Data & Digital Services Department and INSIDE
+          Idaho.
+        </p>
+      </div>
+    </section>
+
+    <!-- Data -->
+    <section id="data">
+      <div>
+        <header class="text-center">
+          <h2>Data</h2>
+        </header>
+        <p>
+          Data is obtained from available federal sources.<br/><br/>Land Cover: Land cover estimates are derived from
+          the
+          National Land Cover Database (NLCD) 2011 using values 52 (Shrub/Scrub) and 71(Grassland/Herbaceous). The NLCD
+          is
+          a national products based on a classification of 2011 Landsat satellite imagery of the United States. It is
+          developed by the Multi-Resoultion Land Characteristics Consortium and available from the <a
+            href="http://www.mrlc.gov/nlcd2011.php">USGS</a>.<br/><br/>Land Management: Land management information is
+          obtained from the Bureau of Land Management\'s Surface Management Agency, which shows who manages the lands of
+          the United States. The data is available from the <a
+            href="http://www.geocommunicator.gov/GeoComm/services.htm#Download">BLM</a>.<br/><br/>Processing: Using a
+          geoprocessing model in ArcGIS 10.4, we identified the two areas classified as rangeland. These choices were
+          verified with the UI Rangeland Center as the best two choices to represent rangeland land cover. Land
+          management
+          data was obtained by identifying the intersection between the land cover and land management data.
+        </p>
+      </div>
+    </section>
+
+    <!-- Accuracy and Disclaimer -->
+    <section id="disclaimer">
+      <div>
+        <header class="text-center">
+          <h2>Accuracy and Disclaimer</h2>
+        </header>
+        <p>Not sure what to say here yet.</p>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section id="about">
+      <div class="">
+        <header class="text-center">
+          <h2>About Us</h2>
+        </header>
+        <p>
+          The Idaho Rangeland Atlas is a collaboration of the University of Idaho Library and the University of Idaho
+          Rangeland Center. Its purpose is to provide simple, clear information about Idaho's rangelands using open,
+          accessible web technologies. Leveraging the University of Idaho's investements in geospatial data and
+          infrastructure enable us to present this information. We believe that if an Idaho citizen wants to understand
+          the basic facts of rangeland ecology and space in our state, those facts should be available without the need
+          to
+          engage in advanced analysis or obtain new skills.<br/><br/>The lack of an aggregating resource, like a
+          statistical abstract, adds time to process of discovery and delays the ability of users to move on, either to
+          advanced research questions, as they have to answer and prove more fundamental ones first, or to other tasks
+          based on the information that they now have. Given the increasing accessibility of web-based geospatial
+          processing, and the improvement in technology to provide rich, informative, web-based queries of spatial data,
+          the opportunity exists to re-invent the statistical abstract for natural resource and agricultural questions,
+          providing a simple interface to gather facts about the state of Idaho’s rangelands.
+        </p>
+      </div>
+    </section>
+  </section>
+</div>
+
+<!-- Footer -->
+<footer id="footer" class="container-fluid bg-danger">
 
 
+  <!-- Contact -->
+  <section id="contact">
+    <div>
+      <header class="text-center">
+        <h2>Contact</h2>
+      </header>
+      <p class="text-center">
+        Any questions or comments should be directed to either Jeremy Kenyon (jkenyon@uidaho.edu) or Bruce Godfrey
+        (bgodfrey@uidaho.edu).
+      </p>
+    </div>
+  </section>
+  <p class="text-center">
+    &copy; Idaho Range Atlas All rights reserved.
+  </p>
+  <!--<div class="padding-top row">-->
+  <!--<img src="./img/dds_logo.png" class="img-responsive col-md-6 logo"/>-->
+  <!--<img src="./img/rc_logo.png" class="img-responsive col-md-6 logo"/>-->
+  <!--</div>-->
+</footer>
 
-	<!-- Main -->
-	<div id="main">
-		<div class="w3-row w3-container">
-			<img src="./img/dds_logo.png"  class="w3-image w3-half logo"/>
-			<img src="./img/rc_logo.png" class="w3-image w3-half logo"/>
-		</div>
+<!--Libraries scripts-->
+<!--<script type="text/javascript" src="./js/dojo.js"></script>-->
+<script type="text/javascript" src="./js/jquery.tablesorter.min.js"></script>
+<script type="text/javascript" src="./js/jquery.custom-scrollbar.js"></script>
+<script type="text/javascript" src="./js/bootstrap.min.js"></script>
 
-		<!-- Map  -->
-		<section id="map" class="w3-row">
-			<!-- Map menu  -->
-			<div id="map-menu" class="w3-third w3-container w3-center">
-				<div>
-					<span class="w3-large">Welcome to the Idaho Rangeland Atlas</span>
-					<p>Select a topic below</p>
-					<div class="w3-row">
-						<div class="w3-half">
-							<span class="glyphicon glyphicon-leaf w3-hover-opacity" aria-hidden="true"></span><br />
-							<span>Land Cover</span>
-						</div>
-						<div class="w3-half">
-								<span class="glyphicon glyphicon-user w3-hover-opacity" aria-hidden="true"></span><br />
-								<span>Land Management</span>
-						</div>
-					</div>
-				</div>
-			</div>
-			<!-- Map content -->
-			<div id="map-content" class="w3-twothird w3-container">
-				<div id="mapCanvas" class="w3-margin-top">
-					<img id="loadingImg" src="img/gears.gif" style="position:relative; left: 40%; top: 40%; z-index:100;" />
-				</div>
 
-			</div>
-		</section>
-
-		<!-- About -->
-		<section id="about" class="w3-row">
-			<div class="w3-container">
-				<header class="w3-center">
-					<h2>About Us</h2>
-				</header>
-				<p>
-					The Idaho Rangeland Atlas is a collaboration of the University of Idaho Library and the University of Idaho Rangeland Center.  Its purpose is to provide simple, clear information about Idaho's rangelands using open, accessible web technologies.  Leveraging the University of Idaho's investements in geospatial data and infrastructure enable us to present this information.  We believe that if an Idaho citizen wants to understand the basic facts of rangeland ecology and space in our state, those facts should be available without the need to engage in advanced analysis or obtain new skills.<br /><br />The lack of an aggregating resource, like a statistical abstract, adds time to process of discovery and delays the ability of users to move on, either to advanced research questions, as they have to answer and prove more fundamental ones first, or to other tasks based on the information that they now have.  Given the increasing accessibility of web-based geospatial processing, and the improvement in technology to provide rich, informative, web-based queries of spatial data, the opportunity exists to re-invent the statistical abstract for natural resource and agricultural questions, providing a simple interface to gather facts about the state of Idaho’s rangelands.
-				</p>
-			</div>
-		</section>
-
-		<!-- Contact -->
-		<section id="contact" class="w3-row">
-			<div class="w3-container">
-				<header class="w3-center">
-					<h2>Contact</h2>
-				</header>
-				<p>
-					Any questions or comments should be directed to either Jeremy Kenyon (jkenyon@uidaho.edu) or Bruce Godfrey (bgodfrey@uidaho.edu).
-				</p>
-			</div>
-		</section>
-
-		<!-- Technical Details -->
-		<section id="technical" class="w3-row">
-			<div class="w3-container">
-				<header>
-					<h2 class="w3-center">Technical Details</h2>
-				</header>
-				<p>
-					All application development uses a combination of HTML5, CSS3, and Javascript.  The geoprocessing uses ESRI’s ArcGIS Javascript API.  Our goal is to use basic, open W3C-endorsed web technologies that are supported by all web browsers and require no additional add-ins, plug-ins, or special software.  All work will be done on software/hardware provided by the University of Idaho Library Data & Digital Services Department and INSIDE Idaho.
-				</p>
-			</div>
-		</section>
-
-		<!-- Data -->
-		<section id="data" class="w3-row">
-			<div class="w3-container">
-				<header class="w3-center">
-					<h2>Data</h2>
-				</header>
-				<p>
-					Data is obtained from available federal sources.<br /><br />Land Cover:  Land cover estimates are derived from the National Land Cover Database (NLCD) 2011 using values 52 (Shrub/Scrub) and 71(Grassland/Herbaceous).  The NLCD is a national products based on a classification of 2011 Landsat satellite imagery of the United States.  It is developed by the Multi-Resoultion Land Characteristics Consortium and available from the <a href="http://www.mrlc.gov/nlcd2011.php">USGS</a>.<br /><br />Land Management:  Land management information is obtained from the Bureau of Land Management\'s Surface Management Agency, which shows who manages the lands of the United States.  The data is available from the <a href="http://www.geocommunicator.gov/GeoComm/services.htm#Download">BLM</a>.<br /><br />Processing:  Using a geoprocessing model in ArcGIS 10.4, we identified the two areas classified as rangeland.  These choices were verified with the UI Rangeland Center as the best two choices to represent rangeland land cover.  Land management data was obtained by identifying the intersection between the land cover and land management data.
-				</p>
-			</div>
-		</section>
-
-		<!-- Accuracy and Disclaimer -->
-		<section id="disclaimer" class="w3-row">
-			<div class="w3-container">
-				<header class="w3-center">
-					<h2>Accuracy and Disclaimer</h2>
-				</header>
-				<p>Not sure what to say here yet.</p>
-			</div>
-		</section>
-	</div>
-
-	<!-- Footer -->
-	<div id="footer" class="w3-row-padding">
-		<div class="w3-container w3-blue-grey w3-center">
-			<p class="w3-text-ligth-grey">
-				&copy; Idaho Range Atlas All rights reserved.
-			</p>
-		</div>
-	</div>
-
-	<!-- Scripts -->
-	<script type="text/javascript" src="./js/main.js"></script>
-	<script type="text/javascript" src="./js/range.js"></script>
-	<script type="text/javascript" src="./js/jquery.tablesorter.min.js"></script>
-	<script type="text/javascript" src="./js/bootstrap.min.js"></script>
-	<script type="text/javascript" src="./js/jquery.custom-scrollbar.js"></script>
+<!-- Custom Scripts -->
+<script type="text/javascript" src="./js/main.js"></script>
+<!--<script type="text/javascript" src="./js/range.js"></script>-->
 
 </body>
+
+
 </html>

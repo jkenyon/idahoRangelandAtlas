@@ -1,14 +1,13 @@
-$(document).ready(function(){
-  $("#menu-toggle").click(function(){
-    $("#navbar-bottom")
-    .toggleClass("w3-hide-small")
-    .toggleClass("w3-hide-medium");
-  });
-
-  $("#navbar-bottom > ul > li").click(function(){
-    $("#navbar-bottom")
-    .toggleClass("w3-hide-small")
-    .toggleClass("w3-hide-medium");
-  });
+require([
+  "my/MyMap",
+  "dojo/domReady!"
+], function(
+  MyMap
+) {
+  var myMap = new MyMap();
+  myMap.createMap();
 
 });
+var dojoConfig = {
+  paths: { extras: location.pathname.replace(/\/[^/]+$/, "") + "/my" }
+};
