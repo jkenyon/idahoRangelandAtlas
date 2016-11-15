@@ -1,13 +1,12 @@
 require([
   "my/MyMap",
   "dojo/domReady!"
-], function(
-  MyMap
-) {
-  var myMap = new MyMap();
-  myMap.createMap();
-
+], function(MyMap) {
+  var map = new MyMap();
+  map.createMap();
 });
-var dojoConfig = {
-  paths: { extras: location.pathname.replace(/\/[^/]+$/, "") + "/my" }
-};
+
+
+// var dojoConfig = {
+//   paths: { extras: location.pathname.replace(/\/[^/]+$/, "") + "/my" }
+// };

@@ -1,4 +1,9 @@
-define(["dojo/_base/declare", "esri/views/MapView", "esri/Map", "dojo/domReady!"],
+define([
+    "dojo/_base/declare",
+    "esri/Map",
+    "esri/views/MapView",
+    "dojo/domReady!"
+  ],
   function (declare, Map, MapView) {
     return declare(null, {
       constructor: function () {
@@ -10,19 +15,11 @@ define(["dojo/_base/declare", "esri/views/MapView", "esri/Map", "dojo/domReady!"
         });
 
         var view = new MapView({
-          container: "viewDiv",
+          container: "mapCanvas",
           map: map,
           zoom: 4,
           center: [15, 65]
         });
-        view.then(
-          function () {
-            console.log("view created");
-          },
-          function (error) {
-            console.log("error while creating view: ", error);
-          }
-        );
         console.log("map created");
       }
     });
