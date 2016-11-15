@@ -4,20 +4,27 @@
 define([
     "dojo/_base/declare",
     "my/MyMap",
+    "my/MyWidgets",
     "esri/Map",
     "esri/views/MapView",
     "dojo/domReady!"
   ],
-  function (declare, MyMap, Map, MapView) {
+  function (declare, MyMap, MyWidgets, Map, MapView) {
     return declare(null, {
-      view: null,
+      myView: null,
       constructor: function () {
         var myMap = new MyMap();
-        this.view = new MapView({
+        this.myView = new MapView({
           container: "mapCanvas",
           map: myMap.map,
-          zoom: 4,
-          center: [15, 65]
+          center: [-115, 45.6],
+          zoom: 7
+        });
+        var myWigets = new MyWidgets(this.myView);
+        var searchWidget = myWigets.search();
+        this.myView.ui.add(searchWidget, {
+          position: "top-left",
+          index: 0
         });
       }
     });
