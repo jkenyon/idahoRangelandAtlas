@@ -1,9 +1,14 @@
 require([
-  "my/MyMap",
+  "my/MyViews",
+  "esri/config",
+
   "dojo/domReady!"
-], function(MyMap) {
-  var map = new MyMap();
-  map.createMap();
+], function(MyViews, esriConfig) {
+  // Fixes CORS problems.
+  esriConfig.request.corsDetection = false;
+
+  esriConfig.request.corsEnabledServers.push("gis-sandbox.northwestknowledge.net");
+  var view = new MyViews();
 });
 
 
