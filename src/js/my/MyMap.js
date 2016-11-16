@@ -10,8 +10,11 @@ define([
       constructor: function () {
         var myLayers = new MyLayers();
         this.map = new Map({
-          basemap: "streets"
+          basemap: "streets",
         });
+      },
+      getMap: function () {
+        return this.map;
       }
     });
   });

@@ -26,6 +26,14 @@ define([
           position: "top-left",
           index: 0
         });
+        this.myView.popup.on("trigger-action", function(event){
+          if(event.action.id === "land-cover"){
+            console.log("land cover action");
+          }
+          if(event.action.id === "land-management"){
+            console.log("land management action");
+          }
+        });
       }
     });
   });

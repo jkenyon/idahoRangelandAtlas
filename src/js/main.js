@@ -6,7 +6,6 @@ require([
 ], function(MyViews, esriConfig) {
   // Fixes CORS problems.
   esriConfig.request.corsDetection = false;
-
   esriConfig.request.corsEnabledServers.push("gis-sandbox.northwestknowledge.net");
   var view = new MyViews();
 });
