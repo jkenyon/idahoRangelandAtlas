@@ -5,9 +5,11 @@ define([
     "dojo/_base/declare",
     "my/MyLayers",
     "my/MyMap",
+    "esri/tasks/QueryTask",
+    "esri/tasks/support/Query",
     "dojo/domReady!"
   ],
-  function (declare) {
+  function (declare, QueryTask, Query) {
     return declare(null, {
       constructor: function () {
       },
