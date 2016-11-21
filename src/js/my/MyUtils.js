@@ -7,11 +7,73 @@ define([
     "my/MyMap",
     "esri/tasks/QueryTask",
     "esri/tasks/support/Query",
+    "dojo/dom",
     "dojo/domReady!"
   ],
-  function (declare, QueryTask, Query) {
+  function (declare, QueryTask, dom, Query) {
     return declare(null, {
+      loading: null,
+      foo: null,
       constructor: function () {
+        // this.loading = dom.byId("loadingImg");
+        var colors = {
+          "PRIVATE": {
+            color: "#ffffff",
+            type: "Private"
+          },
+          "USFS": {
+            color: "#DDF8DE",
+            type: "US Forest Service",
+          },
+          "BLM": {
+            color: "#ffe49c",
+            type: "Bureau of Land Management"
+          },
+          "STATEPR": {
+            color: "#c4e5f5",
+            type: "State Parks & Rec"
+          },
+          "STATE": {
+            color: "#A4C2D2",
+            type: "State Dept. of Lands"
+          },
+          "STATEOTH": {
+            color: "#c4e5f5",
+            type: "State, Other"
+          },
+          "STATEFG": {
+            color: "#A4C2D2",
+            type: "State Fish & Game"
+          },
+          "HSTRCWTR": {
+            color: "#006CB2",
+            type: "Unsurveyed Water"
+          },
+          "BIA": {
+            color: "#E9D0B7",
+            type: "Bureau of Indian Affairs"
+          },
+          "IR": {
+            color: "#ffc68e",
+            type: "American Indian Reservation"
+          },
+          "NPS": {
+            color: "#d9d3f4",
+            type: "National Park Service"
+          },
+          "DOE": {
+            color: "#E9D0B7",
+            type: "Dept. of Energy"
+          },
+          "MIL": {
+            color: "#FBCCFE",
+            type: "US Military"
+          },
+          "BOR": {
+            color: "#FFF7C9",
+            type: "Bureau of Reclamation"
+          }
+        };
       },
 
       // Enables querying a county/data by map click
@@ -22,14 +84,13 @@ define([
         qCnty.geometry = evt;
         countyLyr.queryFeatures(qCnty).then(function (results) {
           doQuery(results.features[0].attributes.NAME, selection);
-          $('#valSelect').val('Choose a County...');
         }).otherwise(this.promiseRejected);
       },
 
-      fixHeading: function (head) {
+      fixHeading: function (divID, head) {
         var h = head.toLowerCase();
         var hE = h.toTitleCase();
-        $(".resultHead").html("<h3>" + hE + "</h3>");
+        $(divID).html("<h3>" + hE + "</h3>");
       },
 
       colorize: function (pixelData) {
@@ -51,7 +112,7 @@ define([
       getLMResults: function (response) {
         var map = MyMap.myMap();
         var featureResults = arrayUtils.map(response.features, function (feature) {
-          foo = feature;
+          this.foo = feature;
           return feature;
         });
 
@@ -61,7 +122,7 @@ define([
         var clipRF = new RasterFunction({
           functionName: "Clip",
           functionArguments: {
-            ClippingGeometry: foo.geometry, //a polygon or envelope
+            ClippingGeometry: this.foo.geometry, //a polygon or envelope
             ClippingType: 1, //int (1= clippingOutside, 2=clippingInside), use 1 to keep image inside of the geometry
             raster: "$$"
           }
@@ -77,13 +138,13 @@ define([
           rasterAttributes = imgMLyr.rasterAttributeTable.features;
           fields = rasterAttributes.filter(function (item, i) {
             var className = item.attributes.cnty_name;
-            return className === foo.attributes.NAME;
+            return className === this.foo.attributes.NAME;
           });
 
           var tbHead = "<thead><tr><th class='header legend'></th><th class='header'>Manager</th><th class='header' >% of Rangeland</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
           var results = "";
 
-          var county = foo.attributes.NAME;
+          var county = this.foo.attributes.NAME;
           fixHeading(county);
           for (i = 0; i < fields.length; i++) {
             var g = fields[i].attributes;
@@ -158,7 +219,7 @@ define([
 
       getLCResults: function (response) {
         var featureLCResults = arrayUtils.map(response.features, function (feature) {
-          foo = feature;
+          this.foo = feature;
           return feature;
         });
 
@@ -168,9 +229,9 @@ define([
         imgLyr.then(function () {
           rasterAttributes = imgLyr.rasterAttributeTable.features;
 
-          fields = rasterAttributes.filter(function (item, i) {
+          var fields = rasterAttributes.filter(function (item, i) {
             var className = item.attributes.cnty_name;
-            return className === foo.attributes.NAME;
+            return className === this.foo.attributes.NAME;
           });
 
           console.log(rasterAttributes);
@@ -185,7 +246,7 @@ define([
           var tbHead = "<thead><tr><th class='header'>Total Rangeland (acres)</th><th class='header' >% of County</th><th class='header' ></th></tr></thead>";
           var results = "";
 
-          var county = foo.attributes.NAME;
+          var county = this.foo.attributes.NAME;
           fixHeading(county);
           console.log(fields);
           var totA = 0;
@@ -268,7 +329,6 @@ define([
       },
 
       init: function () {
-        var loading = dom.byId("loadingImg");
         if (view.ready == false) {
           on(view, "update-start", showLoading);
         } else {
@@ -276,14 +336,14 @@ define([
         }
       },
 
-      showLoading: function () {
-        esri.show(loading);
+      showLoading: function (map) {
+        esri.show(this.loading);
         map.disableMapNavigation();
         map.hideZoomSlider();
       },
 
-      hideLoading: function (error) {
-        esri.hide(loading);
+      hideLoading: function (map) {
+        esri.hide(this.loading);
         map.enableMapNavigation();
         map.showZoomSlider();
       },
@@ -300,7 +360,7 @@ define([
       // Reset the results page and map and return to the menu page
       resetResultPage: function () {
         $(".back-btn").click(this.reload);
-      },
+      }
 
 
     });

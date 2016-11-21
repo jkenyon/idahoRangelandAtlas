@@ -14,6 +14,7 @@ define([
       constructor: function (view, popup) {
         this.searchWidget = new Search({
           view: view,
+          allPlaceholder: "Search for a county",
           sources: [
             {
               featureLayer: new FeatureLayer({
@@ -26,7 +27,21 @@ define([
               suggestionTemplate: "{NAME}",
               exactMatch: false,
               outFields: ["*"],
-              name: "Counties",
+              name: "Land Cover",
+              zoomScale: 500000
+            },
+            {
+              featureLayer: new FeatureLayer({
+                url: "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/ira_2014_county_boundaries/MapServer/0",
+                popupTemplate: popup
+              }),
+              placeholder: "Search for a county",
+              searchFields: ["NAME"],
+              displayField: "NAME",
+              suggestionTemplate: "{NAME}",
+              exactMatch: false,
+              outFields: ["*"],
+              name: "Land Management",
               zoomScale: 500000
             }
           ]

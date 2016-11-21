@@ -7,13 +7,16 @@ define([
     "my/MyWidgets",
     "esri/Map",
     "esri/views/MapView",
+    "esri/layers/support/RasterFunction",
     "dojo/domReady!"
   ],
-  function (declare, MyMap, MyWidgets, Map, MapView) {
+  function (declare, MyMap, MyWidgets, Map, MapView, RasterFunction) {
     return declare(null, {
       myView: null,
       constructor: function () {
         var myMap = new MyMap();
+
+        // var myUtils = new MyUtils();
         var popup = {
           title: "<h4>{NAME}</h4>",
           overwriteActions: true,
@@ -49,16 +52,16 @@ define([
         });
 
         var view = this.myView;
-
-        this.myView.popup.on("trigger-action", function(event){
-          var attributes = view.popup.selectedFeature.attributes;
-          if(event.action.id === "land-cover"){
+        this.myView.popup.on("trigger-action", function (event) {
+          if (event.action.id === "land-cover") {
+            var attributes = view.popup.selectedFeature.attributes;
             console.log("attributes: ", attributes);
           }
-          if(event.action.id === "land-management"){
+          if (event.action.id === "land-management") {
             console.log("attributes: ", attributes);
           }
         });
       }
-    });
+
+    })
   });
