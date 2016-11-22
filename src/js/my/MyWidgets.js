@@ -19,7 +19,7 @@ define([
             {
               featureLayer: new FeatureLayer({
                 url: "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/ira_2014_county_boundaries/MapServer/0",
-                popupTemplate: popup,
+                popupTemplate: popup
               }),
               placeholder: "Search for a county",
               searchFields: ["NAME"],
@@ -32,7 +32,7 @@ define([
             },
             {
               featureLayer: new FeatureLayer({
-                url: "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/ira_2014_county_boundaries/MapServer/0",
+                url: "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/idaho_rangeland_atlas_2014/MapServer/1",
                 popupTemplate: popup
               }),
               placeholder: "Search for a county",
