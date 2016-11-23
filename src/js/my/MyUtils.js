@@ -12,22 +12,31 @@ define([
   function (declare, ImageryLayer) {
     return declare(null, {
       loading: null,
+      map: null,
       foo: null,
-      constructor: function () {
+      imgLyr: null,
+      constructor: function (map) {
         // this.loading = dom.byId("loadingImg");
-      },
-
-      landCoverResults: function (map, attributes) {
-        var imgLyr = new ImageryLayer({
+        this.map = map;
+        this.imgLyr = new ImageryLayer({
           url: "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/bruce_test8/ImageServer",
           opacity: 0.7
         });
-        map.add(imgLyr);
+        this.map.add(this.imgLyr);
+      },
+
+      landCoverResults: function (attributes) {
         var fields;
         var tbHead;
         var results = "";
         var rasterAttributes = null;
-        imgLyr.then(function () {
+        imgLyr = new ImageryLayer({
+          url: "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/bruce_test8/ImageServer",
+          opacity: 0.7
+        });
+        this.map.add(this.imgLyr);
+
+        this.imgLyr.then(function () {
           rasterAttributes = imgLyr.rasterAttributeTable.features;
           fields = rasterAttributes.filter(function (item, i) {
             var className = item.attributes.cnty_name;
@@ -98,7 +107,7 @@ define([
             var sma = colorTypes[res.sma_name].type;
             results += "<tr><td class='dlegend' style='background-color:" + clr + ";'>&nbsp;</td><td>" + sma + "</td><td>" + res.per_rng.toFixed(2) + "</td><td>" + res.per_cnty.toFixed(2) + "</td><td>" + res.area_ac.toFixed(2) + "</td></tr>";
           });
-          tbHead = "<thead><tr><th class='header'>Total Rangeland (acres)</th><th class='header' >% of County</th><th class='header' ></th></tr></thead>";
+          var tbHead = "<thead><tr><th class='header legend'></th><th class='header'>Manager</th><th class='header' >% of Rangeland</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
         });
         return results;
       }

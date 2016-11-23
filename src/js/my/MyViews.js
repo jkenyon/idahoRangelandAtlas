@@ -74,7 +74,66 @@ define([
 
         var view = this.myView;
         this.myView.popup.on("trigger-action", function (event) {
-          if (event.action.id === "land-cover") {
+          var colorTypes = {
+            "PRIVATE": {
+              color: "#ffffff",
+              type: "Private"
+            },
+            "USFS": {
+              color: "#DDF8DE",
+              type: "US Forest Service",
+            },
+            "BLM": {
+              color: "#ffe49c",
+              type: "Bureau of Land Management"
+            },
+            "STATEPR": {
+              color: "#c4e5f5",
+              type: "State Parks & Rec"
+            },
+            "STATE": {
+              color: "#A4C2D2",
+              type: "State Dept. of Lands"
+            },
+            "STATEOTH": {
+              color: "#c4e5f5",
+              type: "State, Other"
+            },
+            "STATEFG": {
+              color: "#A4C2D2",
+              type: "State Fish & Game"
+            },
+            "HSTRCWTR": {
+              color: "#006CB2",
+              type: "Unsurveyed Water"
+            },
+            "BIA": {
+              color: "#E9D0B7",
+              type: "Bureau of Indian Affairs"
+            },
+            "IR": {
+              color: "#ffc68e",
+              type: "American Indian Reservation"
+            },
+            "NPS": {
+              color: "#d9d3f4",
+              type: "National Park Service"
+            },
+            "DOE": {
+              color: "#E9D0B7",
+              type: "Dept. of Energy"
+            },
+            "MIL": {
+              color: "#FBCCFE",
+              type: "US Military"
+            },
+            "BOR": {
+              color: "#FFF7C9",
+              type: "Bureau of Reclamation"
+            }
+          };
+
+          if (event.action.id === "land-management") {
             var attributes = view.popup.selectedFeature.attributes;
             var tbHead;
             var results = "";
@@ -87,64 +146,6 @@ define([
               fields.forEach(function(item){
                 var res = item.attributes;
                 // var clr = "rgb(" + res.red + ", " + res.green + ", " + res.blue + ")";
-                var colorTypes = {
-                  "PRIVATE": {
-                    color: "#ffffff",
-                    type: "Private"
-                  },
-                  "USFS": {
-                    color: "#DDF8DE",
-                    type: "US Forest Service",
-                  },
-                  "BLM": {
-                    color: "#ffe49c",
-                    type: "Bureau of Land Management"
-                  },
-                  "STATEPR": {
-                    color: "#c4e5f5",
-                    type: "State Parks & Rec"
-                  },
-                  "STATE": {
-                    color: "#A4C2D2",
-                    type: "State Dept. of Lands"
-                  },
-                  "STATEOTH": {
-                    color: "#c4e5f5",
-                    type: "State, Other"
-                  },
-                  "STATEFG": {
-                    color: "#A4C2D2",
-                    type: "State Fish & Game"
-                  },
-                  "HSTRCWTR": {
-                    color: "#006CB2",
-                    type: "Unsurveyed Water"
-                  },
-                  "BIA": {
-                    color: "#E9D0B7",
-                    type: "Bureau of Indian Affairs"
-                  },
-                  "IR": {
-                    color: "#ffc68e",
-                    type: "American Indian Reservation"
-                  },
-                  "NPS": {
-                    color: "#d9d3f4",
-                    type: "National Park Service"
-                  },
-                  "DOE": {
-                    color: "#E9D0B7",
-                    type: "Dept. of Energy"
-                  },
-                  "MIL": {
-                    color: "#FBCCFE",
-                    type: "US Military"
-                  },
-                  "BOR": {
-                    color: "#FFF7C9",
-                    type: "Bureau of Reclamation"
-                  }
-                };
                 var clr = colorTypes[res.sma_name].color;
                 var sma = colorTypes[res.sma_name].type;
                 results += "<tr><td class='dlegend' style='background-color:" + clr + ";'>&nbsp;</td><td>" + sma + "</td><td>" + res.per_rng.toFixed(2) + "</td><td>" + res.per_cnty.toFixed(2) + "</td><td>" + res.area_ac.toFixed(2) + "</td></tr>";
@@ -155,7 +156,7 @@ define([
             var tbHead = "<thead><tr><th class='header legend'></th><th class='header'>Manager</th><th class='header' >% of Rangeland</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
             dom.byId("tableDiv").innerHTML = "<table id='table' class='table' cellspacing='0'>" + tbHead + "<tbody>" + results + "</tbody></table>";
           }
-          if (event.action.id === "land-management") {
+          if (event.action.id === "land-cover") {
             var attributes = view.popup.selectedFeature.attributes;
             console.log("attributes: ", attributes);
             dom.byId("tableDiv").innerHTML = "<h1>Results for management</h1>";
