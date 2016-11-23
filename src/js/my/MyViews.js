@@ -6,18 +6,19 @@ define([
     "my/MyMap",
     "my/MyWidgets",
     "esri/Map",
+    "my/MyUtils",
     "dojo/dom",
     "esri/views/MapView",
     "esri/layers/ImageryLayer",
     "dojo/domReady!"
   ],
-  function (declare, MyMap, MyWidgets, Map, dom, MapView, ImageryLayer) {
+  function (declare, MyMap, MyWidgets, Map, MyUtils, dom, MapView, ImageryLayer) {
     return declare(null, {
       myView: null,
       constructor: function () {
         var myMap = new MyMap();
 
-        // var myUtils = new MyUtils();
+        var myUtils = new MyUtils();
         var popup = {
           title: "<h4>{NAME}</h4>",
           overwriteActions: true,
@@ -119,7 +120,6 @@ define([
             }
           };
           var results = "";
-          var totA
           imgLayer.then(function () {
             var totA = 0;
             var totPC = 0;
