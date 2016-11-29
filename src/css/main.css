@@ -16,12 +16,12 @@ a {
   width: 100%;
 }
 
-#mapDiv {
-  height: 400px;
-  width: 400px;
-  margin: 0;
-  padding: 0;
-}
+/*#mapDiv {*/
+  /*height: 400px;*/
+  /*width: 400px;*/
+  /*margin: 0;*/
+  /*padding: 0;*/
+/*}*/
 
 /*.logo {*/
   /*max-height: 300px;*/
@@ -48,10 +48,13 @@ a {
 .padding-0 {padding:0!important}
 
 
-@media screen and (max-width: 767px) {
+@media screen and (min-width: 767px) {
   #mapCanvas {
-    max-height: 420px;
+    padding: 0;
+    margin: 0;
+    height: 620px;
+    width: 100%;
   }
-  .padding-top {padding-top: 18%!important;}
+  .padding-top {padding-top: 5%!important;}
 }
 
