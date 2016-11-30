@@ -10,9 +10,13 @@ define([
     "dojo/dom",
     "esri/views/MapView",
     "esri/layers/ImageryLayer",
+    "esri/layers/support/RasterFunction",
+    "esri/renderers/UniqueValueRenderer",
+    "esri/symbols/SimpleFillSymbol",
+    "esri/layers/FeatureLayer",
     "dojo/domReady!"
   ],
-  function (declare, MyMap, MyWidgets, Map, MyUtils, dom, MapView, ImageryLayer) {
+  function (declare, MyMap, MyWidgets, Map, MyUtils, dom, MapView, ImageryLayer, RasterFunction, UniqueValueRenderer, SimpleFillSymbol, FeatureLayer) {
     return declare(null, {
       myView: null,
       constructor: function () {
@@ -53,12 +57,53 @@ define([
           index: 0
         });
 
-        var imgLyr = new ImageryLayer({
-          url: "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/bruce_test8/ImageServer",
-          opacity: 0.7
+        // Clips the image to only the county geometry
+        var clipRF = new RasterFunction({
+          functionName: "Clip",
+          functionArguments: {
+            ClippingType: 1, //int (1= clippingOutside, 2=clippingInside), use 1 to keep image inside of the geometry
+            raster: "$$"
+          }
         });
 
-        myMap.map.add(imgLyr);
+        var colorize = function(pixelData) {
+          var pixelBlock = pixelData.pixelBlock;
+          var numPixels = pixelBlock.width * pixelBlock.height;
+          var rBand = [];
+          var gBand = [];
+          var bBand = [];
+          for (i = 0; i < numPixels; i++) {
+            // Sets a color between blue (coldest) and red (warmest) in each band
+            rBand[i] = 0;
+            gBand[i] = 0;
+            bBand[i] = 0;
+          }
+          pixelData.pixelBlock.pixels = [rBand, gBand, bBand];
+        } // end colorize
+
+        var imgLyr = new ImageryLayer({
+          url: "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/bruce_test8/ImageServer",
+          opacity: 0.3,
+          pixelFilter: colorize
+        });
+
+        // Creates the style for the county boundary layer
+        var hid = new UniqueValueRenderer({
+          field: "NAME",
+          defaultSymbol: new SimpleFillSymbol({
+            color: [255, 255, 255, 0]
+          })
+        });
+
+        //Creates county boundaries layer
+        var countyLyr = new FeatureLayer({
+          url: "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/ira_2014_county_boundaries/MapServer/0",
+          id: "counties",
+          outFields: ['*'],
+          opacity: 0.7,
+          renderer: hid
+        });
+
 
         var getLandResults = function (imgLayer, attributes, choice) {
           var colorTypes = {
@@ -160,18 +205,25 @@ define([
           return results;
         };
 
+        myMap.map.add(countyLyr);
+        myMap.map.add(imgLyr);
         var view = this.myView;
         this.myView.popup.on("trigger-action", function (event) {
 
           if (event.action.id === "land-management") {
+            imgLyr.pixelFilter = colorize;
+
             var attributes = view.popup.selectedFeature.attributes;
 
+            console.log("attributes: ", view.popup.selectedFeature);
             tbHead = "<thead><tr><th class='header legend'></th><th class='header'>Manager</th><th class='header' >% of Rangeland</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
 
             var managementResults = getLandResults(imgLyr, attributes, "management");
             dom.byId("tableDiv").innerHTML = "<table id='table' class='table' cellspacing='0'>" + tbHead + "<tbody>" + managementResults + "</tbody></table>";
           }
           if (event.action.id === "land-cover") {
+            imgLyr.pixelFilter = null;
+
             var attributes = view.popup.selectedFeature.attributes;
 
             var coverResults = getLandResults(imgLyr, attributes, "cover");
@@ -179,6 +231,7 @@ define([
             dom.byId("tableDiv").innerHTML = "<br /><table id='table' class='table' cellspacing='0'><tbody>" + coverResults + "</tbody></table>";
           }
         });
+
       },
 
       fixHeading: function (head, divID) {
