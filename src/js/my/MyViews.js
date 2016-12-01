@@ -14,9 +14,11 @@ define([
     "esri/renderers/UniqueValueRenderer",
     "esri/symbols/SimpleFillSymbol",
     "esri/layers/FeatureLayer",
+    "esri/renderers/SimpleRenderer",
+    "esri/symbols/SimpleMarkerSymbol",
     "dojo/domReady!"
   ],
-  function (declare, MyMap, MyWidgets, Map, MyUtils, dom, MapView, ImageryLayer, RasterFunction, UniqueValueRenderer, SimpleFillSymbol, FeatureLayer) {
+  function (declare, MyMap, MyWidgets, Map, MyUtils, dom, MapView, ImageryLayer, RasterFunction, UniqueValueRenderer, SimpleFillSymbol, FeatureLayer, SimpleRenderer, SimpleMarkerSymbol) {
     return declare(null, {
       myView: null,
       constructor: function () {
@@ -205,9 +207,11 @@ define([
           return results;
         };
 
+
         myMap.map.add(countyLyr);
         myMap.map.add(imgLyr);
         var view = this.myView;
+
         this.myView.popup.on("trigger-action", function (event) {
 
           if (event.action.id === "land-management") {
@@ -215,11 +219,10 @@ define([
 
             var attributes = view.popup.selectedFeature.attributes;
 
-            console.log("attributes: ", view.popup.selectedFeature);
             tbHead = "<thead><tr><th class='header legend'></th><th class='header'>Manager</th><th class='header' >% of Rangeland</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
 
             var managementResults = getLandResults(imgLyr, attributes, "management");
-            dom.byId("tableDiv").innerHTML = "<table id='table' class='table' cellspacing='0'>" + tbHead + "<tbody>" + managementResults + "</tbody></table>";
+            dom.byId("tableDiv").innerHTML = "<table id='table' class='table table-bordered' cellspacing='0'>" + tbHead + "<tbody>" + managementResults + "</tbody></table>";
           }
           if (event.action.id === "land-cover") {
             imgLyr.pixelFilter = null;
@@ -228,7 +231,7 @@ define([
 
             var coverResults = getLandResults(imgLyr, attributes, "cover");
 
-            dom.byId("tableDiv").innerHTML = "<br /><table id='table' class='table' cellspacing='0'><tbody>" + coverResults + "</tbody></table>";
+            dom.byId("tableDiv").innerHTML = "<br /><table id='table'  class='table table-bordered' cellspacing='0'><tbody>" + coverResults + "</tbody></table>";
           }
         });
 

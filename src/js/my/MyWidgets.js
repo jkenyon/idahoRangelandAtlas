@@ -8,9 +8,11 @@ define([
     "esri/Graphic",
     "esri/renderers/UniqueValueRenderer",
     "esri/symbols/SimpleFillSymbol",
+    "esri/renderers/SimpleRenderer",
+    "esri/symbols/SimpleMarkerSymbol",
     "dojo/domReady!"
   ],
-  function (declare, Search, FeatureLayer, Graphic, UniqueValueRenderer, SimpleFillSymbol) {
+  function (declare, Search, FeatureLayer, Graphic, UniqueValueRenderer, SimpleFillSymbol, SimpleRenderer, SimpleMarkerSymbol) {
     return declare(null, {
       searchWidget: null,
       constructor: function (view, popup) {
