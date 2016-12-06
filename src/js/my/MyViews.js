@@ -227,24 +227,27 @@ define([
           index: 0
         });
 
-        this.myView.popup.on("trigger-action", function (event) {
+        searchWidget.on("select-result", function(event){
+          event.preventDefault();
+          console.log("search: ", searchWidget);
+          view.popup.on("trigger-action", function (event) {
+            var feature = view.popup.features[0];
+            if (event.action.id === "land-management") {
+              myMap.map.basemap = "dark-gray";
+              var tbHead = "<thead><tr><th class='header legend'></th><th class='header'>Manager</th><th class='header' >% of Rangeland</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
 
-          var attributes = view.popup.selectedFeature.attributes;
-          var feature = view.popup.features[0];
-          console.log("features: ", feature);
-          if (event.action.id === "land-management") {
-            tbHead = "<thead><tr><th class='header legend'></th><th class='header'>Manager</th><th class='header' >% of Rangeland</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
+              var managementResults = getLandResults(imgLyr, feature, "management");
+              dom.byId("tableDiv").innerHTML = "<table id='table' class='table table-bordered' cellspacing='0'>" + tbHead + "<tbody>" + managementResults + "</tbody></table>";
+            }
+            else if (event.action.id === "land-cover") {
+              myMap.map.basemap = "streets";
+              var coverResults = getLandResults(imgLyr, feature, "cover");
 
-            var managementResults = getLandResults(imgLyr, feature, "management");
-            dom.byId("tableDiv").innerHTML = "<table id='table' class='table table-bordered' cellspacing='0'>" + tbHead + "<tbody>" + managementResults + "</tbody></table>";
-          }
-          else if (event.action.id === "land-cover") {
-
-            var coverResults = getLandResults(imgLyr, feature, "cover");
-
-            dom.byId("tableDiv").innerHTML = "<br /><table id='table'  class='table table-bordered' cellspacing='0'><tbody>" + coverResults + "</tbody></table>";
-          }
+              dom.byId("tableDiv").innerHTML = "<br /><table id='table'  class='table table-bordered' cellspacing='0'><tbody>" + coverResults + "</tbody></table>";
+            }
+          });
         });
+
 
       },
 

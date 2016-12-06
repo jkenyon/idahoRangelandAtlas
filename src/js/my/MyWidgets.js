@@ -23,8 +23,11 @@ define([
           view: view,
           allPlaceholder: "Search for a county",
           popupOpenOnSelect: true,
+          autoSelect: true,
+          popupEnabled: true,
           sources: [
             {
+              popup: popup,
               featureLayer: new FeatureLayer({
                 url: "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/idaho_rangeland_atlas_2014/MapServer/0",
                 popupTemplate: popup
@@ -54,7 +57,7 @@ define([
               outFields: ["*"],
               name: "Land Management",
               zoomScale: 500000,
-              resultGraphicEnabled: true
+              resultGraphicEnabled: false
             }
           ]
         });
