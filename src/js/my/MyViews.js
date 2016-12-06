@@ -16,9 +16,10 @@ define([
     "esri/layers/FeatureLayer",
     "esri/renderers/SimpleRenderer",
     "esri/symbols/SimpleMarkerSymbol",
+    "esri/widgets/Search",
     "dojo/domReady!"
   ],
-  function (declare, MyMap, MyWidgets, Map, MyUtils, dom, MapView, ImageryLayer, RasterFunction, UniqueValueRenderer, SimpleFillSymbol, FeatureLayer, SimpleRenderer, SimpleMarkerSymbol) {
+  function (declare, MyMap, MyWidgets, Map, MyUtils, dom, MapView, ImageryLayer, RasterFunction, UniqueValueRenderer, SimpleFillSymbol, FeatureLayer, SimpleRenderer, SimpleMarkerSymbol, Search) {
     return declare(null, {
       myView: null,
       constructor: function () {
@@ -49,24 +50,9 @@ define([
           center: [-115, 45.6],
           zoom: 7
         });
+        var view = this.myView;
 
         var myWigets = new MyWidgets(this.myView, popup);
-
-        var searchWidget = myWigets.search();
-
-        this.myView.ui.add(searchWidget, {
-          position: "top-left",
-          index: 0
-        });
-
-        // Clips the image to only the county geometry
-        var clipRF = new RasterFunction({
-          functionName: "Clip",
-          functionArguments: {
-            ClippingType: 1, //int (1= clippingOutside, 2=clippingInside), use 1 to keep image inside of the geometry
-            raster: "$$"
-          }
-        });
 
         var colorize = function(pixelData) {
           var pixelBlock = pixelData.pixelBlock;
@@ -74,6 +60,7 @@ define([
           var rBand = [];
           var gBand = [];
           var bBand = [];
+          var i;
           for (i = 0; i < numPixels; i++) {
             // Sets a color between blue (coldest) and red (warmest) in each band
             rBand[i] = 0;
@@ -81,11 +68,11 @@ define([
             bBand[i] = 0;
           }
           pixelData.pixelBlock.pixels = [rBand, gBand, bBand];
-        } // end colorize
+        }; // end colorize
 
         var imgLyr = new ImageryLayer({
           url: "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/bruce_test8/ImageServer",
-          opacity: 0.3,
+          opacity: 0.7,
           pixelFilter: colorize
         });
 
@@ -107,7 +94,7 @@ define([
         });
 
 
-        var getLandResults = function (imgLayer, attributes, choice) {
+        var getLandResults = function (imgLayer, feature, choice) {
           var colorTypes = {
             "PRIVATE": {
               color: "#ffffff",
@@ -167,6 +154,30 @@ define([
             }
           };
           var results = "";
+          var clipCRF = new RasterFunction({
+            functionName: "Clip",
+            functionArguments: {
+              ClippingGeometry: feature.geometry, //a polygon or envelope
+              ClippingType: 1, //int (1= clippingOutside, 2=clippingInside), use 1 to keep image inside of the geometry
+              raster: "$$"
+            }
+          });
+
+          // Clips the image to only the county geometry
+          var clipRF = new RasterFunction({
+            functionName: "Clip",
+            functionArguments: {
+              ClippingGeometry: feature.geometry, //a polygon or envelope
+              ClippingType: 1, //int (1= clippingOutside, 2=clippingInside), use 1 to keep image inside of the geometry
+              raster: "$$"
+            }
+          });
+
+
+          imgLayer.renderingRule = (choice === "cover") ? clipCRF : clipRF;
+          imgLayer.pixelFilter = (choice === "cover") ? colorize : null;
+
+          myMap.map.add(imgLayer);
           imgLayer.then(function () {
             var totA = 0;
             var totPC = 0;
@@ -174,12 +185,12 @@ define([
             var perCty = 0;
             var total;
             var fields;
-            var rasterAttributes = imgLyr.rasterAttributeTable.features;
+            var rasterAttributes = imgLayer.rasterAttributeTable.features;
             for (var i = 0; i < rasterAttributes.length; i++) {
               totId += rasterAttributes[i].attributes.area_ac;
             }
             fields = rasterAttributes.filter(function (item, i) {
-              return item.attributes.cnty_name === attributes.NAME;
+              return item.attributes.cnty_name === feature.attributes.NAME;
             });
 
             if(choice === "cover"){
@@ -207,29 +218,29 @@ define([
           return results;
         };
 
-
         myMap.map.add(countyLyr);
-        myMap.map.add(imgLyr);
-        var view = this.myView;
+
+        var searchWidget = myWigets.search();
+
+        this.myView.ui.add(searchWidget, {
+          position: "top-left",
+          index: 0
+        });
 
         this.myView.popup.on("trigger-action", function (event) {
 
+          var attributes = view.popup.selectedFeature.attributes;
+          var feature = view.popup.features[0];
+          console.log("features: ", feature);
           if (event.action.id === "land-management") {
-            imgLyr.pixelFilter = colorize;
-
-            var attributes = view.popup.selectedFeature.attributes;
-
             tbHead = "<thead><tr><th class='header legend'></th><th class='header'>Manager</th><th class='header' >% of Rangeland</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
 
-            var managementResults = getLandResults(imgLyr, attributes, "management");
+            var managementResults = getLandResults(imgLyr, feature, "management");
             dom.byId("tableDiv").innerHTML = "<table id='table' class='table table-bordered' cellspacing='0'>" + tbHead + "<tbody>" + managementResults + "</tbody></table>";
           }
-          if (event.action.id === "land-cover") {
-            imgLyr.pixelFilter = null;
+          else if (event.action.id === "land-cover") {
 
-            var attributes = view.popup.selectedFeature.attributes;
-
-            var coverResults = getLandResults(imgLyr, attributes, "cover");
+            var coverResults = getLandResults(imgLyr, feature, "cover");
 
             dom.byId("tableDiv").innerHTML = "<br /><table id='table'  class='table table-bordered' cellspacing='0'><tbody>" + coverResults + "</tbody></table>";
           }
