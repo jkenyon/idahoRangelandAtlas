@@ -66,21 +66,26 @@
   <!-- Map  -->
   <section id="map" class="row padding-bottom">
     <!-- Map menu  -->
-    <div id="map-menu" class="col-sm-4 col-md-3">
+    <div id="map-menu" class="col-sm-4 col-md-3 col-md-push-0">
       <div class="text-center">
-        <strong>Welcome to the Idaho Rangeland Atlas</strong>
+        <strong><h3>Welcome to the Idaho Rangeland Atlas</h3></strong>
         <p>Select a topic below</p>
         <div class="row">
           <div class="col-xs-6">
             <div class="butn">
-              <span class="glyphicon glyphicon-leaf w3-hover-opacity" aria-hidden="true"></span><br/>
-              <span>Land Cover</span>
+              <button type="button">
+                <span class="glyphicon glyphicon-leaf w3-hover-opacity" aria-hidden="true"></span><br/>
+                <span>Land Cover</span>
+              </button>
+
             </div>
           </div>
           <div class="col-xs-6">
             <div class="butn">
-              <span class="glyphicon glyphicon-user w3-hover-opacity" aria-hidden="true"></span><br/>
-              <span>Land Management</span>
+              <button type="button" >
+                <span class="glyphicon glyphicon-user w3-hover-opacity" aria-hidden="true"></span><br/>
+                <span>Land Management</span>
+              </button>
             </div>
           </div>
         </div>
@@ -90,7 +95,7 @@
       </div>
     </div>
     <!-- Map content -->
-    <div id="map-content" class="col-sm-8 col-md-9 col-md-push-0">
+    <div id="map-content" class="col-sm-8 col-md-9">
       <div id="mapCanvas"></div>
       <!--<img id="loadingImg" src="img/gears.gif" style="position:relative; left: 40%; top: 40%; z-index:100;"/>-->
     </div>

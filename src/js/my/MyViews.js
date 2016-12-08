@@ -25,36 +25,46 @@ define([
       constructor: function () {
         var myMap = new MyMap();
 
-        var myUtils = new MyUtils();
+        // var myUtils = new MyUtils();
+
         var popup = {
-          title: "<h4>{NAME}</h4>",
-          overwriteActions: true,
-          content: [],
-          actions: [
-            {
-              id: "land-cover",
-              className: "glyphicon glyphicon-leaf",
-              title: "Land Cover"
-            },
-            {
-              id: "land-management",
-              className: "glyphicon glyphicon-user",
-              title: "Land Management"
-            }
-          ]
+          dockEnabled: true,
+          dockOptions: {
+            buttonEnabled: true,
+            breakpoint: true,
+            position: "top-right"
+          }
         };
 
         this.myView = new MapView({
           container: "mapCanvas",
           map: myMap.map,
           center: [-115, 45.6],
-          zoom: 7
+          zoom: 7,
+          popup: {
+            overwriteActions: true,
+            content: [],
+            actions: [
+              {
+                id: "land-cover",
+                className: "glyphicon glyphicon-leaf",
+                title: "Land Cover"
+              },
+              {
+                id: "land-management",
+                className: "glyphicon glyphicon-user",
+                title: "Land Management"
+              }
+            ]
+          }
         });
         var view = this.myView;
 
+
+
         var myWigets = new MyWidgets(this.myView, popup);
 
-        var colorize = function(pixelData) {
+        var colorize = function (pixelData) {
           var pixelBlock = pixelData.pixelBlock;
           var numPixels = pixelBlock.width * pixelBlock.height;
           var rBand = [];
@@ -93,66 +103,65 @@ define([
           renderer: hid
         });
 
-
+        var colorTypes = {
+          "PRIVATE": {
+            color: "#ffffff",
+            type: "Private"
+          },
+          "USFS": {
+            color: "#DDF8DE",
+            type: "US Forest Service",
+          },
+          "BLM": {
+            color: "#ffe49c",
+            type: "Bureau of Land Management"
+          },
+          "STATEPR": {
+            color: "#c4e5f5",
+            type: "State Parks & Rec"
+          },
+          "STATE": {
+            color: "#A4C2D2",
+            type: "State Dept. of Lands"
+          },
+          "STATEOTH": {
+            color: "#c4e5f5",
+            type: "State, Other"
+          },
+          "STATEFG": {
+            color: "#A4C2D2",
+            type: "State Fish & Game"
+          },
+          "HSTRCWTR": {
+            color: "#006CB2",
+            type: "Unsurveyed Water"
+          },
+          "BIA": {
+            color: "#E9D0B7",
+            type: "Bureau of Indian Affairs"
+          },
+          "IR": {
+            color: "#ffc68e",
+            type: "American Indian Reservation"
+          },
+          "NPS": {
+            color: "#d9d3f4",
+            type: "National Park Service"
+          },
+          "DOE": {
+            color: "#E9D0B7",
+            type: "Dept. of Energy"
+          },
+          "MIL": {
+            color: "#FBCCFE",
+            type: "US Military"
+          },
+          "BOR": {
+            color: "#FFF7C9",
+            type: "Bureau of Reclamation"
+          }
+        };
         var getLandResults = function (imgLayer, feature, choice) {
-          var colorTypes = {
-            "PRIVATE": {
-              color: "#ffffff",
-              type: "Private"
-            },
-            "USFS": {
-              color: "#DDF8DE",
-              type: "US Forest Service",
-            },
-            "BLM": {
-              color: "#ffe49c",
-              type: "Bureau of Land Management"
-            },
-            "STATEPR": {
-              color: "#c4e5f5",
-              type: "State Parks & Rec"
-            },
-            "STATE": {
-              color: "#A4C2D2",
-              type: "State Dept. of Lands"
-            },
-            "STATEOTH": {
-              color: "#c4e5f5",
-              type: "State, Other"
-            },
-            "STATEFG": {
-              color: "#A4C2D2",
-              type: "State Fish & Game"
-            },
-            "HSTRCWTR": {
-              color: "#006CB2",
-              type: "Unsurveyed Water"
-            },
-            "BIA": {
-              color: "#E9D0B7",
-              type: "Bureau of Indian Affairs"
-            },
-            "IR": {
-              color: "#ffc68e",
-              type: "American Indian Reservation"
-            },
-            "NPS": {
-              color: "#d9d3f4",
-              type: "National Park Service"
-            },
-            "DOE": {
-              color: "#E9D0B7",
-              type: "Dept. of Energy"
-            },
-            "MIL": {
-              color: "#FBCCFE",
-              type: "US Military"
-            },
-            "BOR": {
-              color: "#FFF7C9",
-              type: "Bureau of Reclamation"
-            }
-          };
           var results = "";
           var clipCRF = new RasterFunction({
             functionName: "Clip",
@@ -193,7 +202,7 @@ define([
               return item.attributes.cnty_name === feature.attributes.NAME;
             });
 
-            if(choice === "cover"){
+            if (choice === "cover") {
               for (i = 0; i < rasterAttributes.length; i++) {
                 totId += rasterAttributes[i].attributes.area_ac;
               }
@@ -206,7 +215,7 @@ define([
               total = totA.toFixed(2);
               results += "<tr><td>Total County Rangeland (acres)</td><td>" + total + "</td></tr><tr><td>Percent of County Acreage</td><td>" + perCty + "</td></tr>";
             }
-            else if(choice === "management") {
+            else if (choice === "management") {
               fields.forEach(function (item) {
                 var res = item.attributes;
                 var clr = colorTypes[res.sma_name].color;
@@ -222,33 +231,62 @@ define([
 
         var searchWidget = myWigets.search();
 
-        this.myView.ui.add(searchWidget, {
-          position: "top-left",
-          index: 0
-        });
+        view.then(function(){
+          view.popup.open({
+            title: "<strong>Select a topic below</strong>",
+            overwriteActions: true,
+            content: [],
+            actions: [
+              {
+                id: "land-cover",
+                className: "glyphicon glyphicon-leaf",
+                title: "Land Cover"
+              },
+              {
+                id: "land-management",
+                className: "glyphicon glyphicon-user",
+                title: "Land Management"
+              }
+            ],
+            location: view.center.clone()
+          });
 
-        searchWidget.on("select-result", function(event){
-          event.preventDefault();
-          console.log("search: ", searchWidget);
-          view.popup.on("trigger-action", function (event) {
-            var feature = view.popup.features[0];
-            if (event.action.id === "land-management") {
-              myMap.map.basemap = "dark-gray";
-              var tbHead = "<thead><tr><th class='header legend'></th><th class='header'>Manager</th><th class='header' >% of Rangeland</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
+          view.ui.add(searchWidget, {
+            position: "top-left",
+            index: 0
+          });
 
-              var managementResults = getLandResults(imgLyr, feature, "management");
-              dom.byId("tableDiv").innerHTML = "<table id='table' class='table table-bordered' cellspacing='0'>" + tbHead + "<tbody>" + managementResults + "</tbody></table>";
-            }
-            else if (event.action.id === "land-cover") {
-              myMap.map.basemap = "streets";
-              var coverResults = getLandResults(imgLyr, feature, "cover");
+          searchWidget.on("select-result", function (event) {
+            // view.popup.visible = false;
+            event.preventDefault();
+            // var searchEvent = event;
+            // view.on("click", function(event){
+            //   view.popup.open({
+            //     title: searchEvent.result.name.toString(),
+            //     location: event.mapPoint
+            //   });
+            // });
 
-              dom.byId("tableDiv").innerHTML = "<br /><table id='table'  class='table table-bordered' cellspacing='0'><tbody>" + coverResults + "</tbody></table>";
-            }
+            // console.log("search: ", searchWidget);
+            view.popup.on("trigger-action", function (event) {
+              var feature = view.popup.features[0];
+              // var feature = searchEvent.result.feature;
+              if (event.action.id === "land-management") {
+                myMap.map.basemap = "dark-gray";
+                var tbHead = "<thead><tr><th class='header legend'></th><th class='header'>Manager</th><th class='header' >% of Rangeland</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
+
+                var managementResults = getLandResults(imgLyr, feature, "management");
+                dom.byId("tableDiv").innerHTML = "<table id='table' class='table table-bordered' cellspacing='0'>" + tbHead + "<tbody>" + managementResults + "</tbody></table>";
+              }
+              else if (event.action.id === "land-cover") {
+                myMap.map.basemap = "streets";
+                var coverResults = getLandResults(imgLyr, feature, "cover");
+
+                dom.byId("tableDiv").innerHTML = "<br /><table id='table'  class='table table-bordered' cellspacing='0'><tbody>" + coverResults + "</tbody></table>";
+              }
+            });
           });
         });
-
-
       },
 
       fixHeading: function (head, divID) {
