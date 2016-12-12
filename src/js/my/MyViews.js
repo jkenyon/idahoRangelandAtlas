@@ -40,27 +40,9 @@ define([
           container: "mapCanvas",
           map: myMap.map,
           center: [-115, 45.6],
-          zoom: 7,
-          popup: {
-            overwriteActions: true,
-            content: [],
-            actions: [
-              {
-                id: "land-cover",
-                className: "glyphicon glyphicon-leaf",
-                title: "Land Cover"
-              },
-              {
-                id: "land-management",
-                className: "glyphicon glyphicon-user",
-                title: "Land Management"
-              }
-            ]
-          }
+          zoom: 7
         });
         var view = this.myView;
-
-
 
         var myWigets = new MyWidgets(this.myView, popup);
 
@@ -232,33 +214,38 @@ define([
         var searchWidget = myWigets.search();
 
         view.then(function(){
-          view.popup.open({
-            title: "<strong>Select a topic below</strong>",
-            overwriteActions: true,
-            content: [],
-            actions: [
-              {
-                id: "land-cover",
-                className: "glyphicon glyphicon-leaf",
-                title: "Land Cover"
-              },
-              {
-                id: "land-management",
-                className: "glyphicon glyphicon-user",
-                title: "Land Management"
-              }
-            ],
-            location: view.center.clone()
-          });
+
 
           view.ui.add(searchWidget, {
             position: "top-left",
             index: 0
           });
 
-          searchWidget.on("select-result", function (event) {
+          searchWidget.on("search-complete", function (event) {
             // view.popup.visible = false;
-            event.preventDefault();
+            if(event.numResults !== 0){
+              var name = event.results[0].results[0].name;
+              view.popup.open({
+                title: "<h3> " + name + " </h3><strong>Select a topic below</strong>",
+                overwriteActions: true,
+                content: [],
+                actions: [
+                  {
+                    id: "land-cover",
+                    className: "glyphicon glyphicon-leaf",
+                    title: "Land Cover"
+                  },
+                  {
+                    id: "land-management",
+                    className: "glyphicon glyphicon-user",
+                    title: "Land Management"
+                  }
+                ],
+                location: event.results[0].results[0].extent.center
+              });
+            }
+
+            // event.preventDefault();
             // var searchEvent = event;
             // view.on("click", function(event){
             //   view.popup.open({
@@ -276,13 +263,13 @@ define([
                 var tbHead = "<thead><tr><th class='header legend'></th><th class='header'>Manager</th><th class='header' >% of Rangeland</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
 
                 var managementResults = getLandResults(imgLyr, feature, "management");
-                dom.byId("tableDiv").innerHTML = "<table id='table' class='table table-bordered' cellspacing='0'>" + tbHead + "<tbody>" + managementResults + "</tbody></table>";
+                dom.byId("tableDiv").innerHTML = "<table id='table' class='table table-bordered text-center' cellspacing='0'>" + tbHead + "<tbody>" + managementResults + "</tbody></table>";
               }
               else if (event.action.id === "land-cover") {
                 myMap.map.basemap = "streets";
                 var coverResults = getLandResults(imgLyr, feature, "cover");
 
-                dom.byId("tableDiv").innerHTML = "<br /><table id='table'  class='table table-bordered' cellspacing='0'><tbody>" + coverResults + "</tbody></table>";
+                dom.byId("tableDiv").innerHTML = "<br /><table id='table'  class='table table-bordered text-center' cellspacing='0'><tbody>" + coverResults + "</tbody></table>";
               }
             });
           });
