@@ -245,16 +245,6 @@ define([
               });
             }
 
-            // event.preventDefault();
-            // var searchEvent = event;
-            // view.on("click", function(event){
-            //   view.popup.open({
-            //     title: searchEvent.result.name.toString(),
-            //     location: event.mapPoint
-            //   });
-            // });
-
-            // console.log("search: ", searchWidget);
             view.popup.on("trigger-action", function (event) {
               var feature = view.popup.features[0];
               // var feature = searchEvent.result.feature;
