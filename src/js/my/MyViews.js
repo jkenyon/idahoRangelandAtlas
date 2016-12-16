@@ -17,9 +17,10 @@ define([
     "esri/renderers/SimpleRenderer",
     "esri/symbols/SimpleMarkerSymbol",
     "esri/widgets/Search",
+    "dojo/dom-construct",
     "dojo/domReady!"
   ],
-  function (declare, MyMap, MyWidgets, Map, MyUtils, dom, MapView, ImageryLayer, RasterFunction, UniqueValueRenderer, SimpleFillSymbol, FeatureLayer, SimpleRenderer, SimpleMarkerSymbol, Search) {
+  function (declare, MyMap, MyWidgets, Map, MyUtils, dom, MapView, ImageryLayer, RasterFunction, UniqueValueRenderer, SimpleFillSymbol, FeatureLayer, SimpleRenderer, SimpleMarkerSymbol, Search, domConstruct) {
     return declare(null, {
       myView: null,
       constructor: function () {
@@ -213,17 +214,36 @@ define([
 
         var searchWidget = myWigets.search();
 
-        view.then(function(){
+        var data = [
+          'ADA', 'ADAMS', 'BANNOCK', 'BEAR LAKE', 'BENEWAH', 'BINGHAM', 'BLAINE', 'BOISE', 'BONNER', 'BONNEVILLE', 'BOUNDARY', 'BUTTE', 'CAMAS', 'CANYON', 'CARIBOU', 'CASSIA', 'CLARK', 'CLEARWATER', 'CUSTER', 'ELMORE', 'FRANKLIN', 'FREMONT', 'GEM', 'GOODING', 'IDAHO', 'JEFFERSON', 'JEROME', 'KOOTENAI', 'LATAH', 'LEMHI', 'LEWIS', 'LINCOLN', 'MADISON', 'MINIDOKA', 'NEZ PERCE', 'ONEIDA', 'OWYHEE', 'PAYETTE', 'POWER', 'SHOSHONE', 'TETON', 'TWIN FALLS', 'VALLEY', 'WASHINGTON'
+        ];
 
+        var dropdownButton = function (data) {
+          var i;
+          var button = '<div id="search-dropdown"><button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
+            '<span class="glyphicon glyphicon-triangle-bottom"></span></button>' +
+            '<ul class="dropdown-menu">';
+          for (i = 0; i < data.length; i++) {
+            button += '<li><a href="#"> ' + data[i] + '</a></li>';
+          }
+          button += '</ul></div>';
+          return button;
+        };
+
+        var dropdown = domConstruct.toDom(dropdownButton(data));
+
+        view.then(function () {
 
           view.ui.add(searchWidget, {
-            position: "top-left",
+            position: "top-right",
             index: 0
           });
 
+          domConstruct.place(dropdown, dom.byId('esri_widgets_Search_0'), "first");
+
+
           searchWidget.on("search-complete", function (event) {
-            // view.popup.visible = false;
-            if(event.numResults !== 0){
+            if (event.numResults !== 0) {
               var name = event.results[0].results[0].name;
               view.popup.open({
                 title: "<h3> " + name + " </h3><strong>Select a topic below</strong>",
@@ -249,7 +269,7 @@ define([
               var feature = view.popup.features[0];
               // var feature = searchEvent.result.feature;
               if (event.action.id === "land-management") {
-                myMap.map.basemap = "dark-gray";
+                myMap.map.basemap = "streets";
                 var tbHead = "<thead><tr><th class='header legend'></th><th class='header'>Manager</th><th class='header' >% of Rangeland</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
 
                 var managementResults = getLandResults(imgLyr, feature, "management");

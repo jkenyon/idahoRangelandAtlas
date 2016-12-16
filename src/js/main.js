@@ -11,10 +11,4 @@ require([
   esriConfig.request.corsDetection = false;
   esriConfig.request.corsEnabledServers.push("gis-sandbox.northwestknowledge.net");
   var view = new MyViews();
-  // var searchBox = new MySearchBox();
 });
-
-
-// var dojoConfig = {
-//   paths: { extras: location.pathname.replace(/\/[^/]+$/, "") + "/my" }
-// };
