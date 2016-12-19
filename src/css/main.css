@@ -2,20 +2,57 @@
   Main
 */
 
-a {
-  cursor: pointer;
+body {
+  background-color: #484848;
+  color: white;
+  font-family: 'PT Sans', sans-serif;
 }
 
+a {
+  cursor: hand;
+}
+a::selection {
+  color: white;
+}
+a:active {
+  color: white;
+}
+
+#header {
+  color: white;
+}
+
+#navbar {
+  height: 100%;
+  margin-bottom: 0px;
+  padding-bottom: 0px;
+  overflow-y: visible;
+}
+
+#map-menu {
+}
+
+#map {
+}
 
 #mapCanvas {
   padding: 0;
   margin: 0;
-  height: 400px;
+  height: 520px;
   width: 100%;
 }
 
 #resultHead {
   overflow-y: scroll;
+}
+
+#footer {
+  background-color: dimgrey;
+  color: white;
+}
+
+#navbar-close span {
+  font-size: 110%;
 }
 
 .search-dropdown {
@@ -48,18 +85,24 @@ a {
   display:block !important;
 }
 
-.butn {
-  position: relative;
-  font-size: 140%;
-  /*color: #D3D3D3;*/
-  margin-left: auto;
-  margin-right: auto;
+.content {
+  overflow-y: scroll;
 }
 
+div.butn:hover {
+  cursor: hand;
+}
+div.butn span:first-child {
+  font-size: 240%;
+  color: #D3D3D3;
+}
+
+
+/* Custom styles*/
 .padding-top {padding-top: 8%!important;}
 .padding-bottom {padding-bottom: 16px!important;}
 .padding-0 {padding:0!important}
-
+.fixed {position: fixed !important;}
 
 
 @media screen and (min-width: 768px) {
@@ -79,4 +122,3 @@ a {
     /*display: block;*/
   /*}*/
 }
-
