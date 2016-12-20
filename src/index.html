@@ -57,19 +57,24 @@
   </div>
 
   <div id="navbar" class="navbar-collapse collapse row">
-    <div id="nav-menu" class="col-md-2">
+    <div id="nav-menu" class="col-md-6 col-lg-4">
       <ul class="nav navbar-nav">
-        <li><a href="#about">About the Project</a></li>
-        <li><a href="#data">Data and Methods</a></li>
-        <li><a href="#technical">Technical Details</a></li>
-        <li><a href="#disclaimer">Accuracy and Disclaimer</a></li>
+        <li aria-selected="true"><a href="#about" class="selected">About the Project</a></li>
+        <li><a href="#data" class="selected">Data and Methods</a></li>
+        <li><a href="#technical"class="selected">Technical Details</a></li>
+        <li><a href="#disclaimer" class="selected">Accuracy and Disclaimer</a></li>
+        <li><a href="#contact" class="selected">Contact</a></li>
       </ul>
+      <div id="img-range" class="row">
+        <img src="./img/dds_logo.png" class="img-responsive col-md-6 logo"/>
+        <img src="./img/rc_logo.png" class="img-responsive col-md-6 logo"/>
+      </div>
     </div>
 
-    <div id="nav-menu-content" class="col-md-10">
+    <div id="nav-menu-content" class="col-md-6 col-lg-8">
       <!-- Technical Details -->
       <div id="technical" class="hidden">
-        <div class="content">
+        <div>
           <header class="text-center">
             <h2>Technical Details</h2>
           </header>
@@ -86,11 +91,11 @@
 
       <!-- Data -->
       <div id="data" class="hidden">
-        <div class="content">
+        <div>
           <header class="text-center">
             <h2>Data</h2>
           </header>
-          <p class="pre-scrollable">
+          <p>
             Data is obtained from available federal sources.<br/><br/>Land Cover: Land cover estimates are derived from
             the
             National Land Cover Database (NLCD) 2011 using values 52 (Shrub/Scrub) and 71(Grassland/Herbaceous). The
@@ -113,11 +118,11 @@
 
       <!-- Accuracy and Disclaimer -->
       <div id="disclaimer" class="hidden">
-        <div class="content">
+        <div>
           <header class="text-center">
             <h2>Accuracy and Disclaimer</h2>
           </header>
-          <p class="pre-scrollable">Not sure what to say here yet.</p>
+          <p>Not sure what to say here yet.</p>
         </div>
       </div>
 
@@ -127,7 +132,7 @@
           <header class="text-center">
             <h2>About Us</h2>
           </header>
-          <p class="pre-scrollable">
+          <p>
             The Idaho Rangeland Atlas is a collaboration of the University of Idaho Library and the University of Idaho
             Rangeland Center. Its purpose is to provide simple, clear information about Idaho's rangelands using open,
             accessible web technologies. Leveraging the University of Idaho's investements in geospatial data and
@@ -149,7 +154,22 @@
           </p>
         </div>
       </div>
+
+      <!-- Contact -->
+      <div id="contact" class="hidden">
+        <div>
+          <header class="text-center">
+            <h2>Contact</h2>
+          </header>
+          <p class="text-center">
+            Any questions or comments should be directed to either Jeremy Kenyon (jkenyon@uidaho.edu) or Bruce Godfrey
+            (bgodfrey@uidaho.edu).
+          </p>
+        </div>
+      </div>
+
     </div>
+
   </div>
 </nav>
 
@@ -243,25 +263,22 @@
 <footer id="footer" class="container-fluid">
 
 
-  <!-- Contact -->
-  <section id="contact">
-    <div>
-      <header class="text-center">
-        <h2>Contact</h2>
-      </header>
-      <p class="text-center">
-        Any questions or comments should be directed to either Jeremy Kenyon (jkenyon@uidaho.edu) or Bruce Godfrey
-        (bgodfrey@uidaho.edu).
-      </p>
-    </div>
-  </section>
-  <p class="text-center">
-    &copy; Idaho Range Atlas All rights reserved.
-  </p>
-  <!--<div class="padding-top row">-->
-  <!--<img src="./img/dds_logo.png" class="img-responsive col-md-6 logo"/>-->
-  <!--<img src="./img/rc_logo.png" class="img-responsive col-md-6 logo"/>-->
-  <!--</div>-->
+  <!--&lt;!&ndash; Contact &ndash;&gt;-->
+  <!--<section id="contact">-->
+    <!--<div>-->
+      <!--<header class="text-center">-->
+        <!--<h2>Contact</h2>-->
+      <!--</header>-->
+      <!--<p class="text-center">-->
+        <!--Any questions or comments should be directed to either Jeremy Kenyon (jkenyon@uidaho.edu) or Bruce Godfrey-->
+        <!--(bgodfrey@uidaho.edu).-->
+      <!--</p>-->
+    <!--</div>-->
+  <!--</section>-->
+  <!--<p class="text-center">-->
+    <!--&copy; Idaho Range Atlas All rights reserved.-->
+  <!--</p>-->
+
 </footer>
 
 

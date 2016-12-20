@@ -12,37 +12,42 @@ require([
   esriConfig.request.corsEnabledServers.push("gis-sandbox.northwestknowledge.net");
   var view = new MyViews();
 
-  // $('#land-cover').on('click', function () {
-  //   dom.byId()
-  // });
-  $('#hamburger-button').on('click', function () {
-    var header = dom.byId('header');
+  var header = dom.byId('header');
+  $('#hamburger-button #navbar-open').on('click', function () {
+    $('#disclaimer, #technical, #data, #contact').removeClass('hidden');
+    header.style.height = '100%';
     $('#about').toggleClass('hidden');
+    $()
     $('#navbar-close').toggleClass('hidden');
     $('#navbar-open').toggleClass('hidden');
-    if(header.style.height === '100%'){
-      header.style.height = 'auto';
-    }
-    else {
-      header.style.height = '100%';
-    }
+  });
+  $('#hamburger-button #navbar-close').on('click', function () {
+    $('#about, #disclaimer, #technical, #data, #contact').addClass('hidden');
+    header.style.height = 'auto';
+    $('#navbar-close').toggleClass('hidden');
+    $('#navbar-open').toggleClass('hidden');
   });
 
   $("#nav-menu ul li a").on('click', function (event) {
-    $('#about, #disclaimer, #technical, #data').addClass('hidden');
+    $('#about, #disclaimer, #technical, #data, #contact').addClass('hidden');
     switch(event.target.hash){
       case "#about":
-        $('#about').toggleClass();
+        $('#about').toggleClass('hidden');
+        // $(this).addClass('selected');
         break;
       case "#technical":
-        $('#technical').toggleClass();
+        $('#technical').toggleClass('hidden');
         break;
       case "#disclaimer":
-        $('#disclaimer').toggleClass();
+        $('#disclaimer').toggleClass('hidden');
         break;
       case "#data":
-        $('#data').toggleClass();
+        $('#data').toggleClass('hidden');
         break;
+      case "#contact":
+        $('#contact').toggleClass('hidden');
+        break;
+      default: break;
     }
   })
 });
