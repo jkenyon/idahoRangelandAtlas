@@ -61,7 +61,7 @@
       <ul class="nav navbar-nav">
         <li aria-selected="true"><a href="#about" class="selected">About the Project</a></li>
         <li><a href="#data" class="selected">Data and Methods</a></li>
-        <li><a href="#technical"class="selected">Technical Details</a></li>
+        <li><a href="#technical" class="selected">Technical Details</a></li>
         <li><a href="#disclaimer" class="selected">Accuracy and Disclaimer</a></li>
         <li><a href="#contact" class="selected">Contact</a></li>
       </ul>
@@ -176,11 +176,11 @@
 <!-- Main -->
 <div id="main" class="container-fluid padding-top row">
 
-  <section id="main-content" class="col-lg-6">
+  <section id="main-content" class="col-lg-6 col-md-4">
 
     <!-- Map menu  -->
     <div id="map-menu">
-      <div class="text-center">
+      <div id="topics" class="text-center">
         <strong><h3>Welcome to the Idaho Rangeland Atlas</h3></strong>
         <p>Select a topic below</p>
         <div class="row">
@@ -188,58 +188,83 @@
             <div class="butn">
               <span id="land-cover" class="glyphicon glyphicon-leaf w3-hover-opacity" aria-hidden="true"></span><br/>
               <h4>Land Cover</h4>
-              <div id="cover-info" class="hidden">
-                <p>
-                  Idaho is contains numerous types of land. The largest of these broadly categorized as 'rangeland'.
-                  Here in Idaho, these vast tracts of open space provide important habitat to wildlife and forage for
-                  livestock, offer a multitude of recreation opportunities and are a key source of renewable energy and
-                  minerals.
-                </p>
-                <p>
-                  Bacon ipsum dolor amet short loin brisket ground round, ribeye turducken corned beef rump pancetta
-                  shank leberkas tri-tip. Beef ribs sausage cow salami swine, leberkas bacon flank doner meatloaf
-                  alcatra boudin brisket pancetta shank. Bacon ipsum dolor amet short loin brisket ground round, ribeye
-                  turducken corned beef rump pancetta shank leberkas tri-tip. Beef ribs sausage cow salami swine,
-                  leberkas bacon flank doner meatloaf alcatra boudin brisket pancetta shank. Bacon ipsum dolor amet
-                  short loin brisket ground round, ribeye turducken corned beef rump pancetta shank leberkas tri-tip.
-                  Beef ribs sausage cow salami swine, leberkas bacon flank doner meatloaf alcatra boudin brisket
-                  pancetta shank.Bacon ipsum dolor amet short loin brisket ground round, ribeye turducken corned beef
-                  rump pancetta shank leberkas tri-tip. Beef ribs sausage cow salami swine, leberkas bacon flank doner
-                  meatloaf alcatra boudin brisket pancetta shank.
-                </p>
-              </div>
             </div>
           </div>
-        </div>
-        <div class="col-xs-6">
-          <div class="butn">
-            <span class="glyphicon glyphicon-user w3-hover-opacity" aria-hidden="true"></span><br/>
-            <h4>Land Management</h4>
-            <div class="hidden">
-              <p>
-                Rangeland in Idaho is primarily managed by three parties, private land owners, the Bureau of Land
-                Management, and the US Forest Service. These groups administer the public lands in Idaho with a mission
-                of sustaining the health, diversity and productivity of the public lands for the use and enjoyment of
-                present and future generations. Resources on the public lands include recreation, rangelands, timber,
-                minerals, water, fish and wildlife, wilderness, air and soils, and scenic, scientific, and cultural
-                values.
-              </p>
-              <p>
-                Bacon ipsum dolor amet short loin brisket ground round, ribeye turducken corned beef rump pancetta shank
-                leberkas tri-tip. Beef ribs sausage cow salami swine, leberkas bacon flank doner meatloaf alcatra boudin
-                brisket pancetta shank. Bacon ipsum dolor amet short loin brisket ground round, ribeye turducken corned
-                beef rump pancetta shank leberkas tri-tip. Beef ribs sausage cow salami swine, leberkas bacon flank
-                doner meatloaf alcatra boudin brisket pancetta shank. Bacon ipsum dolor amet short loin brisket ground
-                round, ribeye turducken corned beef rump pancetta shank leberkas tri-tip. Beef ribs sausage cow salami
-                swine, leberkas bacon flank doner meatloaf alcatra boudin brisket pancetta shank.Bacon ipsum dolor amet
-                short loin brisket ground round, ribeye turducken corned beef rump pancetta shank leberkas tri-tip. Beef
-                ribs sausage cow salami swine, leberkas bacon flank doner meatloaf alcatra boudin brisket pancetta
-                shank.
-              </p>
+          <div class="col-xs-6">
+            <div class="butn">
+              <span id="land-management" class="glyphicon glyphicon-user w3-hover-opacity"
+                    aria-hidden="true"></span><br/>
+              <h4>Land Management</h4>
             </div>
           </div>
         </div>
       </div>
+      <div id="cover-info" class="hidden padding-top padding-bottom">
+        <div>
+          <span class="back-btn glyphicon glyphicon-share-alt"></span>
+        </div>
+        <h4 class="text-center">Land Cover</h4>
+        <p>
+          Idaho is contains numerous types of land. The largest of these broadly categorized as 'rangeland'.
+          Here in Idaho, these vast tracts of open space provide important habitat to wildlife and forage for
+          livestock, offer a multitude of recreation opportunities and are a key source of renewable energy and
+          minerals.
+        </p>
+        <button type="button" class="btn btn-primary more-btn" data-toggle="collapse" data-target="#cover-more">Learn
+          More &raquo;</button>
+        <div id="cover-more" class="collapse">
+          <p>
+            Bacon ipsum dolor amet short loin brisket ground round, ribeye turducken corned beef rump pancetta
+            shank leberkas tri-tip. Beef ribs sausage cow salami swine, leberkas bacon flank doner meatloaf
+            alcatra boudin brisket pancetta shank. Bacon ipsum dolor amet short loin brisket ground round, ribeye
+            turducken corned beef rump pancetta shank leberkas tri-tip. Beef ribs sausage cow salami swine,
+            leberkas bacon flank doner meatloaf alcatra boudin brisket pancetta shank. Bacon ipsum dolor amet
+            short loin brisket ground round, ribeye turducken corned beef rump pancetta shank leberkas tri-tip.
+            Beef ribs sausage cow salami swine, leberkas bacon flank doner meatloaf alcatra boudin brisket
+            pancetta shank.Bacon ipsum dolor amet short loin brisket ground round, ribeye turducken corned beef
+            rump pancetta shank leberkas tri-tip. Beef ribs sausage cow salami swine, leberkas bacon flank doner
+            meatloaf alcatra boudin brisket pancetta shank.
+          </p>
+        </div>
+        <div class="text-center">
+          <h4 ><strong>Select a county on the map</strong></h4>
+        </div>
+      </div>
+
+      <div id="management-info" class="hidden padding-top padding-bottom">
+        <div>
+          <span class="back-btn glyphicon glyphicon-share-alt"></span>
+        </div>
+        <h4 class="text-center">Land Management</h4>
+        <p>
+          Rangeland in Idaho is primarily managed by three parties, private land owners, the Bureau of Land
+          Management, and the US Forest Service. These groups administer the public lands in Idaho with a mission
+          of sustaining the health, diversity and productivity of the public lands for the use and enjoyment of
+          present and future generations. Resources on the public lands include recreation, rangelands, timber,
+          minerals, water, fish and wildlife, wilderness, air and soils, and scenic, scientific, and cultural
+          values.
+        </p>
+        <button type="button" class="btn btn-primary more-btn" data-toggle="collapse" data-target="#management-more">
+          Learn More &raquo;</button>
+        <div id="management-more" class="collapse">
+          <p>
+            Bacon ipsum dolor amet short loin brisket ground round, ribeye turducken corned beef rump pancetta shank
+            leberkas tri-tip. Beef ribs sausage cow salami swine, leberkas bacon flank doner meatloaf alcatra boudin
+            brisket pancetta shank. Bacon ipsum dolor amet short loin brisket ground round, ribeye turducken corned
+            beef rump pancetta shank leberkas tri-tip. Beef ribs sausage cow salami swine, leberkas bacon flank
+            doner meatloaf alcatra boudin brisket pancetta shank. Bacon ipsum dolor amet short loin brisket ground
+            round, ribeye turducken corned beef rump pancetta shank leberkas tri-tip. Beef ribs sausage cow salami
+            swine, leberkas bacon flank doner meatloaf alcatra boudin brisket pancetta shank.Bacon ipsum dolor amet
+            short loin brisket ground round, ribeye turducken corned beef rump pancetta shank leberkas tri-tip. Beef
+            ribs sausage cow salami swine, leberkas bacon flank doner meatloaf alcatra boudin brisket pancetta
+            shank.
+          </p>
+        </div>
+        <div class="text-center">
+          <h4><strong>Select a county on the map</strong></h4>
+        </div>
+      </div>
+
       <div id="tableDiv">
         <div id="resultHead"></div>
       </div>
@@ -247,7 +272,7 @@
   </section>
 
   <!-- Map  -->
-  <section id="map" class="padding-bottom col-lg-6">
+  <section id="map" class="padding-bottom col-lg-6 col-md-8">
     <!-- Map content -->
     <div id="map-content">
       <div id="mapCanvas"></div>
@@ -258,28 +283,6 @@
 
 
 </div>
-
-<!-- Footer -->
-<footer id="footer" class="container-fluid">
-
-
-  <!--&lt;!&ndash; Contact &ndash;&gt;-->
-  <!--<section id="contact">-->
-    <!--<div>-->
-      <!--<header class="text-center">-->
-        <!--<h2>Contact</h2>-->
-      <!--</header>-->
-      <!--<p class="text-center">-->
-        <!--Any questions or comments should be directed to either Jeremy Kenyon (jkenyon@uidaho.edu) or Bruce Godfrey-->
-        <!--(bgodfrey@uidaho.edu).-->
-      <!--</p>-->
-    <!--</div>-->
-  <!--</section>-->
-  <!--<p class="text-center">-->
-    <!--&copy; Idaho Range Atlas All rights reserved.-->
-  <!--</p>-->
-
-</footer>
 
 
 <!--Libraries scripts-->

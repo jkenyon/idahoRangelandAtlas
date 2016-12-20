@@ -62,13 +62,20 @@ a:active {
   overflow-y: scroll;
 }
 
-#footer {
-  background-color: dimgrey;
-  color: white;
-}
-
 #navbar-close span {
   font-size: 110%;
+}
+
+#topics {
+  padding-bottom: 5%;
+}
+
+#land-cover:hover {
+  cursor: hand;
+}
+
+#land-management:hover {
+  cursor: hand;
 }
 
 .search-dropdown {
@@ -111,6 +118,18 @@ div.butn:hover {
 div.butn span:first-child {
   font-size: 240%;
   color: #D3D3D3;
+}
+
+.back-btn {
+  font-size: 200%;
+  color: #D3D3D3;
+  -moz-transform: scaleX(-1);
+  -o-transform: scaleX(-1);
+  -webkit-transform: scaleX(-1);
+}
+
+more-btn {
+  float: right;
 }
 
 .img-responsive {

@@ -17,7 +17,6 @@ require([
     $('#disclaimer, #technical, #data, #contact').removeClass('hidden');
     header.style.height = '100%';
     $('#about').toggleClass('hidden');
-    $()
     $('#navbar-close').toggleClass('hidden');
     $('#navbar-open').toggleClass('hidden');
   });
@@ -33,7 +32,7 @@ require([
     switch(event.target.hash){
       case "#about":
         $('#about').toggleClass('hidden');
-        // $(this).addClass('selected');
+        $(this).addClass('selected')
         break;
       case "#technical":
         $('#technical').toggleClass('hidden');
@@ -49,5 +48,20 @@ require([
         break;
       default: break;
     }
-  })
+  });
+
+  $('.back-btn').on('click', function () {
+    $('#topics').removeClass('hidden');
+    $('#cover-info, #management-info').addClass('hidden');
+  });
+
+  $('#land-cover').on('click', function () {
+    $('#topics').addClass('hidden');
+    $('#cover-info').removeClass('hidden');
+  });
+  $('#land-management').on('click', function () {
+    $('#topics').addClass('hidden');
+    $('#management-info').removeClass('hidden');
+  });
+
 });
