@@ -38,7 +38,7 @@
 <!-- Header -->
 <nav id="header" class="navbar navbar-inverse navbar-fixed-top container-fluid row">
 
-  <div class="navbar-header">
+  <div class="navbar-header container-fluid">
     <a href="#map" class="navbar-brand">Idaho Rangeland Atlas</a>
     <button id="hamburger-button" type="button" class="navbar-toggle collapsed" data-toggle="collapse"
             data-target="#navbar"
@@ -174,7 +174,7 @@
 </nav>
 
 <!-- Main -->
-<div id="main" class="container-fluid padding-top row">
+<div id="main" class="container-fluid padding-top row" align="center">
 
   <section id="main-content" class="col-lg-6 col-md-4">
 
@@ -200,11 +200,11 @@
         </div>
       </div>
       <div id="cover-info" class="hidden padding-top padding-bottom">
-        <div>
+        <div class="text-left">
           <span class="back-btn glyphicon glyphicon-share-alt"></span>
         </div>
-        <h4 class="text-center">Land Cover</h4>
-        <p>
+        <h3 class="text-center text-primary padding-bottom">Land Cover</h3>
+        <p class="text-justify">
           Idaho is contains numerous types of land. The largest of these broadly categorized as 'rangeland'.
           Here in Idaho, these vast tracts of open space provide important habitat to wildlife and forage for
           livestock, offer a multitude of recreation opportunities and are a key source of renewable energy and
@@ -213,7 +213,7 @@
         <button type="button" class="btn btn-primary more-btn" data-toggle="collapse" data-target="#cover-more">Learn
           More &raquo;</button>
         <div id="cover-more" class="collapse">
-          <p>
+          <p class="text-justify">
             Bacon ipsum dolor amet short loin brisket ground round, ribeye turducken corned beef rump pancetta
             shank leberkas tri-tip. Beef ribs sausage cow salami swine, leberkas bacon flank doner meatloaf
             alcatra boudin brisket pancetta shank. Bacon ipsum dolor amet short loin brisket ground round, ribeye
@@ -227,16 +227,16 @@
           </p>
         </div>
         <div class="text-center">
-          <h4 ><strong>Select a county on the map</strong></h4>
+          <h4><strong>Select a county on the map</strong></h4>
         </div>
       </div>
 
       <div id="management-info" class="hidden padding-top padding-bottom">
-        <div>
+        <div class="text-left">
           <span class="back-btn glyphicon glyphicon-share-alt"></span>
         </div>
-        <h4 class="text-center">Land Management</h4>
-        <p>
+        <h3 class="text-center text-primary padding-bottom">Land Management</h3>
+        <p class="text-justify">
           Rangeland in Idaho is primarily managed by three parties, private land owners, the Bureau of Land
           Management, and the US Forest Service. These groups administer the public lands in Idaho with a mission
           of sustaining the health, diversity and productivity of the public lands for the use and enjoyment of
@@ -247,7 +247,7 @@
         <button type="button" class="btn btn-primary more-btn" data-toggle="collapse" data-target="#management-more">
           Learn More &raquo;</button>
         <div id="management-more" class="collapse">
-          <p>
+          <p class="text-justify">
             Bacon ipsum dolor amet short loin brisket ground round, ribeye turducken corned beef rump pancetta shank
             leberkas tri-tip. Beef ribs sausage cow salami swine, leberkas bacon flank doner meatloaf alcatra boudin
             brisket pancetta shank. Bacon ipsum dolor amet short loin brisket ground round, ribeye turducken corned
@@ -264,18 +264,17 @@
           <h4><strong>Select a county on the map</strong></h4>
         </div>
       </div>
+    </div>
 
-      <div id="tableDiv">
-        <div id="resultHead"></div>
-      </div>
+    <div id="tableDiv" class="padding-bottom">
+      <div id="resultHead" class="text-center"></div>
     </div>
   </section>
 
   <!-- Map  -->
   <section id="map" class="padding-bottom col-lg-6 col-md-8">
     <!-- Map content -->
-    <div id="map-content">
-      <div id="mapCanvas"></div>
+    <div id="mapCanvas">
       <!--<img id="loadingImg" src="img/gears.gif" style="position:relative; left: 40%; top: 40%; z-index:100;"/>-->
     </div>
 

@@ -5,8 +5,10 @@ require([
   "dijit/form/FilteringSelect",
   "esri/config",
   "dojo/dom",
+  "dojo/on",
+  "dojo/dom-style",
   "dojo/domReady!"
-], function(MyViews,MySearchBox,  Memory, FilteringSelect, esriConfig, dom) {
+], function (MyViews, MySearchBox, Memory, FilteringSelect, esriConfig, dom, on, domStyle) {
   // Fixes CORS problems.
   esriConfig.request.corsDetection = false;
   esriConfig.request.corsEnabledServers.push("gis-sandbox.northwestknowledge.net");
@@ -29,7 +31,7 @@ require([
 
   $("#nav-menu ul li a").on('click', function (event) {
     $('#about, #disclaimer, #technical, #data, #contact').addClass('hidden');
-    switch(event.target.hash){
+    switch (event.target.hash) {
       case "#about":
         $('#about').toggleClass('hidden');
         $(this).addClass('selected')
@@ -46,22 +48,28 @@ require([
       case "#contact":
         $('#contact').toggleClass('hidden');
         break;
-      default: break;
+      default:
+        break;
     }
   });
 
   $('.back-btn').on('click', function () {
     $('#topics').removeClass('hidden');
     $('#cover-info, #management-info').addClass('hidden');
+    $('#esri_widgets_Search_0').addClass('hidden');
   });
 
   $('#land-cover').on('click', function () {
     $('#topics').addClass('hidden');
     $('#cover-info').removeClass('hidden');
+    $('#esri_widgets_Search_0').removeClass('hidden');
   });
   $('#land-management').on('click', function () {
     $('#topics').addClass('hidden');
     $('#management-info').removeClass('hidden');
+    $('#esri_widgets_Search_0').removeClass('hidden');
   });
+
+
 
 });

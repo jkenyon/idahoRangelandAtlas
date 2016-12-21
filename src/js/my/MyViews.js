@@ -18,13 +18,17 @@ define([
     "esri/symbols/SimpleMarkerSymbol",
     "esri/widgets/Search",
     "dojo/dom-construct",
+    "dojo/dom-class",
+    "dojo/on",
+    "dojo/dom-style",
     "dojo/domReady!"
   ],
-  function (declare, MyMap, MyWidgets, Map, MyUtils, dom, MapView, ImageryLayer, RasterFunction, UniqueValueRenderer, SimpleFillSymbol, FeatureLayer, SimpleRenderer, SimpleMarkerSymbol, Search, domConstruct) {
+  function (declare, MyMap, MyWidgets, Map, MyUtils, dom, MapView, ImageryLayer, RasterFunction, UniqueValueRenderer, SimpleFillSymbol, FeatureLayer, SimpleRenderer, SimpleMarkerSymbol, Search, domConstruct, domClass, on, domStyle) {
     return declare(null, {
       myView: null,
       constructor: function () {
         var myMap = new MyMap();
+        var map = myMap.map;
 
         // var myUtils = new MyUtils();
 
@@ -232,6 +236,9 @@ define([
 
         var dropdown = domConstruct.toDom(dropdownButton(data));
 
+        var full = false;
+
+
         view.then(function () {
 
           view.ui.add(searchWidget, {
@@ -240,6 +247,59 @@ define([
           });
 
           domConstruct.place(dropdown, dom.byId('esri_widgets_Search_0'), "first");
+
+          domClass.add('esri_widgets_Search_0', "hidden");
+
+          var fullscreenBtn = domConstruct.toDom('<button type="button" id="fullscreen-btn" class="btn btn-info"><span class="glyphicon glyphicon-fullscreen"></span></button>');
+
+          view.ui.add(fullscreenBtn, {position: "top-left", index:0});
+
+          var mapStyle = domStyle.getComputedStyle(mapCanvas);
+          var mainDiv = dom.byId('main');
+          var mainStyle = domStyle.getComputedStyle(mainDiv);
+          on(fullscreenBtn, 'click', function (evt) {
+            var map = dom.byId('map');
+            var mapCanvas = dom.byId('mapCanvas');
+            if(full === true){
+              dom.byId('header').style.display = 'block';
+              dom.byId('main-content').style.display = 'block';
+              // domStyle.set(mapCanvas, {
+              //   height: mapStyle.height,
+              //   width: mapStyle.width,
+              // });
+              domStyle.set(mainDiv, {
+                height: mainStyle.height,
+                width: mainStyle.width,
+              });
+              domClass.remove(mapCanvas, "fullscreen");
+              domClass.remove(map, "fullscreen");
+              domClass.add(mainDiv, "container-fluid");
+              domClass.add(mainDiv, "padding-top");
+              full = false;
+            }
+            else {
+              dom.byId('header').style.display = 'none';
+              dom.byId('main-content').style.display = 'none';
+              // domStyle.set(map, {
+              //   height: "100%",
+              //   width: '100%',
+              //   marginTop: '0px',
+              //   marginBottom: '0px'
+              // });
+              // domStyle.set(mapCanvas, {
+              //   height: "100%",
+              //   width: '100%',
+              //   marginTop: '0px',
+              //   marginBottom: '0px'
+              // });
+              domClass.add(mapCanvas, "fullscreen");
+              domClass.add(map, "fullscreen");
+              domClass.remove(mainDiv, "container-fluid");
+              domClass.remove(mainDiv, "padding-top");
+              full = true;
+            }
+          });
+
 
 
           searchWidget.on("search-complete", function (event) {
