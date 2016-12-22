@@ -15,14 +15,14 @@ require([
   var view = new MyViews();
 
   var header = dom.byId('header');
-  $('#hamburger-button #navbar-open').on('click', function () {
-    $('#disclaimer, #technical, #data, #contact').removeClass('hidden');
+  $('#navbar-open').on('click', function () {
+    $('#disclaimer, #technical, #data, #contact').addClass('hidden');
     header.style.height = '100%';
     $('#about').toggleClass('hidden');
     $('#navbar-close').toggleClass('hidden');
     $('#navbar-open').toggleClass('hidden');
   });
-  $('#hamburger-button #navbar-close').on('click', function () {
+  $('#navbar-close').on('click', function () {
     $('#about, #disclaimer, #technical, #data, #contact').addClass('hidden');
     header.style.height = 'auto';
     $('#navbar-close').toggleClass('hidden');
@@ -55,21 +55,25 @@ require([
 
   $('.back-btn').on('click', function () {
     $('#topics').removeClass('hidden');
-    $('#cover-info, #management-info').addClass('hidden');
+    $('#cover-info, #management-info, #back-button').addClass('hidden');
     $('#esri_widgets_Search_0').addClass('hidden');
+    $('#table').replaceWith("");
+    $('#tableDiv').addClass('hidden');
   });
 
   $('#land-cover').on('click', function () {
     $('#topics').addClass('hidden');
+    $('#tableDiv').removeClass('hidden');
     $('#cover-info').removeClass('hidden');
+    $('#back-button').removeClass('hidden');
     $('#esri_widgets_Search_0').removeClass('hidden');
   });
   $('#land-management').on('click', function () {
     $('#topics').addClass('hidden');
+    $('#tableDiv').removeClass('hidden');
     $('#management-info').removeClass('hidden');
+    $('#back-button').removeClass('hidden');
     $('#esri_widgets_Search_0').removeClass('hidden');
   });
-
-
 
 });

@@ -21,8 +21,8 @@
   </script>
 
   <!--Esri Api -->
-  <link rel="stylesheet" href="https://js.arcgis.com/4.1/esri/css/main.css">
-  <script src="https://js.arcgis.com/4.1/"></script>
+  <link rel="stylesheet" href="https://js.arcgis.com/4.2/esri/css/main.css">
+  <script src="https://js.arcgis.com/4.2/"></script>
 
   <link rel="stylesheet" type='text/css' href="./css/bootstrap.min.css"/>
   <!--<link rel="stylesheet" type='text/css' href="css/w3.css" />-->
@@ -35,148 +35,149 @@
 </head>
 
 <body>
-<!-- Header -->
-<nav id="header" class="navbar navbar-inverse navbar-fixed-top container-fluid row">
-
-  <div class="navbar-header container-fluid">
-    <a href="#map" class="navbar-brand">Idaho Rangeland Atlas</a>
-    <button id="hamburger-button" type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-            data-target="#navbar"
-            aria-controls="navbar">
-      <div id="navbar-open">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </div>
-      <div id="navbar-close" class="hidden">
-        <span class="glyphicon glyphicon-remove"></span>
-      </div>
-
-    </button>
-  </div>
-
-  <div id="navbar" class="navbar-collapse collapse row">
-    <div id="nav-menu" class="col-md-6 col-lg-4">
-      <ul class="nav navbar-nav">
-        <li aria-selected="true"><a href="#about" class="selected">About the Project</a></li>
-        <li><a href="#data" class="selected">Data and Methods</a></li>
-        <li><a href="#technical" class="selected">Technical Details</a></li>
-        <li><a href="#disclaimer" class="selected">Accuracy and Disclaimer</a></li>
-        <li><a href="#contact" class="selected">Contact</a></li>
-      </ul>
-      <div id="img-range" class="row">
-        <img src="./img/dds_logo.png" class="img-responsive col-md-6 logo"/>
-        <img src="./img/rc_logo.png" class="img-responsive col-md-6 logo"/>
-      </div>
-    </div>
-
-    <div id="nav-menu-content" class="col-md-6 col-lg-8">
-      <!-- Technical Details -->
-      <div id="technical" class="hidden">
-        <div>
-          <header class="text-center">
-            <h2>Technical Details</h2>
-          </header>
-          <p>
-            All application development uses a combination of HTML5, CSS3, and Javascript. The geoprocessing uses ESRI’s
-            ArcGIS Javascript API. Our goal is to use basic, open W3C-endorsed web technologies that are supported by
-            all
-            web browsers and require no additional add-ins, plug-ins, or special software. All work will be done on
-            software/hardware provided by the University of Idaho Library Data & Digital Services Department and INSIDE
-            Idaho.
-          </p>
-        </div>
-      </div>
-
-      <!-- Data -->
-      <div id="data" class="hidden">
-        <div>
-          <header class="text-center">
-            <h2>Data</h2>
-          </header>
-          <p>
-            Data is obtained from available federal sources.<br/><br/>Land Cover: Land cover estimates are derived from
-            the
-            National Land Cover Database (NLCD) 2011 using values 52 (Shrub/Scrub) and 71(Grassland/Herbaceous). The
-            NLCD
-            is
-            a national products based on a classification of 2011 Landsat satellite imagery of the United States. It is
-            developed by the Multi-Resoultion Land Characteristics Consortium and available from the <a
-              href="http://www.mrlc.gov/nlcd2011.php">USGS</a>.<br/><br/>Land Management: Land management information is
-            obtained from the Bureau of Land Management\'s Surface Management Agency, which shows who manages the lands
-            of
-            the United States. The data is available from the <a
-              href="http://www.geocommunicator.gov/GeoComm/services.htm#Download">BLM</a>.<br/><br/>Processing: Using a
-            geoprocessing model in ArcGIS 10.4, we identified the two areas classified as rangeland. These choices were
-            verified with the UI Rangeland Center as the best two choices to represent rangeland land cover. Land
-            management
-            data was obtained by identifying the intersection between the land cover and land management data.
-          </p>
-        </div>
-      </div>
-
-      <!-- Accuracy and Disclaimer -->
-      <div id="disclaimer" class="hidden">
-        <div>
-          <header class="text-center">
-            <h2>Accuracy and Disclaimer</h2>
-          </header>
-          <p>Not sure what to say here yet.</p>
-        </div>
-      </div>
-
-      <!-- About -->
-      <div id="about" class="hidden">
-        <div>
-          <header class="text-center">
-            <h2>About Us</h2>
-          </header>
-          <p>
-            The Idaho Rangeland Atlas is a collaboration of the University of Idaho Library and the University of Idaho
-            Rangeland Center. Its purpose is to provide simple, clear information about Idaho's rangelands using open,
-            accessible web technologies. Leveraging the University of Idaho's investements in geospatial data and
-            infrastructure enable us to present this information. We believe that if an Idaho citizen wants to
-            understand
-            the basic facts of rangeland ecology and space in our state, those facts should be available without the
-            need
-            to
-            engage in advanced analysis or obtain new skills.<br/><br/>The lack of an aggregating resource, like a
-            statistical abstract, adds time to process of discovery and delays the ability of users to move on, either
-            to
-            advanced research questions, as they have to answer and prove more fundamental ones first, or to other tasks
-            based on the information that they now have. Given the increasing accessibility of web-based geospatial
-            processing, and the improvement in technology to provide rich, informative, web-based queries of spatial
-            data,
-            the opportunity exists to re-invent the statistical abstract for natural resource and agricultural
-            questions,
-            providing a simple interface to gather facts about the state of Idaho’s rangelands.
-          </p>
-        </div>
-      </div>
-
-      <!-- Contact -->
-      <div id="contact" class="hidden">
-        <div>
-          <header class="text-center">
-            <h2>Contact</h2>
-          </header>
-          <p class="text-center">
-            Any questions or comments should be directed to either Jeremy Kenyon (jkenyon@uidaho.edu) or Bruce Godfrey
-            (bgodfrey@uidaho.edu).
-          </p>
-        </div>
-      </div>
-
-    </div>
-
-  </div>
-</nav>
 
 <!-- Main -->
-<div id="main" class="container-fluid padding-top row" align="center">
+<div id="main" class="row">
+  <!-- Header -->
+  <nav id="header" class="navbar navbar-inverse navbar-fixed-top container-fluid row">
 
-  <section id="main-content" class="col-lg-6 col-md-4">
+    <div class="navbar-header container-fluid">
+      <a href="#map" class="navbar-brand">Idaho Rangeland Atlas</a>
+      <button id="hamburger-button" type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target="#navbar"
+              aria-controls="navbar">
+        <div id="navbar-open">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </div>
+        <div id="navbar-close" class="hidden">
+          <span class="glyphicon glyphicon-remove"></span>
+        </div>
+
+      </button>
+    </div>
+
+    <div id="navbar" class="navbar-collapse collapse row">
+      <div id="nav-menu" class="col-md-6 col-lg-4">
+        <ul class="nav navbar-nav">
+          <li aria-selected="true"><a href="#about" class="selected">About the Project</a></li>
+          <li><a href="#data" class="selected">Data and Methods</a></li>
+          <li><a href="#technical" class="selected">Technical Details</a></li>
+          <li><a href="#disclaimer" class="selected">Accuracy and Disclaimer</a></li>
+          <li><a href="#contact" class="selected">Contact</a></li>
+        </ul>
+        <div class="row imgs-range">
+          <img src="./img/dds_logo.png" class="img-responsive col-md-6 logo"/>
+          <img src="./img/rc_logo.png" class="img-responsive col-md-6 logo"/>
+        </div>
+      </div>
+
+      <div id="nav-menu-content" class="col-md-6 col-lg-8">
+        <!-- Technical Details -->
+        <div id="technical" class="hidden">
+          <div>
+            <header class="text-center">
+              <h2>Technical Details</h2>
+            </header>
+            <p>
+              All application development uses a combination of HTML5, CSS3, and Javascript. The geoprocessing uses ESRI’s
+              ArcGIS Javascript API. Our goal is to use basic, open W3C-endorsed web technologies that are supported by
+              all
+              web browsers and require no additional add-ins, plug-ins, or special software. All work will be done on
+              software/hardware provided by the University of Idaho Library Data & Digital Services Department and INSIDE
+              Idaho.
+            </p>
+          </div>
+        </div>
+
+        <!-- Data -->
+        <div id="data" class="hidden">
+          <div>
+            <header class="text-center">
+              <h2>Data</h2>
+            </header>
+            <p>
+              Data is obtained from available federal sources.<br/><br/>Land Cover: Land cover estimates are derived from
+              the
+              National Land Cover Database (NLCD) 2011 using values 52 (Shrub/Scrub) and 71(Grassland/Herbaceous). The
+              NLCD
+              is
+              a national products based on a classification of 2011 Landsat satellite imagery of the United States. It is
+              developed by the Multi-Resoultion Land Characteristics Consortium and available from the <a
+                href="http://www.mrlc.gov/nlcd2011.php">USGS</a>.<br/><br/>Land Management: Land management information is
+              obtained from the Bureau of Land Management\'s Surface Management Agency, which shows who manages the lands
+              of
+              the United States. The data is available from the <a
+                href="http://www.geocommunicator.gov/GeoComm/services.htm#Download">BLM</a>.<br/><br/>Processing: Using a
+              geoprocessing model in ArcGIS 10.4, we identified the two areas classified as rangeland. These choices were
+              verified with the UI Rangeland Center as the best two choices to represent rangeland land cover. Land
+              management
+              data was obtained by identifying the intersection between the land cover and land management data.
+            </p>
+          </div>
+        </div>
+
+        <!-- Accuracy and Disclaimer -->
+        <div id="disclaimer" class="hidden">
+          <div>
+            <header class="text-center">
+              <h2>Accuracy and Disclaimer</h2>
+            </header>
+            <p>Not sure what to say here yet.</p>
+          </div>
+        </div>
+
+        <!-- About -->
+        <div id="about" class="hidden">
+          <div>
+            <header class="text-center">
+              <h2>About Us</h2>
+            </header>
+            <p>
+              The Idaho Rangeland Atlas is a collaboration of the University of Idaho Library and the University of Idaho
+              Rangeland Center. Its purpose is to provide simple, clear information about Idaho's rangelands using open,
+              accessible web technologies. Leveraging the University of Idaho's investements in geospatial data and
+              infrastructure enable us to present this information. We believe that if an Idaho citizen wants to
+              understand
+              the basic facts of rangeland ecology and space in our state, those facts should be available without the
+              need
+              to
+              engage in advanced analysis or obtain new skills.<br/><br/>The lack of an aggregating resource, like a
+              statistical abstract, adds time to process of discovery and delays the ability of users to move on, either
+              to
+              advanced research questions, as they have to answer and prove more fundamental ones first, or to other tasks
+              based on the information that they now have. Given the increasing accessibility of web-based geospatial
+              processing, and the improvement in technology to provide rich, informative, web-based queries of spatial
+              data,
+              the opportunity exists to re-invent the statistical abstract for natural resource and agricultural
+              questions,
+              providing a simple interface to gather facts about the state of Idaho’s rangelands.
+            </p>
+          </div>
+        </div>
+
+        <!-- Contact -->
+        <div id="contact" class="hidden">
+          <div>
+            <header class="text-center">
+              <h2>Contact</h2>
+            </header>
+            <p class="text-center">
+              Any questions or comments should be directed to either Jeremy Kenyon (jkenyon@uidaho.edu) or Bruce Godfrey
+              (bgodfrey@uidaho.edu).
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </nav>
+
+  <!-- Main Content-->
+  <div id="main-content" align="center" class="col-lg-6 col-md-4 container-fluid padding-top">
 
     <!-- Map menu  -->
     <div id="map-menu">
@@ -199,10 +200,11 @@
           </div>
         </div>
       </div>
-      <div id="cover-info" class="hidden padding-top padding-bottom">
-        <div class="text-left">
-          <span class="back-btn glyphicon glyphicon-share-alt"></span>
-        </div>
+
+      <div id="back-button" class="text-left hidden padding-top">
+        <span class="back-btn glyphicon glyphicon-share-alt"></span>
+      </div>
+      <div id="cover-info" class="hidden padding-bottom">
         <h3 class="text-center text-primary padding-bottom">Land Cover</h3>
         <p class="text-justify">
           Idaho is contains numerous types of land. The largest of these broadly categorized as 'rangeland'.
@@ -231,10 +233,7 @@
         </div>
       </div>
 
-      <div id="management-info" class="hidden padding-top padding-bottom">
-        <div class="text-left">
-          <span class="back-btn glyphicon glyphicon-share-alt"></span>
-        </div>
+      <div id="management-info" class="hidden padding-bottom">
         <h3 class="text-center text-primary padding-bottom">Land Management</h3>
         <p class="text-justify">
           Rangeland in Idaho is primarily managed by three parties, private land owners, the Bureau of Land
@@ -264,21 +263,22 @@
           <h4><strong>Select a county on the map</strong></h4>
         </div>
       </div>
+
+      <div id="tableDiv" class="padding-bottom">
+        <div id="resultHead" class="text-center"></div>
+      </div>
     </div>
 
-    <div id="tableDiv" class="padding-bottom">
-      <div id="resultHead" class="text-center"></div>
-    </div>
-  </section>
+  </div>
 
   <!-- Map  -->
-  <section id="map" class="padding-bottom col-lg-6 col-md-8">
-    <!-- Map content -->
-    <div id="mapCanvas">
+  <div id="map" class="container-fluid padding-top col-lg-6 col-md-8">
+     <!-- Map content -->
+    <div id="mapCanvas" class="map-display">
       <!--<img id="loadingImg" src="img/gears.gif" style="position:relative; left: 40%; top: 40%; z-index:100;"/>-->
     </div>
 
-  </section>
+  </div>
 
 
 </div>

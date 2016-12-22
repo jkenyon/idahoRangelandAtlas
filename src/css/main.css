@@ -6,6 +6,10 @@ body {
   background-color: #484848;
   color: white;
   font-family: 'PT Sans', sans-serif;
+  width: 100%;
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
 }
 
 p {
@@ -20,6 +24,14 @@ a::selection {
 }
 a:active {
   color: white;
+}
+
+#main {
+  display: block;
+  height: 100%;
+  width: 100%;
+  padding: 0px;
+  margin: 0px;
 }
 
 #header {
@@ -47,11 +59,7 @@ a:active {
   background-color: #1b6d85 !important;
 }
 
-
-#map {
-}
-
-#mapCanvas {
+.map-display {
   padding: 0;
   margin: 0;
   height: 520px;
@@ -59,7 +67,7 @@ a:active {
 }
 
 #resultHead {
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 #navbar-close span {
@@ -80,7 +88,7 @@ a:active {
 
 .search-dropdown {
   z-index: 100;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 
 .navbar {
@@ -132,8 +140,8 @@ more-btn {
   float: right;
 }
 
-.img-responsive {
-
+.imgs-range {
+  padding-bottom: 5px;
 }
 
 /*================= CUSTOM CLASS STYLES =======================*/
@@ -176,7 +184,7 @@ more-btn {
 
 /* Small Devices, Tablets */
 @media only screen and (min-width : 768px) {
-  #mapCanvas {
+  .map-display {
     padding: 0;
     margin: 0;
     height: 620px;
@@ -237,6 +245,10 @@ more-btn {
 @media only screen and (max-width : 480px) {
   #nav-menu {
     border-bottom: 1px solid #d9edf7;
+  }
+  .map-display {
+    height: 300px;
+    width: 100%;
   }
 }
 
