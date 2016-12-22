@@ -10,7 +10,7 @@ define([
   function (declare, Search, FeatureLayer) {
     return declare(null, {
       searchWidget: null,
-      constructor: function (view, popup) {
+      constructor: function (view) {
         var url = "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/idaho_rangeland_atlas_2014/MapServer/0";
 
         this.searchWidget = new Search({
@@ -21,10 +21,8 @@ define([
           popupEnabled: true,
           sources: [
             {
-              popup: popup,
               featureLayer: new FeatureLayer({
-                url: url,
-                popupTemplate: popup
+                url: url
               }),
               placeholder: "Search for a county",
               searchFields: ["NAME"],

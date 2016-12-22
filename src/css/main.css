@@ -59,6 +59,11 @@ a:active {
   background-color: #1b6d85 !important;
 }
 
+#map {
+  padding: 0px;
+  margin: 0px;
+}
+
 .map-display {
   padding: 0;
   margin: 0;
@@ -151,8 +156,8 @@ more-btn {
 .fixed {position: fixed !important;}
 .selected {background-color: #1b6d85; color: white; }
 .fullscreen {
-  height: 100% !important;
-  width: 100% !important;
+  height: 100vh !important;
+  width: 100vw !important;
   padding: 0px !important;
   margin: 0px !important;
   border: 0px !important;

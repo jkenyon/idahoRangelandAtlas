@@ -32,30 +32,6 @@ define([
 
         // var myUtils = new MyUtils();
 
-        var popup = {
-          dockEnabled: true,
-          dockOptions: {
-            buttonEnabled: true,
-            breakpoint: true,
-            position: "top-right"
-          },
-          title: "<h3> " + name + " </h3><strong>Select a topic below</strong>",
-          overwriteActions: true,
-          content: [],
-          actions: [
-            {
-              id: "land-cover",
-              className: "glyphicon glyphicon-leaf",
-              title: "Land Cover"
-            },
-            {
-              id: "land-management",
-              className: "glyphicon glyphicon-user",
-              title: "Land Management"
-            }
-          ]
-        };
-
         this.myView = new MapView({
           container: "mapCanvas",
           map: myMap.map,
@@ -64,7 +40,7 @@ define([
         });
         var view = this.myView;
 
-        var myWigets = new MyWidgets(this.myView, popup);
+        var myWigets = new MyWidgets(this.myView);
 
         var colorize = function (pixelData) {
           var pixelBlock = pixelData.pixelBlock;
@@ -265,7 +241,6 @@ define([
         var backBtn = dom.byId('back-button');
         on(backBtn, 'click', function () {
           map.remove(imgLyr);
-          console.log('back');
         });
 
         view.then(function () {
@@ -283,6 +258,7 @@ define([
 
           view.ui.add(fullscreenBtn, {position: "top-left", index: 0});
 
+          var mainDiv = dom.byId('main');
           var mapCanvas = dom.byId('mapCanvas');
           var mapStyle = domStyle.getComputedStyle(mapCanvas);
           var mapDiv = dom.byId('map');
@@ -291,74 +267,66 @@ define([
             if (full === true) {
               dom.byId('header').style.display = 'block';
               dom.byId('main-content').style.display = 'block';
-              domStyle.set(mapCanvas, {
-                height: mapStyle.height,
-                width: mapStyle.width
-              });
-              domStyle.set(mapDiv, {
-                height: mapDivStyle.height,
-                width: mapDivStyle.width
-              });
+              // domStyle.set(mapCanvas, {
+              //   height: mapStyle.height,
+              //   width: mapStyle.width
+              // });
+              // domStyle.set(mapDiv, {
+              //   height: mapDivStyle.height,
+              //   width: mapDivStyle.width
+              // });
               // domClass.remove(mapCanvas, "fullscreen");
               domClass.add(mapCanvas, "map-display");
-              // domClass.remove(map, "fullscreen");
-              // domClass.add(mainDiv, "container-fluid");
-              // domClass.add(mainDiv, "padding-top");
+              domClass.remove(map, "fullscreen");
+              domClass.add(mainDiv, "container-fluid");
+              domClass.add(mainDiv, "padding-top");
+              domClass.add(mapDiv, "container-fluid");
+              domClass.add(mapDiv, "padding-top");
               full = false;
             }
             else {
               dom.byId('header').style.display = 'none';
               dom.byId('main-content').style.display = 'none';
-              domStyle.set(mapCanvas, {
-                height: "100% !important",
-                minHeight: '100% !important',
-                width: '100% !important',
-                padding: '0px',
-                margin: '0px',
-              });
-              domStyle.set(mapDiv, {
-                height: "100% !important",
-                minHeight: '100% !important',
-                width: '100% !important',
-                padding: '0px',
-                margin: '0px',
-              });
-              domClass.remove(mapCanvas, "map-display");
-              // domClass.add(mapCanvas, "fullscreen");
-              // domClass.add(mapDiv, "fullscreen");
+              // domStyle.set(mapCanvas, {
+              //   height: "100vh",
+              //   width: '100vw',
+              //   padding: '0px',
+              //   margin: '0px'
+              // });
+              // domStyle.set(mapDiv, {
+              //   height: "100% !important",
+              //   minHeight: '100% !important',
+              //   width: '100% !important',
+              //   padding: '0px',
+              //   margin: '0px',
+              // });
+              // domClass.remove(mapCanvas, "map-display");
+              domClass.add(mapCanvas, "fullscreen");
+              // // domClass.add(mapDiv, "fullscreen");
+              domClass.remove(mainDiv, "container-fluid");
+              domClass.remove(mainDiv, "padding-top");
+              domClass.remove(mapDiv, "container-fluid");
+              domClass.remove(mapDiv, "padding-top");
               full = true;
             }
           });
 
-
-          searchWidget.on("search-complete", function (event) {
+          searchWidget.on("select-result", function (event) {
             var feature;
-            console.log(event);
             if (event.numResults !== 0) {
-              feature = event.results[0].results[0].feature;
-
+              feature = event.result.feature;
               if (choice === "management") {
-                // myMap.map.basemap = "streets";
                 var tbHead = "<thead><tr><th class='header legend'></th><th class='header'>Manager</th><th class='header' >% of Rangeland</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
 
                 var managementResults = getLandResults(imgLyr, feature, "management");
                 dom.byId("tableDiv").innerHTML = "<table id='table' class='table table-bordered text-center' cellspacing='0'>" + tbHead + "<tbody>" + managementResults + "</tbody></table>";
               }
               else if (choice === "cover") {
-                // myMap.map.basemap = "streets";
                 var coverResults = getLandResults(imgLyr, feature, "cover");
 
                 dom.byId("tableDiv").innerHTML = "<br /><table id='table'  class='table table-bordered text-center' cellspacing='0'><tbody>" + coverResults + "</tbody></table>";
               }
             }
-
-
-
-            // view.popup.on("trigger-action", function (event) {
-            //   var feature = view.popup.features[0];
-            //   // var feature = searchEvent.result.feature;
-            //   // if (event.action.id === "land-management") {
-            //
           });
         });
       },
