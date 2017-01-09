@@ -277,9 +277,8 @@ define([
               // });
               // domClass.remove(mapCanvas, "fullscreen");
               domClass.add(mapCanvas, "map-display");
-              domClass.remove(map, "fullscreen");
+              domClass.remove(mapCanvas, "fullscreen");
               domClass.add(mainDiv, "container-fluid");
-              domClass.add(mainDiv, "padding-top");
               domClass.add(mapDiv, "container-fluid");
               domClass.add(mapDiv, "padding-top");
               full = false;
@@ -304,7 +303,6 @@ define([
               domClass.add(mapCanvas, "fullscreen");
               // // domClass.add(mapDiv, "fullscreen");
               domClass.remove(mainDiv, "container-fluid");
-              domClass.remove(mainDiv, "padding-top");
               domClass.remove(mapDiv, "container-fluid");
               domClass.remove(mapDiv, "padding-top");
               full = true;

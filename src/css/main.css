@@ -51,13 +51,14 @@ a:active {
   padding-top: 5px;
 }
 
-#nav-menu a:hover {
+#nav-menu>ul>li>a{
+  background-color: #1b6d85;
+}
+
+#nav-menu>ul>li>a:active {
   background-color: #00bcd4;
 }
 
-#nav-menu a:active {
-  background-color: #1b6d85 !important;
-}
 
 #map {
   padding: 0px;
@@ -117,6 +118,7 @@ a:active {
 .navbar-nav>li {
   float: none;
 }
+
 .navbar-collapse.collapse.in{
   display:block !important;
 }
@@ -152,6 +154,7 @@ more-btn {
 /*================= CUSTOM CLASS STYLES =======================*/
 .padding-top {padding-top: 8%!important;}
 .padding-bottom {padding-bottom: 16px!important;}
+.padding-left {padding-bottom: 5px!important;}
 .padding-0 {padding:0!important}
 .fixed {position: fixed !important;}
 .selected {background-color: #1b6d85; color: white; }
