@@ -209,23 +209,7 @@ define([
 
         var searchWidget = myWigets.search();
 
-        var data = [
-          'ADA', 'ADAMS', 'BANNOCK', 'BEAR LAKE', 'BENEWAH', 'BINGHAM', 'BLAINE', 'BOISE', 'BONNER', 'BONNEVILLE', 'BOUNDARY', 'BUTTE', 'CAMAS', 'CANYON', 'CARIBOU', 'CASSIA', 'CLARK', 'CLEARWATER', 'CUSTER', 'ELMORE', 'FRANKLIN', 'FREMONT', 'GEM', 'GOODING', 'IDAHO', 'JEFFERSON', 'JEROME', 'KOOTENAI', 'LATAH', 'LEMHI', 'LEWIS', 'LINCOLN', 'MADISON', 'MINIDOKA', 'NEZ PERCE', 'ONEIDA', 'OWYHEE', 'PAYETTE', 'POWER', 'SHOSHONE', 'TETON', 'TWIN FALLS', 'VALLEY', 'WASHINGTON'
-        ];
-
-        var dropdownButton = function (data) {
-          var i;
-          var button = '<div id="search-dropdown"><button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">' +
-            '<span class="glyphicon glyphicon-triangle-bottom"></span></button>' +
-            '<ul class="dropdown-menu">';
-          for (i = 0; i < data.length; i++) {
-            button += '<li><a href="#"> ' + data[i] + '</a></li>';
-          }
-          button += '</ul></div>';
-          return button;
-        };
-
-        var dropdown = domConstruct.toDom(dropdownButton(data));
+        var selectWidget = domConstruct.toDom('<div id="select-county"><select class="select-counties" id="select"></select></div>');
 
         var full = false;
 
@@ -250,7 +234,193 @@ define([
             index: 0
           });
 
-          domConstruct.place(dropdown, dom.byId('esri_widgets_Search_0'), "first");
+          // domConstruct.place(selectWidget, dom.byId('esri_widgets_Search_0'), "first");
+          view.ui.add(selectWidget, {
+            position: "top-left",
+            index: 0
+          });
+          var counties = [
+            {
+              id: 0,
+              text: 'ADA'
+            },
+            {
+              id: 1,
+              text: 'ADAMS'
+            },
+            {
+              id: 2,
+              text: 'BANNOCK'
+            },
+            {
+              id: 3,
+              text: 'BEAR LAKE'
+            },
+            {
+              id: 4,
+              text: 'BENEWAH'
+            },
+            {
+              id: 5,
+              text: 'BINGHAM'
+            },
+            {
+              id: 6,
+              text: 'BLAINE'
+            },
+            {
+              id: 7,
+              text: 'BOISE'
+            },
+            {
+              id: 8,
+              text: 'BONNER'
+            },
+            {
+              id: 9,
+              text: 'BONNEVILLE'
+            },
+            {
+              id: 10,
+              text: 'BOUNDARY'
+            },
+            {
+              id: 11,
+              text: 'BUTTE'
+            },
+            {
+              id: 12,
+              text: 'CAMAS'
+            },
+            {
+              id: 13,
+              text: 'CANYON'
+            },
+            {
+              id: 14,
+              text: 'CARIBOU'
+            },
+            {
+              id: 15,
+              text: 'CASSIA'
+            },
+            {
+              id: 16,
+              text: 'CLARK'
+            },
+            {
+              id: 17,
+              text: 'CLEARWATER'
+            },
+            {
+              id: 18,
+              text: 'CUSTER'
+            },
+            {
+              id: 19,
+              text: 'ELMORE'
+            },
+            {
+              id: 20,
+              text: 'FRANKLIN'
+            },
+            {
+              id: 21,
+              text: 'FREMONT'
+            },
+            {
+              id: 22,
+              text: 'GEM'
+            },
+            {
+              id: 23,
+              text: 'GOODING'
+            },
+            {
+              id: 24,
+              text: 'IDAHO'
+            },
+            {
+              id: 25,
+              text: 'JEFFERSON'
+            },
+            {
+              id: 26,
+              text: 'JEROME'
+            },
+            {
+              id: 27,
+              text: 'KOOTENAI'
+            },
+            {
+              id: 28,
+              text: 'LATAH'
+            },
+            {
+              id: 29,
+              text: 'LEMHI'
+            },
+            {
+              id: 30,
+              text: 'LEWIS'
+            },
+            {
+              id: 31,
+              text: 'LINCOLN'
+            },
+            {
+              id: 32,
+              text: 'MADISON'
+            },
+            {
+              id: 33,
+              text: 'MINIDOKA'
+            },
+            {
+              id: 34,
+              text: 'NEZ PERCE'
+            },
+            {
+              id: 35,
+              text: 'ONEIDA'
+            },
+            {
+              id: 36,
+              text: 'OWYHEE'
+            },
+            {
+              id: 37,
+              text: 'PAYETTE'
+            },
+            {
+              id: 38,
+              text: 'POWER'
+            },
+            {
+              id: 39,
+              text: 'SHOSHONE'
+            },
+            {
+              id: 40,
+              text: 'TETON'
+            },
+            {
+              id: 41,
+              text: 'TWIN FALLS'
+            },
+            {
+              id: 42,
+              text: 'VALLEY'
+            },
+            {
+              id: 43,
+              text: 'WASHINGTON'
+            }
+          ];
+          $(".select-counties").select2({
+            placeholder: "Select a county",
+            data: counties
+          });
 
           domClass.add('esri_widgets_Search_0', "hidden");
 
@@ -307,6 +477,12 @@ define([
               domClass.remove(mapDiv, "padding-top");
               full = true;
             }
+          });
+
+
+          $('#select').on('change', function (event) {
+            var selectedText = event.target.selectedOptions["0"].text;
+            console.log(selectedText);
           });
 
           searchWidget.on("select-result", function (event) {
