@@ -163,13 +163,23 @@ div.butn span:first-child {
   -webkit-transform: scaleX(-1);
 }
 
-more-btn {
-  float: right;
+
+.more-btn {
 }
+
+
 
 .imgs-range {
   padding-bottom: 5px;
 }
+
+.table-dark-bg {
+  color: white;
+  background-color: rgba(0,0,0,.35);
+  margin: 0;
+  padding: 0;
+}
+
 
 /*================= CUSTOM CLASS STYLES =======================*/
 .padding-top {padding-top: 8%!important;}
@@ -184,6 +194,9 @@ more-btn {
   padding: 0px !important;
   margin: 0px !important;
   border: 0px !important;
+}
+.z-index-100 {
+  z-index: 100!important;
 }
 /*===============================================================*/
 

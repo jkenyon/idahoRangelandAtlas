@@ -245,7 +245,7 @@ require([
   $('.back-btn').on('click', function () {
     $('#topics').removeClass('hidden');
     $('#cover-info, #management-info, #back-button').addClass('hidden');
-    $('#esri_widgets_Search_0').addClass('hidden');
+    $('#select-county').addClass('hidden');
     $('#table').replaceWith("");
     $('#tableDiv').addClass('hidden');
   });
@@ -255,14 +255,14 @@ require([
     $('#tableDiv').removeClass('hidden');
     $('#cover-info').removeClass('hidden');
     $('#back-button').removeClass('hidden');
-    $('#esri_widgets_Search_0').removeClass('hidden');
+    $('#select-county').removeClass('hidden');
   });
   $('#land-management').on('click', function () {
     $('#topics').addClass('hidden');
     $('#tableDiv').removeClass('hidden');
     $('#management-info').removeClass('hidden');
     $('#back-button').removeClass('hidden');
-    $('#esri_widgets_Search_0').removeClass('hidden');
+    $('#select-county').removeClass('hidden');
   });
 
   // $(".select-counties").select2({

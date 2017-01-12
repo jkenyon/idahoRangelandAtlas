@@ -15,10 +15,7 @@ define([
 
         this.searchWidget = new Search({
           view: view,
-          allPlaceholder: "Search for a county",
-          popupOpenOnSelect: true,
-          autoSelect: true,
-          popupEnabled: true,
+          popupEnabled: false,
           sources: [
             {
               featureLayer: new FeatureLayer({

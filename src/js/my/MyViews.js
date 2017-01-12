@@ -165,7 +165,7 @@ define([
           imgLayer.pixelFilter = (choice === "cover") ? colorize : null;
 
           myMap.map.add(imgLayer);
-          imgLayer.then(function () {
+          return imgLayer.then(function () {
             var totA = 0;
             var totPC = 0;
             var totId = 0;
@@ -201,8 +201,13 @@ define([
                 results += "<tr><td class='dlegend' style='background-color:" + clr + ";'>&nbsp;</td><td>" + sma + "</td><td>" + res.per_rng.toFixed(2) + "</td><td>" + res.per_cnty.toFixed(2) + "</td><td>" + res.area_ac.toFixed(2) + "</td></tr>";
               });
             }
+            return new Promise(
+              function(resolve, reject){
+                resolve(results);
+                reject("an error occured");
+              }
+            );
           });
-          return results;
         };
 
         myMap.map.add(countyLyr);
@@ -418,18 +423,20 @@ define([
             }
           ];
           $(".select-counties").select2({
-            placeholder: "Select a county",
+            placeholder: "Select",
             data: counties
           });
 
-          domClass.add('esri_widgets_Search_0', "hidden");
+          domClass.add('select-county', "hidden");
+          dom.byId('esri_widgets_Search_0').style.display = 'none';
 
           var fullscreenBtn = domConstruct.toDom('<button type="button" id="fullscreen-btn" class="btn btn-info"><span class="glyphicon glyphicon-fullscreen"></span></button>');
 
-          view.ui.add(fullscreenBtn, {position: "top-left", index: 0});
+          view.ui.add(fullscreenBtn, {position: "top-left", index: 2});
 
           var mainDiv = dom.byId('main');
           var mapCanvas = dom.byId('mapCanvas');
+          var table = dom.byId('tableDiv');
           var mapStyle = domStyle.getComputedStyle(mapCanvas);
           var mapDiv = dom.byId('map');
           var mapDivStyle = domStyle.getComputedStyle(mapDiv);
@@ -437,44 +444,25 @@ define([
             if (full === true) {
               dom.byId('header').style.display = 'block';
               dom.byId('main-content').style.display = 'block';
-              // domStyle.set(mapCanvas, {
-              //   height: mapStyle.height,
-              //   width: mapStyle.width
-              // });
-              // domStyle.set(mapDiv, {
-              //   height: mapDivStyle.height,
-              //   width: mapDivStyle.width
-              // });
-              // domClass.remove(mapCanvas, "fullscreen");
               domClass.add(mapCanvas, "map-display");
               domClass.remove(mapCanvas, "fullscreen");
               domClass.add(mainDiv, "container-fluid");
               domClass.add(mapDiv, "container-fluid");
               domClass.add(mapDiv, "padding-top");
+              view.ui.remove(table);
+              domClass.remove(table, "table-dark-bg");
+              domConstruct.place(table, dom.byId('map-menu'), "last");
               full = false;
             }
             else {
               dom.byId('header').style.display = 'none';
               dom.byId('main-content').style.display = 'none';
-              // domStyle.set(mapCanvas, {
-              //   height: "100vh",
-              //   width: '100vw',
-              //   padding: '0px',
-              //   margin: '0px'
-              // });
-              // domStyle.set(mapDiv, {
-              //   height: "100% !important",
-              //   minHeight: '100% !important',
-              //   width: '100% !important',
-              //   padding: '0px',
-              //   margin: '0px',
-              // });
-              // domClass.remove(mapCanvas, "map-display");
               domClass.add(mapCanvas, "fullscreen");
-              // // domClass.add(mapDiv, "fullscreen");
               domClass.remove(mainDiv, "container-fluid");
               domClass.remove(mapDiv, "container-fluid");
               domClass.remove(mapDiv, "padding-top");
+              view.ui.add(table, {position: "bottom-left", index: 0});
+              domClass.add(table, "table-dark-bg");
               full = true;
             }
           });
@@ -482,26 +470,40 @@ define([
 
           $('#select').on('change', function (event) {
             var selectedText = event.target.selectedOptions["0"].text;
-            console.log(selectedText);
+            searchWidget.search(selectedText).then(
+              function (success) {
+
+                var feature = success[0].results[0].feature;
+                if (choice === "management") {
+                  var tbHead = "<thead><tr><th class='header legend'></th><th class='header'>Manager</th><th class='header' >% of Rangeland</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
+
+                  var managementResults;
+                  getLandResults(imgLyr, feature, "management").then(function(searchResults){
+                    managementResults = searchResults;
+                  }).then(function(tableResults){
+                    dom.byId("tableDiv").innerHTML = "<table id='table' class='table table-bordered text-center table-responsive' cellspacing='0'>" + tbHead + "<tbody>" + managementResults + "</tbody></table>";
+                  });
+
+                }
+                else if (choice === "cover") {
+                  var coverResults;
+                  getLandResults(imgLyr, feature, "cover").then(function (searchResults) {
+                    coverResults = searchResults;
+
+                  }).then(function(tableResults){
+                    dom.byId("tableDiv").innerHTML = "<br /><table id='table'  class='table table-bordered text-center table-responsive' cellspacing='0'><tbody>" + coverResults + "</tbody></table>";
+                  });
+
+                }
+
+              },
+
+              function (error) {
+                console.log(error);
+              }
+            );
           });
 
-          searchWidget.on("select-result", function (event) {
-            var feature;
-            if (event.numResults !== 0) {
-              feature = event.result.feature;
-              if (choice === "management") {
-                var tbHead = "<thead><tr><th class='header legend'></th><th class='header'>Manager</th><th class='header' >% of Rangeland</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
-
-                var managementResults = getLandResults(imgLyr, feature, "management");
-                dom.byId("tableDiv").innerHTML = "<table id='table' class='table table-bordered text-center' cellspacing='0'>" + tbHead + "<tbody>" + managementResults + "</tbody></table>";
-              }
-              else if (choice === "cover") {
-                var coverResults = getLandResults(imgLyr, feature, "cover");
-
-                dom.byId("tableDiv").innerHTML = "<br /><table id='table'  class='table table-bordered text-center' cellspacing='0'><tbody>" + coverResults + "</tbody></table>";
-              }
-            }
-          });
         });
       },
 
@@ -512,4 +514,5 @@ define([
       }
 
     })
-  });
+  })
+;
