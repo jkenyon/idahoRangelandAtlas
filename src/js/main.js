@@ -247,19 +247,19 @@ require([
     $('#cover-info, #management-info, #back-button').addClass('hidden');
     $('#select-county').addClass('hidden');
     $('#table').replaceWith("");
-    $('#tableDiv').addClass('hidden');
+    $('#table-div').addClass('hidden');
   });
 
   $('#land-cover').on('click', function () {
     $('#topics').addClass('hidden');
-    $('#tableDiv').removeClass('hidden');
+    $('#table-div').removeClass('hidden');
     $('#cover-info').removeClass('hidden');
     $('#back-button').removeClass('hidden');
     $('#select-county').removeClass('hidden');
   });
   $('#land-management').on('click', function () {
     $('#topics').addClass('hidden');
-    $('#tableDiv').removeClass('hidden');
+    $('#table-div').removeClass('hidden');
     $('#management-info').removeClass('hidden');
     $('#back-button').removeClass('hidden');
     $('#select-county').removeClass('hidden');

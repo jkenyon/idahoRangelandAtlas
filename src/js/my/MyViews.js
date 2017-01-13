@@ -432,11 +432,11 @@ define([
 
           var fullscreenBtn = domConstruct.toDom('<button type="button" id="fullscreen-btn" class="btn btn-info"><span class="glyphicon glyphicon-fullscreen"></span></button>');
 
-          view.ui.add(fullscreenBtn, {position: "top-left", index: 2});
+          view.ui.add(fullscreenBtn, {position: "top-right", index: 0});
 
           var mainDiv = dom.byId('main');
           var mapCanvas = dom.byId('mapCanvas');
-          var table = dom.byId('tableDiv');
+          var table = dom.byId('table-div');
           var mapStyle = domStyle.getComputedStyle(mapCanvas);
           var mapDiv = dom.byId('map');
           var mapDivStyle = domStyle.getComputedStyle(mapDiv);
@@ -447,6 +447,7 @@ define([
               domClass.add(mapCanvas, "map-display");
               domClass.remove(mapCanvas, "fullscreen");
               domClass.add(mainDiv, "container-fluid");
+              domClass.add(mainDiv, "margin-top-55");
               domClass.add(mapDiv, "container-fluid");
               domClass.add(mapDiv, "padding-top");
               view.ui.remove(table);
@@ -459,6 +460,7 @@ define([
               dom.byId('main-content').style.display = 'none';
               domClass.add(mapCanvas, "fullscreen");
               domClass.remove(mainDiv, "container-fluid");
+              domClass.remove(mainDiv, "margin-top-55");
               domClass.remove(mapDiv, "container-fluid");
               domClass.remove(mapDiv, "padding-top");
               view.ui.add(table, {position: "bottom-left", index: 0});
@@ -481,7 +483,7 @@ define([
                   getLandResults(imgLyr, feature, "management").then(function(searchResults){
                     managementResults = searchResults;
                   }).then(function(tableResults){
-                    dom.byId("tableDiv").innerHTML = "<table id='table' class='table table-bordered text-center table-responsive' cellspacing='0'>" + tbHead + "<tbody>" + managementResults + "</tbody></table>";
+                    dom.byId("table-div").innerHTML = "<table id='table' class='table table-bordered text-center table-responsive' cellspacing='0'>" + tbHead + "<tbody>" + managementResults + "</tbody></table>";
                   });
 
                 }
@@ -491,7 +493,7 @@ define([
                     coverResults = searchResults;
 
                   }).then(function(tableResults){
-                    dom.byId("tableDiv").innerHTML = "<br /><table id='table'  class='table table-bordered text-center table-responsive' cellspacing='0'><tbody>" + coverResults + "</tbody></table>";
+                    dom.byId("table-div").innerHTML = "<br /><table id='table'  class='table table-bordered text-center table-responsive' cellspacing='0'><tbody>" + coverResults + "</tbody></table>";
                   });
 
                 }

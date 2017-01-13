@@ -1,5 +1,5 @@
 /*
-  Main
+  main.css
 */
 
 body {
@@ -7,8 +7,8 @@ body {
   font-family: 'PT Sans', sans-serif;
   width: 100%;
   height: 100%;
-  margin: 0px;
-  padding: 0px;
+  margin: 0;
+  padding: 0;
 }
 
 p {
@@ -21,88 +21,51 @@ a {
 }
 a::selection {
   color: white;
+  background-color: #2aabd2;
 }
 a:active {
   color: white;
 }
 
-#main {
+
+.header {
+  color: white;
+  overflow-y: auto;
+}
+
+.main {
   display: block;
   height: 100%;
   width: 100%;
-  padding: 0px;
-  margin: 0px;
+  padding: 0;
+  margin: 0;
 }
 
-#header {
+.main-content {
   color: white;
-  overflow-y: auto;
 }
 
-#navbar {
-  height: 100%;
-  margin-bottom: 0px;
-  padding-bottom: 0px;
+.navbar-overlay {
+  min-height: 100%;
+  margin-bottom: 0;
+  padding-bottom: 0;
   overflow-y: visible;
 }
 
-#nav-menu {
-  text-align: center;
-  padding-top: 5px;
+
+.map {
+  padding: 0;
+  margin: 0;
 }
 
-#nav-menu>ul>li>a{
-  background-color: #1b6d85;
-}
-
-#nav-menu>ul>li>a:active {
-  background-color: #00bcd4;
-}
-
-
-#map {
-  padding: 0px;
-  margin: 0px;
-}
-
-#map-menu {
-  color: white;
+.map-menu {
 }
 
 .map-display {
-  padding: 0;
-  margin: 0;
-  height: 520px;
+  height: 680px;
   width: 100%;
 }
 
-#resultHead {
-  overflow-y: auto;
-}
-
-#navbar-close span {
-  font-size: 110%;
-}
-
-#topics {
-  padding-bottom: 5%;
-}
-
-#land-cover:hover {
-  cursor: hand;
-}
-
-#land-management:hover {
-  cursor: hand;
-}
-
-#select-county {
-  z-index: 10000;
-  color: #000;
-}
-#select-county>li {
-  color: black;
-}
 
 .search-dropdown {
   z-index: 100;
@@ -118,20 +81,31 @@ a:active {
 }
 
 .navbar {
-  -webkit-box-shadow: 0px 2px 5px 1px rgba(46,12,46,0.49);
-  -moz-box-shadow: 0px 2px 5px 1px rgba(46,12,46,0.49);
-  box-shadow: 0px 2px 5px 1px rgba(46,12,46,0.49);
+  -webkit-box-shadow: 0 2px 5px 1px rgba(46,12,46,0.49);
+  -moz-box-shadow: 0 2px 5px 1px rgba(46,12,46,0.49);
+  box-shadow: 0 2px 5px 1px rgba(46,12,46,0.49);
 }
 
 .navbar-header {
   float: none;
 }
+
 .navbar-toggle {
   display: block;
 }
+
+.navbar-close span {
+  font-size: 110%;
+}
+
 .navbar-collapse.collapse {
   display: none!important;
 }
+
+.navbar-collapse.collapse.in{
+  display:block !important;
+}
+
 .navbar-nav {
   float: none!important;
 }
@@ -139,18 +113,39 @@ a:active {
   float: none;
 }
 
-.navbar-collapse.collapse.in{
-  display:block !important;
+.nav-menu {
+  text-align: center;
+  padding-top: 5px;
 }
 
-.content {
+.nav-menu>ul>li{
+  background-color: #1b6d85;
+}
+
+
+.nav-menu>ul>li:active{
+  background-color: #00bcd4;
+}
+
+.nav-menu-content {
   overflow-y: scroll;
 }
 
-div.butn:hover {
+.imgs-range {
+  padding-bottom: 5px;
+  margin: 0;
+}
+
+.logo {
+  height: 100px;
+  margin: 0;
+  padding: 0;
+}
+
+.butn:hover {
   cursor: hand;
 }
-div.butn span:first-child {
+.butn span:first-child {
   font-size: 240%;
   color: #D3D3D3;
 }
@@ -163,14 +158,7 @@ div.butn span:first-child {
   -webkit-transform: scaleX(-1);
 }
 
-
 .more-btn {
-}
-
-
-
-.imgs-range {
-  padding-bottom: 5px;
 }
 
 .table-dark-bg {
@@ -182,18 +170,18 @@ div.butn span:first-child {
 
 
 /*================= CUSTOM CLASS STYLES =======================*/
-.padding-top {padding-top: 8%!important;}
-.padding-bottom {padding-bottom: 16px!important;}
-.padding-left {padding-bottom: 5px!important;}
+.margin-top-55 {margin-top: 55px !important;}
+.padding-bottom-16 {padding-bottom: 16px!important;}
+.padding-left-5 {padding-bottom: 5px!important;}
 .padding-0 {padding:0!important}
 .fixed {position: fixed !important;}
 .selected {background-color: #1b6d85; color: white; }
 .fullscreen {
   height: 100vh !important;
   width: 100vw !important;
-  padding: 0px !important;
-  margin: 0px !important;
-  border: 0px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: 0 !important;
 }
 .z-index-100 {
   z-index: 100!important;
@@ -203,94 +191,107 @@ div.butn span:first-child {
 
 /*======================== MEDIA QUERIES ==========================*/
 
-/* For desktops/screen*/
-@media screen and (min-device-width: 1200px) and (max-device-width: 1600px) {
-
-}
-
-/*==========  Mobile First Method  ==========*/
-
-/* Custom, iPhone Retina */
-@media only screen and (min-width : 320px) {
-
-}
-
-/* Extra Small Devices, Phones */
-@media only screen and (min-width : 480px) {
-  .img-responsive {
-    height: 100px !important;
-    width: 100% !important;
-  }
-}
-
-/* Small Devices, Tablets */
-@media only screen and (min-width : 768px) {
+/*-------------------------------------------------------------------
+  Responsive Grid Media Queries - 1280, 1024, 768, 480
+   1280-1024   - desktop (default grid)
+   1024-768    - tablet landscape
+   768-480     - tablet
+   480-less    - phone landscape & smaller
+-------------------------------------------------------------------*/
+/*-------------------------------------------------------------------------*/
+/*Desktops*/
+@media all and (min-width: 1024px) and (max-width: 1280px) {
   .map-display {
-    padding: 0;
-    margin: 0;
-    height: 620px;
+    height: 720px;
     width: 100%;
   }
-  #nav-menu {
-    border-right: 1px solid #d9edf7;
-  }
-  .img-responsive {
-    height: 120px !important;
-    width: 100% !important;
-  }
-  .padding-top {padding-top: 5%!important;}
 }
+/*-------------------------------------------------------------------------*/
 
-/* Medium Devices, Desktops */
-@media only screen and (min-width : 992px) {
-  #img-range {
-    padding-top: 150px !important;
-  }
+/*-------------------------------------------------------------------------*/
+/*Tablets landscape*/
+@media all and (min-width: 768px) and (max-width: 1024px) {
   .map-display {
-    padding: 0;
-    margin: 0;
-    height: 670px;
+    height: 700px;
     width: 100%;
   }
 }
 
-/* Large Devices, Wide Screens */
-@media only screen and (min-width : 1200px) {
-
+/*Tablets*/
+@media all and (min-width: 480px) and (max-width: 768px) {
+  .map-display {
+    height: 500px;
+    width: 100%;
+  }
+  .logo {
+    height: 80px;
+    width: 100%;
+  }
 }
+/*-------------------------------------------------------------------------*/
 
-
-/*==========  Non-Mobile First Method  ==========*/
-
-/* Large Devices, Wide Screens */
-@media only screen and (max-width : 1200px) {
-  #nav-menu {
+/*Mobiles landscape*/
+@media all and (max-width: 480px) {
+  .nav-menu {
     text-align: center;
-    padding-top: 5px;
+    padding-top: 0;
+  }
+  .nav-menu-content {
+  }
+  .logo {
+    height: 70px;
+    width: 100%;
+  }
+}
+/*-------------------------------------------------------------------------*/
+
+/*-------------------------------------------------------------------------*/
+/* Portrait */
+@media screen and (orientation:portrait) { /* Portrait styles here */ }
+/* Landscape */
+@media screen and (orientation:landscape) { /* Landscape styles here */ }
+
+/*-------------------------------------------------------------------------*/
+
+/*-------------------------------------------------------------------------*/
+/* CSS for iPhone, iPad, and Retina Displays */
+
+/* Non-Retina */
+@media screen and (-webkit-max-device-pixel-ratio: 1) {
+}
+
+/* Retina */
+@media only screen and (-webkit-min-device-pixel-ratio: 1.5),
+only screen and (-o-min-device-pixel-ratio: 3/2),
+only screen and (min--moz-device-pixel-ratio: 1.5),
+only screen and (min-device-pixel-ratio: 1.5) {
+}
+
+/* iPhone Portrait */
+@media screen and (max-device-width: 480px) and (orientation:portrait) {
+  .map-display {
+    height: 200px;
+    width: 100%;
   }
 
-  #nav-menu a:hover {
-    background-color: #00bcd4;
+  .nav-menu {
   }
 
-  #nav-menu a:active {
-    background-color: #1b6d85 !important;
+  .main-content {
+    font-size: small;
+    /*max-height: 460px;*/
+    /*overflow-y: scroll;*/
+  }
+
+  .table-div {
+    max-height: 300px;
+    overflow-y: scroll;
   }
 }
 
-/* Medium Devices, Desktops */
-@media only screen and (max-width : 992px) {
-
-}
-
-/* Small Devices, Tablets */
-@media only screen and (max-width : 768px) {
-
-}
-
-/* Extra Small Devices, Phones */
-@media only screen and (max-width : 480px) {
-  #nav-menu {
+/* iPhone Landscape */
+@media screen and (max-device-width: 480px) and (orientation:landscape) {
+  .nav-menu {
     border-bottom: 1px solid #d9edf7;
   }
   .map-display {
@@ -299,7 +300,12 @@ div.butn span:first-child {
   }
 }
 
-/* Custom, iPhone Retina */
-@media only screen and (max-width : 320px) {
+/* iPad Portrait */
+@media screen and (min-device-width: 481px) and (orientation:portrait) {
 
 }
+
+/* iPad Landscape */
+@media screen and (min-device-width: 481px) and (orientation:landscape) {
+}
+/*-------------------------------------------------------------------------*/
