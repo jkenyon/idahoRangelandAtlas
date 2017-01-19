@@ -58,8 +58,11 @@ define([
           pixelData.pixelBlock.pixels = [rBand, gBand, bBand];
         }; // end colorize
 
+        // var imgLyrUrl = "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/bruce_test8/ImageServer";
+        //
+        var imgLyrUrl = "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/idaho_rangeland_atlas_201701/ImageServer";
         var imgLyr = new ImageryLayer({
-          url: "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/bruce_test8/ImageServer",
+          url: imgLyrUrl,
           opacity: 0.7,
           pixelFilter: colorize
         });
@@ -198,7 +201,7 @@ define([
                 var res = item.attributes;
                 var clr = colorTypes[res.sma_name].color;
                 var sma = colorTypes[res.sma_name].type;
-                results += "<tr><td class='dlegend' style='background-color:" + clr + ";'>&nbsp;</td><td>" + sma + "</td><td>" + res.per_rng.toFixed(2) + "</td><td>" + res.per_cnty.toFixed(2) + "</td><td>" + res.area_ac.toFixed(2) + "</td></tr>";
+                results += "<tr><td class='dlegend' style='background-color:" + clr + ";'>&nbsp;</td><td>" + sma + "</td><td>" + res.nlcd_name.toString() + "</td><td>" + res.per_nlcd.toFixed(2) + "</td><td>" + res.per_cnty.toFixed(2) + "</td><td>" + res.area_ac.toFixed(2) + "</td></tr>";
               });
             }
             return new Promise(
@@ -244,6 +247,7 @@ define([
             position: "top-left",
             index: 0
           });
+
           var counties = [
             {
               id: 0,
@@ -422,6 +426,7 @@ define([
               text: 'WASHINGTON'
             }
           ];
+
           $(".select-counties").select2({
             placeholder: "Select",
             data: counties
@@ -477,13 +482,13 @@ define([
 
                 var feature = success[0].results[0].feature;
                 if (choice === "management") {
-                  var tbHead = "<thead><tr><th class='header legend'></th><th class='header'>Manager</th><th class='header' >% of Rangeland</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
+                  var tbHead = "<thead><tr><th class='header legend'></th><th class='header'>Manager</th><th class='header'>Type of Land</th><th class='header' >% of Rangeland</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
 
                   var managementResults;
                   getLandResults(imgLyr, feature, "management").then(function(searchResults){
                     managementResults = searchResults;
                   }).then(function(tableResults){
-                    dom.byId("table-div").innerHTML = "<table id='table' class='table table-bordered text-center table-responsive' cellspacing='0'>" + tbHead + "<tbody>" + managementResults + "</tbody></table>";
+                    dom.byId("table-div").innerHTML = "<table id='table' class='table table-fixed table-bordered text-center table-responsive ' cellspacing='0'>" + tbHead + "<tbody>" + managementResults + "</tbody></table>";
                   });
 
                 }

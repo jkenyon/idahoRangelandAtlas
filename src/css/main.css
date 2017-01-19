@@ -66,6 +66,10 @@ a:active {
   width: 100%;
 }
 
+.table-div {
+  max-height: 450px;
+  margin-bottom: 5px;
+}
 
 .search-dropdown {
   z-index: 100;
@@ -142,6 +146,10 @@ a:active {
   padding: 0;
 }
 
+.loading {
+  background: url('../assets/gears.svg') no-repeat center center;
+}
+
 .butn:hover {
   cursor: hand;
 }
@@ -171,6 +179,7 @@ a:active {
 
 /*================= CUSTOM CLASS STYLES =======================*/
 .margin-top-55 {margin-top: 55px !important;}
+.margin-0 {margin: 0;}
 .padding-bottom-16 {padding-bottom: 16px!important;}
 .padding-left-5 {padding-bottom: 5px!important;}
 .padding-0 {padding:0!important}
@@ -204,6 +213,9 @@ a:active {
   .map-display {
     height: 720px;
     width: 100%;
+  }
+  .nav-menu {
+    border-right: 1px solid #ffffff;
   }
 }
 /*-------------------------------------------------------------------------*/
