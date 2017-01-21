@@ -64,7 +64,11 @@ define([
         var imgLyr = new ImageryLayer({
           url: imgLyrUrl,
           opacity: 0.7,
-          pixelFilter: colorize
+          pixelFilter: colorize,
+          popupTemplate: {
+            title: "Type of land:{Raster.ServicePixelValue}",
+            content: "Manager: {Raster.nlcd_name}"
+          }
         });
 
         // Creates the style for the county boundary layer
@@ -164,8 +168,10 @@ define([
           });
 
 
-          imgLayer.renderingRule = (choice === "cover") ? clipCRF : clipRF;
-          imgLayer.pixelFilter = (choice === "cover") ? colorize : null;
+          // imgLayer.renderingRule = (choice === "cover") ? clipCRF : clipRF;
+          imgLayer.renderingRule = clipRF;
+          // imgLayer.pixelFilter = (choice === "cover") ? colorize : null;
+          imgLayer.pixelFilter = null;
 
           myMap.map.add(imgLayer);
           return imgLayer.then(function () {
@@ -175,35 +181,28 @@ define([
             var perCty = 0;
             var total;
             var fields;
+            console.log(imgLayer);
             var rasterAttributes = imgLayer.rasterAttributeTable.features;
             for (var i = 0; i < rasterAttributes.length; i++) {
               totId += rasterAttributes[i].attributes.area_ac;
             }
             fields = rasterAttributes.filter(function (item, i) {
-              return item.attributes.cnty_name === feature.attributes.NAME;
+              return (item.attributes.cnty_name === feature.attributes.NAME);
             });
 
-            if (choice === "cover") {
-              for (i = 0; i < rasterAttributes.length; i++) {
-                totId += rasterAttributes[i].attributes.area_ac;
+            fields.forEach(function (item) {
+              var res = item.attributes;
+              var clr = colorTypes[res.sma_name].color;
+              var sma = colorTypes[res.sma_name].type;
+              if(choice === "cover"){
+                results += "<tr><td>" + res.nlcd_name.toString() + "</td><td>" + res.per_cnty.toFixed(2) + "</td><td>" + res.area_ac.toFixed(2) + "</td></tr>";
               }
-              for (i = 0; i < fields.length; i++) {
-                var g = fields[i].attributes;
-                totA += g.area_ac;
-                totPC += g.per_cnty
-              }
-              perCty = totPC.toFixed(2);
-              total = totA.toFixed(2);
-              results += "<tr><td>Total County Rangeland (acres)</td><td>" + total + "</td></tr><tr><td>Percent of County Acreage</td><td>" + perCty + "</td></tr>";
-            }
-            else if (choice === "management") {
-              fields.forEach(function (item) {
-                var res = item.attributes;
-                var clr = colorTypes[res.sma_name].color;
-                var sma = colorTypes[res.sma_name].type;
+              else if(choice === "management" && item.attributes.nlcd_name === "Rangeland"){
                 results += "<tr><td class='dlegend' style='background-color:" + clr + ";'>&nbsp;</td><td>" + sma + "</td><td>" + res.nlcd_name.toString() + "</td><td>" + res.per_nlcd.toFixed(2) + "</td><td>" + res.per_cnty.toFixed(2) + "</td><td>" + res.area_ac.toFixed(2) + "</td></tr>";
-              });
-            }
+              }
+
+            });
+
             return new Promise(
               function(resolve, reject){
                 resolve(results);
@@ -474,6 +473,7 @@ define([
             }
           });
 
+          
 
           $('#select').on('change', function (event) {
             var selectedText = event.target.selectedOptions["0"].text;
@@ -481,14 +481,15 @@ define([
               function (success) {
 
                 var feature = success[0].results[0].feature;
-                if (choice === "management") {
-                  var tbHead = "<thead><tr><th class='header legend'></th><th class='header'>Manager</th><th class='header'>Type of Land</th><th class='header' >% of Rangeland</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
+                var tbManagementHead = "<thead><tr><th class='header legend'></th><th class='header'>Manager</th><th class='header'>Type of Land</th><th class='header' >% of Rangeland</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
+                var tbCoverHead = "<thead><tr><th class='header'>Type of Land</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
 
+                if (choice === "management") {
                   var managementResults;
                   getLandResults(imgLyr, feature, "management").then(function(searchResults){
                     managementResults = searchResults;
-                  }).then(function(tableResults){
-                    dom.byId("table-div").innerHTML = "<table id='table' class='table table-fixed table-bordered text-center table-responsive ' cellspacing='0'>" + tbHead + "<tbody>" + managementResults + "</tbody></table>";
+                  }).then(function(){
+                    dom.byId("table-div").innerHTML = "<table id='table' class='table table-bordered table-condensed text-center table-responsive table-fixed' cellspacing='0'>" + tbManagementHead + "<tbody>" + managementResults + "</tbody></table>";
                   });
 
                 }
@@ -497,8 +498,8 @@ define([
                   getLandResults(imgLyr, feature, "cover").then(function (searchResults) {
                     coverResults = searchResults;
 
-                  }).then(function(tableResults){
-                    dom.byId("table-div").innerHTML = "<br /><table id='table'  class='table table-bordered text-center table-responsive' cellspacing='0'><tbody>" + coverResults + "</tbody></table>";
+                  }).then(function(){
+                    dom.byId("table-div").innerHTML ="<table id='table' class='table table-bordered table-condensed text-center table-responsive table-fixed' cellspacing='0'>" + tbCoverHead + "<tbody>" + coverResults + "</tbody></table>";
                   });
 
                 }
