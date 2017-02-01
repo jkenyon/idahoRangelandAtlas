@@ -16,6 +16,7 @@ define([
     "esri/layers/FeatureLayer",
     "esri/renderers/SimpleRenderer",
     "esri/symbols/SimpleMarkerSymbol",
+    "esri/layers/support/MosaicRule",
     "esri/widgets/Search",
     "dojo/dom-construct",
     "dojo/dom-class",
@@ -23,7 +24,7 @@ define([
     "dojo/dom-style",
     "dojo/domReady!"
   ],
-  function (declare, MyMap, MyWidgets, Map, MyUtils, dom, MapView, ImageryLayer, RasterFunction, UniqueValueRenderer, SimpleFillSymbol, FeatureLayer, SimpleRenderer, SimpleMarkerSymbol, Search, domConstruct, domClass, on, domStyle) {
+  function (declare, MyMap, MyWidgets, Map, MyUtils, dom, MapView, ImageryLayer, RasterFunction, UniqueValueRenderer, SimpleFillSymbol, FeatureLayer, SimpleRenderer, SimpleMarkerSymbol, MosaicRule, Search, domConstruct, domClass, on, domStyle) {
     return declare(null, {
       myView: null,
       constructor: function () {
@@ -42,34 +43,117 @@ define([
 
         var myWigets = new MyWidgets(this.myView);
 
-        var colorize = function (pixelData) {
+        var rasterAttributes;
+
+        /********************
+         * Create image layer
+         ********************/
+
+        var imgUrl = "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/idaho_rangeland_atlas_201701/ImageServer";
+
+        var imgLayer = new ImageryLayer({
+          url: imgUrl,
+          pixelFilter: colorize // Applies color to the layer
+        });
+
+        /**************************
+         * Add image layer to map
+         *************************/
+
+        // myMap.map.add(imgLayer);
+
+        /**********************************************************
+         * Get the raster attribute table to add color to
+         * the image layer once the layer loads.
+         *********************************************************/
+        var imgFields;
+
+
+        imgLayer.then(function () {
+          rasterAttributes = imgLayer.rasterAttributeTable.features;
+          imgFields = rasterAttributes.filter(function (item, i) {
+            var className = item.attributes.nlcd_name;
+            var countyName = item.attributes.cnty_name;
+            return className === "Rangeland" /*&& countyName === "LATAH COUNTY"*/;
+          });
+
+        });
+
+        /**********************************************************
+         * Apply the RGB values stored for each pixel value to the
+         * pixel in a three-band array using the pixelFilter
+         *********************************************************/
+
+        function colorize(pixelData, fields) {
+          if (pixelData === null || pixelData.pixelBlock === null ||
+            pixelData.pixelBlock.pixels === null) {
+            return;
+          }
+
+          // The pixelBlock stores the values of all pixels visible in the view
           var pixelBlock = pixelData.pixelBlock;
-          var numPixels = pixelBlock.width * pixelBlock.height;
+
+          // The pixels visible in the view
+          var pixels = pixelBlock.pixels;
+
+          // Get the pixels from the only band of the data
+          var band1 = pixels[0];
+
+          // Create empty arrays for each of the RGB bands to set on the pixelBlock
           var rBand = [];
           var gBand = [];
           var bBand = [];
-          var i;
-          for (i = 0; i < numPixels; i++) {
-            // Sets a color between blue (coldest) and red (warmest) in each band
-            rBand[i] = 0;
-            gBand[i] = 0;
-            bBand[i] = 0;
-          }
-          pixelData.pixelBlock.pixels = [rBand, gBand, bBand];
-        }; // end colorize
 
-        // var imgLyrUrl = "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/bruce_test8/ImageServer";
-        //
-        var imgLyrUrl = "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/idaho_rangeland_atlas_201701/ImageServer";
-        var imgLyr = new ImageryLayer({
-          url: imgLyrUrl,
-          opacity: 0.7,
-          pixelFilter: colorize,
-          popupTemplate: {
-            title: "Type of land:{Raster.ServicePixelValue}",
-            content: "Manager: {Raster.nlcd_name}"
+          // the mask will be used to filter unwanted data
+          var mask = [];
+
+          // The number of pixels in the pixelBlock
+          var numPixels = pixelBlock.width * pixelBlock.height;
+
+          // for each pixel in the block
+          for (var i = 0; i < numPixels; i++) {
+            var val = band1[i]; // get the current pixel value
+
+            // if the pixel value matches the first field (Rangeland)
+            // then assign it its preset RGB values
+            if (val === imgFields[0].attributes.Value) {
+
+              mask[i] = 1;
+              //rBand[i] = fields[0].attributes.Red;
+              //gBand[i] = fields[0].attributes.Green;
+              //bBand[i] = fields[0].attributes.Blue;
+              rBand[i] = 255;
+              gBand[i] = 0;
+              bBand[i] = 255;
+
+              // if the pixel value matches the second field (LATAH COUNTY)
+              // then assign it its preset RGB values
+            } else if (val === imgFields[1].attributes.Value) {
+
+              mask[i] = 1;
+              //rBand[i] = fields[1].attributes.Red;
+              //gBand[i] = fields[1].attributes.Green;
+              //bBand[i] = fields[1].attributes.Blue;
+              rBand[i] = 255;
+              gBand[i] = 0;
+              bBand[i] = 255;
+
+            } else {
+              // if the pixel value does not match the desired values
+              // then exclude it from the mask so it doesn't display
+              mask[i] = 0;
+              rBand[i] = 0;
+              gBand[i] = 0;
+              bBand[i] = 0;
+            }
           }
-        });
+
+          // Set the new pixel values on the pixelBlock
+          pixelData.pixelBlock.pixels = [rBand, gBand, bBand];
+          pixelData.pixelBlock.statistics = null;
+          pixelData.pixelBlock.pixelType = "U8"; // U8 is used for color
+          pixelData.pixelBlock.mask = mask;
+        }
 
         // Creates the style for the county boundary layer
         var hid = new UniqueValueRenderer({
@@ -146,7 +230,7 @@ define([
             type: "Bureau of Reclamation"
           }
         };
-        var getLandResults = function (imgLayer, feature, choice) {
+        var getLandResults = function (feature, choice) {
           var results = "";
           var clipCRF = new RasterFunction({
             functionName: "Clip",
@@ -154,10 +238,10 @@ define([
               ClippingGeometry: feature.geometry, //a polygon or envelope
               ClippingType: 1, //int (1= clippingOutside, 2=clippingInside), use 1 to keep image inside of the geometry
               raster: "$$"
+              // raster: colorRF
             }
           });
 
-          // Clips the image to only the county geometry
           var clipRF = new RasterFunction({
             functionName: "Clip",
             functionArguments: {
@@ -166,45 +250,39 @@ define([
               raster: "$$"
             }
           });
-
-
-          // imgLayer.renderingRule = (choice === "cover") ? clipCRF : clipRF;
-          imgLayer.renderingRule = clipRF;
-          // imgLayer.pixelFilter = (choice === "cover") ? colorize : null;
-          imgLayer.pixelFilter = null;
-
+          // renderingRule = (choice === "cover") ? clipCRF : clipRF;
+          // imgLayer.renderingRule = clipRF;
           myMap.map.add(imgLayer);
+          var fields = null;
           return imgLayer.then(function () {
             var totA = 0;
             var totPC = 0;
             var totId = 0;
             var perCty = 0;
             var total;
-            var fields;
-            console.log(imgLayer);
             var rasterAttributes = imgLayer.rasterAttributeTable.features;
             for (var i = 0; i < rasterAttributes.length; i++) {
               totId += rasterAttributes[i].attributes.area_ac;
             }
             fields = rasterAttributes.filter(function (item, i) {
-              return (item.attributes.cnty_name === feature.attributes.NAME);
+              return (item.attributes.cnty_name === feature.attributes.NAME && item.attributes.nlcd_name === "Rangeland");
             });
 
+            imgLayer.pixelFilter = colorize(fields);
             fields.forEach(function (item) {
               var res = item.attributes;
               var clr = colorTypes[res.sma_name].color;
               var sma = colorTypes[res.sma_name].type;
-              if(choice === "cover"){
+              if (choice === "cover") {
                 results += "<tr><td>" + res.nlcd_name.toString() + "</td><td>" + res.per_cnty.toFixed(2) + "</td><td>" + res.area_ac.toFixed(2) + "</td></tr>";
               }
-              else if(choice === "management" && item.attributes.nlcd_name === "Rangeland"){
+              else if (choice === "management") {
                 results += "<tr><td class='dlegend' style='background-color:" + clr + ";'>&nbsp;</td><td>" + sma + "</td><td>" + res.nlcd_name.toString() + "</td><td>" + res.per_nlcd.toFixed(2) + "</td><td>" + res.per_cnty.toFixed(2) + "</td><td>" + res.area_ac.toFixed(2) + "</td></tr>";
               }
-
             });
 
             return new Promise(
-              function(resolve, reject){
+              function (resolve, reject) {
                 resolve(results);
                 reject("an error occured");
               }
@@ -473,7 +551,6 @@ define([
             }
           });
 
-          
 
           $('#select').on('change', function (event) {
             var selectedText = event.target.selectedOptions["0"].text;
@@ -486,20 +563,20 @@ define([
 
                 if (choice === "management") {
                   var managementResults;
-                  getLandResults(imgLyr, feature, "management").then(function(searchResults){
+                  getLandResults(feature, "management").then(function (searchResults) {
                     managementResults = searchResults;
-                  }).then(function(){
+                  }).then(function () {
                     dom.byId("table-div").innerHTML = "<table id='table' class='table table-bordered table-condensed text-center table-responsive table-fixed' cellspacing='0'>" + tbManagementHead + "<tbody>" + managementResults + "</tbody></table>";
                   });
 
                 }
                 else if (choice === "cover") {
                   var coverResults;
-                  getLandResults(imgLyr, feature, "cover").then(function (searchResults) {
+                  getLandResults(feature, "cover").then(function (searchResults) {
                     coverResults = searchResults;
 
-                  }).then(function(){
-                    dom.byId("table-div").innerHTML ="<table id='table' class='table table-bordered table-condensed text-center table-responsive table-fixed' cellspacing='0'>" + tbCoverHead + "<tbody>" + coverResults + "</tbody></table>";
+                  }).then(function () {
+                    dom.byId("table-div").innerHTML = "<table id='table' class='table table-bordered table-condensed text-center table-responsive table-fixed' cellspacing='0'>" + tbCoverHead + "<tbody>" + coverResults + "</tbody></table>";
                   });
 
                 }

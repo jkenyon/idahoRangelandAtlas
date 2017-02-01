@@ -21,7 +21,6 @@ define([
               featureLayer: new FeatureLayer({
                 url: url
               }),
-              placeholder: "Search for a county",
               searchFields: ["NAME"],
               suggestionTemplate: '{NAME}',
               displayField: "NAME",
