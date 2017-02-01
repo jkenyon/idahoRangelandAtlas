@@ -43,118 +43,6 @@ define([
 
         var myWigets = new MyWidgets(this.myView);
 
-        var rasterAttributes;
-
-        /********************
-         * Create image layer
-         ********************/
-
-        var imgUrl = "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/idaho_rangeland_atlas_201701/ImageServer";
-
-        var imgLayer = new ImageryLayer({
-          url: imgUrl,
-          pixelFilter: colorize // Applies color to the layer
-        });
-
-        /**************************
-         * Add image layer to map
-         *************************/
-
-        // myMap.map.add(imgLayer);
-
-        /**********************************************************
-         * Get the raster attribute table to add color to
-         * the image layer once the layer loads.
-         *********************************************************/
-        var imgFields;
-
-
-        imgLayer.then(function () {
-          rasterAttributes = imgLayer.rasterAttributeTable.features;
-          imgFields = rasterAttributes.filter(function (item, i) {
-            var className = item.attributes.nlcd_name;
-            var countyName = item.attributes.cnty_name;
-            return className === "Rangeland" /*&& countyName === "LATAH COUNTY"*/;
-          });
-
-        });
-
-        /**********************************************************
-         * Apply the RGB values stored for each pixel value to the
-         * pixel in a three-band array using the pixelFilter
-         *********************************************************/
-
-        function colorize(pixelData, fields) {
-          if (pixelData === null || pixelData.pixelBlock === null ||
-            pixelData.pixelBlock.pixels === null) {
-            return;
-          }
-
-          // The pixelBlock stores the values of all pixels visible in the view
-          var pixelBlock = pixelData.pixelBlock;
-
-          // The pixels visible in the view
-          var pixels = pixelBlock.pixels;
-
-          // Get the pixels from the only band of the data
-          var band1 = pixels[0];
-
-          // Create empty arrays for each of the RGB bands to set on the pixelBlock
-          var rBand = [];
-          var gBand = [];
-          var bBand = [];
-
-          // the mask will be used to filter unwanted data
-          var mask = [];
-
-          // The number of pixels in the pixelBlock
-          var numPixels = pixelBlock.width * pixelBlock.height;
-
-          // for each pixel in the block
-          for (var i = 0; i < numPixels; i++) {
-            var val = band1[i]; // get the current pixel value
-
-            // if the pixel value matches the first field (Rangeland)
-            // then assign it its preset RGB values
-            if (val === imgFields[0].attributes.Value) {
-
-              mask[i] = 1;
-              //rBand[i] = fields[0].attributes.Red;
-              //gBand[i] = fields[0].attributes.Green;
-              //bBand[i] = fields[0].attributes.Blue;
-              rBand[i] = 255;
-              gBand[i] = 0;
-              bBand[i] = 255;
-
-              // if the pixel value matches the second field (LATAH COUNTY)
-              // then assign it its preset RGB values
-            } else if (val === imgFields[1].attributes.Value) {
-
-              mask[i] = 1;
-              //rBand[i] = fields[1].attributes.Red;
-              //gBand[i] = fields[1].attributes.Green;
-              //bBand[i] = fields[1].attributes.Blue;
-              rBand[i] = 255;
-              gBand[i] = 0;
-              bBand[i] = 255;
-
-            } else {
-              // if the pixel value does not match the desired values
-              // then exclude it from the mask so it doesn't display
-              mask[i] = 0;
-              rBand[i] = 0;
-              gBand[i] = 0;
-              bBand[i] = 0;
-            }
-          }
-
-          // Set the new pixel values on the pixelBlock
-          pixelData.pixelBlock.pixels = [rBand, gBand, bBand];
-          pixelData.pixelBlock.statistics = null;
-          pixelData.pixelBlock.pixelType = "U8"; // U8 is used for color
-          pixelData.pixelBlock.mask = mask;
-        }
-
         // Creates the style for the county boundary layer
         var hid = new UniqueValueRenderer({
           field: "NAME",
@@ -232,35 +120,116 @@ define([
         };
         var getLandResults = function (feature, choice) {
           var results = "";
-          var clipCRF = new RasterFunction({
-            functionName: "Clip",
-            functionArguments: {
-              ClippingGeometry: feature.geometry, //a polygon or envelope
-              ClippingType: 1, //int (1= clippingOutside, 2=clippingInside), use 1 to keep image inside of the geometry
-              raster: "$$"
-              // raster: colorRF
+
+          var rasterAttributes;
+          var fields;
+          var imgUrl = "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/idaho_rangeland_atlas_201701/ImageServer";
+
+          var colorize = function(pixelData) {
+            if (pixelData === null || pixelData.pixelBlock === null ||
+              pixelData.pixelBlock.pixels === null) {
+              return;
             }
+
+            // The pixelBlock stores the values of all pixels visible in the view
+            var pixelBlock = pixelData.pixelBlock;
+
+            // The pixels visible in the view
+            var pixels = pixelBlock.pixels;
+
+            // Get the pixels from the only band of the data
+            var band1 = pixels[0];
+
+            // Create empty arrays for each of the RGB bands to set on the pixelBlock
+            var rBand = [];
+            var gBand = [];
+            var bBand = [];
+
+            // the mask will be used to filter unwanted data
+            var mask = [];
+
+            // The number of pixels in the pixelBlock
+            var numPixels = pixelBlock.width * pixelBlock.height;
+
+            // for each pixel in the block
+            for (var i = 0; i < numPixels; i++) {
+              var val = band1[i]; // get the current pixel value
+
+              // if the pixel value matches the first field (Rangeland)
+              // then assign it its preset RGB values
+              if (val === fields[0].attributes.Value) {
+
+                mask[i] = 1;
+                //rBand[i] = fields[0].attributes.Red;
+                //gBand[i] = fields[0].attributes.Green;
+                //bBand[i] = fields[0].attributes.Blue;
+                rBand[i] = 255;
+                gBand[i] = 0;
+                bBand[i] = 255;
+
+                // if the pixel value matches the second field (LATAH COUNTY)
+                // then assign it its preset RGB values
+              } else if (val === fields[1].attributes.Value) {
+
+                mask[i] = 1;
+                //rBand[i] = fields[1].attributes.Red;
+                //gBand[i] = fields[1].attributes.Green;
+                //bBand[i] = fields[1].attributes.Blue;
+                rBand[i] = 255;
+                gBand[i] = 0;
+                bBand[i] = 255;
+
+              } else {
+                // if the pixel value does not match the desired values
+                // then exclude it from the mask so it doesn't display
+                mask[i] = 0;
+                rBand[i] = 0;
+                gBand[i] = 0;
+                bBand[i] = 0;
+              }
+            }
+
+            // Set the new pixel values on the pixelBlock
+            pixelData.pixelBlock.pixels = [rBand, gBand, bBand];
+            pixelData.pixelBlock.statistics = null;
+            pixelData.pixelBlock.pixelType = "U8"; // U8 is used for color
+            pixelData.pixelBlock.mask = mask;
+          };
+
+          var imgLayer = new ImageryLayer({
+            url: imgUrl,
+            pixelFilter: colorize // Applies color to the layer
           });
 
-          var clipRF = new RasterFunction({
-            functionName: "Clip",
-            functionArguments: {
-              ClippingGeometry: feature.geometry, //a polygon or envelope
-              ClippingType: 1, //int (1= clippingOutside, 2=clippingInside), use 1 to keep image inside of the geometry
-              raster: "$$"
-            }
-          });
-          // renderingRule = (choice === "cover") ? clipCRF : clipRF;
-          // imgLayer.renderingRule = clipRF;
-          myMap.map.add(imgLayer);
-          var fields = null;
+         myMap.map.add(imgLayer);
+
+          // var clipCRF = new RasterFunction({
+          //   functionName: "Clip",
+          //   functionArguments: {
+          //     ClippingGeometry: feature.geometry, //a polygon or envelope
+          //     ClippingType: 1, //int (1= clippingOutside, 2=clippingInside), use 1 to keep image inside of the geometry
+          //     raster: "$$"
+          //     // raster: colorRF
+          //   }
+          // });
+          //
+          // var clipRF = new RasterFunction({
+          //   functionName: "Clip",
+          //   functionArguments: {
+          //     ClippingGeometry: feature.geometry, //a polygon or envelope
+          //     ClippingType: 1, //int (1= clippingOutside, 2=clippingInside), use 1 to keep image inside of the geometry
+          //     raster: "$$"
+          //   }
+          // });
+
+
           return imgLayer.then(function () {
             var totA = 0;
             var totPC = 0;
             var totId = 0;
             var perCty = 0;
             var total;
-            var rasterAttributes = imgLayer.rasterAttributeTable.features;
+            rasterAttributes = imgLayer.rasterAttributeTable.features;
             for (var i = 0; i < rasterAttributes.length; i++) {
               totId += rasterAttributes[i].attributes.area_ac;
             }
@@ -268,7 +237,6 @@ define([
               return (item.attributes.cnty_name === feature.attributes.NAME && item.attributes.nlcd_name === "Rangeland");
             });
 
-            imgLayer.pixelFilter = colorize(fields);
             fields.forEach(function (item) {
               var res = item.attributes;
               var clr = colorTypes[res.sma_name].color;
