@@ -118,14 +118,21 @@ define([
             type: "Bureau of Reclamation"
           }
         };
+
+        var imgUrl = "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/idaho_rangeland_atlas_201701/ImageServer";
+
+        var imgLayer = new ImageryLayer({
+          url: imgUrl,
+          /*pixelFilter: colorize*/ // Applies color to the layer
+        });
+
         var getLandResults = function (feature, choice) {
           var results = "";
 
           var rasterAttributes;
           var fields;
-          var imgUrl = "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/idaho_rangeland_atlas_201701/ImageServer";
 
-          var colorize = function(pixelData) {
+          var colorize = function (pixelData) {
             if (pixelData === null || pixelData.pixelBlock === null ||
               pixelData.pixelBlock.pixels === null) {
               return;
@@ -196,12 +203,9 @@ define([
             pixelData.pixelBlock.mask = mask;
           };
 
-          var imgLayer = new ImageryLayer({
-            url: imgUrl,
-            pixelFilter: colorize // Applies color to the layer
-          });
+          imgLayer.pixelFilter = colorize;
 
-         myMap.map.add(imgLayer);
+          myMap.map.add(imgLayer);
 
           // var clipCRF = new RasterFunction({
           //   functionName: "Clip",
