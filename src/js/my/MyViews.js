@@ -119,6 +119,30 @@ define([
           }
         };
 
+        var landTypeColors = {
+          "Rangeland": {
+            color: [56, 36, 61]
+          },
+          "Wetlands": {
+            color: [68, 147, 205]
+          },
+          "Water": {
+            color: [0, 44, 205]
+          },
+          "Forest": {
+            color: [0, 125, 3]
+          },
+          "Developed": {
+            color: [127, 71, 120]
+          },
+          "Cultivated Crops": {
+            color: [216, 217, 61]
+          },
+          "Pasture/Hay": {
+            color: [216, 20, 61]
+          }
+        };
+
         // var imgUrl = "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/idaho_rangeland_atlas_201701/ImageServer";
         var imgUrl = "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/idaho_rangeland_atlas_201702/ImageServer";
 
@@ -172,10 +196,19 @@ define([
                 // then assign it its preset RGB values
                 if (val === fields[j].attributes.Value) {
 
-                  mask[i] = 1;
-                  rBand[i] = fields[j].attributes.red;
-                  gBand[i] = fields[j].attributes.green;
-                  bBand[i] = fields[j].attributes.blue;
+                  if(fields[j].attributes.nlcd_name !== "Rangeland"){
+                    mask[i] = 1;
+                    rBand[i] = landTypeColors[fields[j].attributes.nlcd_name].color[0];
+                    gBand[i] = landTypeColors[fields[j].attributes.nlcd_name].color[1];
+                    bBand[i] = landTypeColors[fields[j].attributes.nlcd_name].color[2];
+                  }
+                  else {
+                    mask[i] = 1;
+                    rBand[i] = fields[j].attributes.red;
+                    gBand[i] = fields[j].attributes.green;
+                    bBand[i] = fields[j].attributes.blue;
+                  }
+
                   break;
                   // rBand[i] = 255;
                   // gBand[i] = 0;
@@ -245,18 +278,22 @@ define([
                 return (item.attributes.cnty_name === feature.attributes.NAME);
               })
             ;
-            console.log(fields);
+            // console.log(fields);
 
             fields.forEach(function (item) {
               var res = item.attributes;
               // var clr = colorTypes[res.sma_name].color;
-              var clrs = [res.red, res.green, res.blue];
-              var clr = "rgb("+clrs[0]+","+clrs[1]+","+clrs[2]+")";
+              var clrs;
+              var clr;
               var sma = colorTypes[res.sma_name].type;
               if (choice === "cover") {
+                clrs = landTypeColors[res.nlcd_name].color;
+                clr = "rgb("+clrs[0]+","+clrs[1]+","+clrs[2]+")";
                 results += "<tr><td class='dlegend' style='background-color:" + clr + ";'>&nbsp;</td><td>" + res.nlcd_name.toString() + "</td><td>" + res.per_cnty.toFixed(2) + "</td><td>" + res.area_ac.toFixed(2) + "</td></tr>";
               }
               else if (choice === "management") {
+                clrs = [res.red, res.green, res.blue];
+                clr = "rgb("+clrs[0]+","+clrs[1]+","+clrs[2]+")";
                 results += "<tr><td class='dlegend' style='background-color:" + clr + ";'>&nbsp;</td><td>" + sma + "</td><td>" + res.per_nlcd.toFixed(2) + "</td><td>" + res.per_cnty.toFixed(2) + "</td><td>" + res.area_ac.toFixed(2) + "</td></tr>";
               }
             });
