@@ -119,7 +119,8 @@ define([
           }
         };
 
-        var imgUrl = "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/idaho_rangeland_atlas_201701/ImageServer";
+        // var imgUrl = "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/idaho_rangeland_atlas_201701/ImageServer";
+        var imgUrl = "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/idaho_rangeland_atlas_201702/ImageServer";
 
         var imgLayer = new ImageryLayer({
           url: imgUrl,
@@ -158,33 +159,35 @@ define([
             // The number of pixels in the pixelBlock
             var numPixels = pixelBlock.width * pixelBlock.height;
 
+            console.log(fields);
+
             // for each pixel in the block
             for (var i = 0; i < numPixels; i++) {
               var val = band1[i]; // get the current pixel value
-
+              
               // if the pixel value matches the first field (Rangeland)
               // then assign it its preset RGB values
               if (val === fields[0].attributes.Value) {
 
                 mask[i] = 1;
-                //rBand[i] = fields[0].attributes.Red;
-                //gBand[i] = fields[0].attributes.Green;
-                //bBand[i] = fields[0].attributes.Blue;
-                rBand[i] = 255;
-                gBand[i] = 0;
-                bBand[i] = 255;
+                rBand[i] = fields[0].attributes.red;
+                gBand[i] = fields[0].attributes.green;
+                bBand[i] = fields[0].attributes.blue;
+                // rBand[i] = 255;
+                // gBand[i] = 0;
+                // bBand[i] = 255;
 
                 // if the pixel value matches the second field (LATAH COUNTY)
                 // then assign it its preset RGB values
               } else if (val === fields[1].attributes.Value) {
 
                 mask[i] = 1;
-                //rBand[i] = fields[1].attributes.Red;
-                //gBand[i] = fields[1].attributes.Green;
-                //bBand[i] = fields[1].attributes.Blue;
-                rBand[i] = 255;
-                gBand[i] = 0;
-                bBand[i] = 255;
+                rBand[i] = fields[1].attributes.red;
+                gBand[i] = fields[1].attributes.green;
+                bBand[i] = fields[1].attributes.blue;
+                // rBand[i] = 255;
+                // gBand[i] = 0;
+                // bBand[i] = 255;
 
               } else {
                 // if the pixel value does not match the desired values
