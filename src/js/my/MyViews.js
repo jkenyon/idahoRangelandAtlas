@@ -238,9 +238,13 @@ define([
             for (var i = 0; i < rasterAttributes.length; i++) {
               totId += rasterAttributes[i].attributes.area_ac;
             }
-            fields = rasterAttributes.filter(function (item, i) {
+            fields = (choice === "management") ? rasterAttributes.filter(function (item, i) {
               return (item.attributes.cnty_name === feature.attributes.NAME && item.attributes.nlcd_name === "Rangeland");
-            });
+            }) :
+              rasterAttributes.filter(function (item, i) {
+                return (item.attributes.cnty_name === feature.attributes.NAME);
+              })
+            ;
             console.log(fields);
 
             fields.forEach(function (item) {
@@ -250,10 +254,10 @@ define([
               var clr = "rgb("+clrs[0]+","+clrs[1]+","+clrs[2]+")";
               var sma = colorTypes[res.sma_name].type;
               if (choice === "cover") {
-                results += "<tr><td>" + res.nlcd_name.toString() + "</td><td>" + res.per_cnty.toFixed(2) + "</td><td>" + res.area_ac.toFixed(2) + "</td></tr>";
+                results += "<tr><td class='dlegend' style='background-color:" + clr + ";'>&nbsp;</td><td>" + res.nlcd_name.toString() + "</td><td>" + res.per_cnty.toFixed(2) + "</td><td>" + res.area_ac.toFixed(2) + "</td></tr>";
               }
               else if (choice === "management") {
-                results += "<tr><td class='dlegend' style='background-color:" + clr + ";'>&nbsp;</td><td>" + sma + "</td><td>" + res.nlcd_name.toString() + "</td><td>" + res.per_nlcd.toFixed(2) + "</td><td>" + res.per_cnty.toFixed(2) + "</td><td>" + res.area_ac.toFixed(2) + "</td></tr>";
+                results += "<tr><td class='dlegend' style='background-color:" + clr + ";'>&nbsp;</td><td>" + sma + "</td><td>" + res.per_nlcd.toFixed(2) + "</td><td>" + res.per_cnty.toFixed(2) + "</td><td>" + res.area_ac.toFixed(2) + "</td></tr>";
               }
             });
 
@@ -285,7 +289,7 @@ define([
         });
         var backBtn = dom.byId('back-button');
         on(backBtn, 'click', function () {
-          map.remove(imgLyr);
+          map.remove(imgLayer);
         });
 
         view.then(function () {
@@ -534,8 +538,8 @@ define([
               function (success) {
                 myMap.map.remove(imgLayer);
                 var feature = success[0].results[0].feature;
-                var tbManagementHead = "<thead><tr><th class='header legend'></th><th class='header'>Manager</th><th class='header'>Type of Land</th><th class='header' >% of Rangeland</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
-                var tbCoverHead = "<thead><tr><th class='header'>Type of Land</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
+                var tbManagementHead = "<thead><tr><th class='header legend'></th><th class='header'>Manager</th><th class='header' >% of Rangeland</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
+                var tbCoverHead = "<thead><tr><th class='header legend'></th><th class='header'>Type of Land</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
 
                 if (choice === "management") {
                   var managementResults;
