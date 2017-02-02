@@ -67,7 +67,7 @@ define([
           },
           "USFS": {
             color: "#DDF8DE",
-            type: "US Forest Service",
+            type: "US Forest Service"
           },
           "BLM": {
             color: "#ffe49c",
@@ -241,10 +241,13 @@ define([
             fields = rasterAttributes.filter(function (item, i) {
               return (item.attributes.cnty_name === feature.attributes.NAME && item.attributes.nlcd_name === "Rangeland");
             });
+            console.log(fields);
 
             fields.forEach(function (item) {
               var res = item.attributes;
-              var clr = colorTypes[res.sma_name].color;
+              // var clr = colorTypes[res.sma_name].color;
+              var clrs = [res.red, res.green, res.blue];
+              var clr = "rgb("+clrs[0]+","+clrs[1]+","+clrs[2]+")";
               var sma = colorTypes[res.sma_name].type;
               if (choice === "cover") {
                 results += "<tr><td>" + res.nlcd_name.toString() + "</td><td>" + res.per_cnty.toFixed(2) + "</td><td>" + res.area_ac.toFixed(2) + "</td></tr>";
