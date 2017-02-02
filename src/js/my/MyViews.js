@@ -123,7 +123,7 @@ define([
         var imgUrl = "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/idaho_rangeland_atlas_201702/ImageServer";
 
         var imgLayer = new ImageryLayer({
-          url: imgUrl,
+          url: imgUrl
           /*pixelFilter: colorize*/ // Applies color to the layer
         });
 
@@ -159,44 +159,42 @@ define([
             // The number of pixels in the pixelBlock
             var numPixels = pixelBlock.width * pixelBlock.height;
 
-            console.log(fields);
-
+            var j;
+            var i;
             // for each pixel in the block
-            for (var i = 0; i < numPixels; i++) {
+            for (i = 0; i < numPixels; i++) {
               var val = band1[i]; // get the current pixel value
-              
               // if the pixel value matches the first field (Rangeland)
-              // then assign it its preset RGB values
-              if (val === fields[0].attributes.Value) {
+              // cycle through array fields
+              // j = i % fields.length;
 
-                mask[i] = 1;
-                rBand[i] = fields[0].attributes.red;
-                gBand[i] = fields[0].attributes.green;
-                bBand[i] = fields[0].attributes.blue;
-                // rBand[i] = 255;
-                // gBand[i] = 0;
-                // bBand[i] = 255;
-
-                // if the pixel value matches the second field (LATAH COUNTY)
+              for (j = 0; j < fields.length; j++) {
                 // then assign it its preset RGB values
-              } else if (val === fields[1].attributes.Value) {
+                if (val === fields[j].attributes.Value) {
 
-                mask[i] = 1;
-                rBand[i] = fields[1].attributes.red;
-                gBand[i] = fields[1].attributes.green;
-                bBand[i] = fields[1].attributes.blue;
-                // rBand[i] = 255;
-                // gBand[i] = 0;
-                // bBand[i] = 255;
+                  mask[i] = 1;
+                  rBand[i] = fields[j].attributes.red;
+                  gBand[i] = fields[j].attributes.green;
+                  bBand[i] = fields[j].attributes.blue;
+                  break;
+                  // rBand[i] = 255;
+                  // gBand[i] = 0;
+                  // bBand[i] = 255;
 
-              } else {
-                // if the pixel value does not match the desired values
-                // then exclude it from the mask so it doesn't display
-                mask[i] = 0;
-                rBand[i] = 0;
-                gBand[i] = 0;
-                bBand[i] = 0;
+                  // if the pixel value matches the second field (LATAH COUNTY)
+                  // then assign it its preset RGB values
+                }
+                else {
+                  // if the pixel value does not match the desired values
+                  // then exclude it from the mask so it doesn't display
+                  mask[i] = 0;
+                  rBand[i] = 0;
+                  gBand[i] = 0;
+                  bBand[i] = 0;
+                }
+
               }
+
             }
 
             // Set the new pixel values on the pixelBlock
@@ -531,7 +529,7 @@ define([
             var selectedText = event.target.selectedOptions["0"].text;
             searchWidget.search(selectedText).then(
               function (success) {
-
+                myMap.map.remove(imgLayer);
                 var feature = success[0].results[0].feature;
                 var tbManagementHead = "<thead><tr><th class='header legend'></th><th class='header'>Manager</th><th class='header'>Type of Land</th><th class='header' >% of Rangeland</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
                 var tbCoverHead = "<thead><tr><th class='header'>Type of Land</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
