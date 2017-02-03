@@ -119,29 +119,6 @@ define([
           }
         };
 
-        var landTypeColors = {
-          "Rangeland": {
-            color: [56, 36, 61]
-          },
-          "Wetlands": {
-            color: [68, 147, 205]
-          },
-          "Water": {
-            color: [0, 44, 205]
-          },
-          "Forest": {
-            color: [0, 125, 3]
-          },
-          "Developed": {
-            color: [127, 71, 120]
-          },
-          "Cultivated Crops": {
-            color: [216, 217, 61]
-          },
-          "Pasture/Hay": {
-            color: [216, 20, 61]
-          }
-        };
 
         // var imgUrl = "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/idaho_rangeland_atlas_201701/ImageServer";
         var imgUrl = "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/idaho_rangeland_atlas_201702/ImageServer";
@@ -153,6 +130,44 @@ define([
 
         var getLandResults = function (feature, choice) {
           var results = "";
+          var landTypeColors = {
+            "Rangeland": {
+              color: [56, 36, 61],
+              totalCountyPerc: 0,
+              totalAcr: 0
+            },
+            "Wetlands": {
+              color: [68, 147, 205],
+              totalCountyPerc: 0,
+              totalAcr: 0
+            },
+            "Water": {
+              color: [0, 44, 205],
+              totalCountyPerc: 0,
+              totalAcr: 0
+            },
+            "Forest": {
+              color: [0, 125, 3],
+              totalCountyPerc: 0,
+              totalAcr: 0
+            },
+            "Developed": {
+              color: [127, 71, 120],
+              totalCountyPerc: 0,
+              totalAcr: 0
+            },
+            "Cultivated Crops": {
+              color: [216, 217, 61],
+              totalCountyPerc: 0,
+              totalAcr: 0
+            },
+            "Pasture/Hay": {
+              color: [216, 20, 61],
+              totalCountyPerc: 0,
+              totalAcr: 0
+            }
+          };
+          var landTypes = ["Rangeland", "Wetlands", "Water", "Forest", "Developed", "Cultivated Crops", "Pasture/Hay"];
 
           var rasterAttributes;
           var fields;
@@ -196,7 +211,7 @@ define([
                 // then assign it its preset RGB values
                 if (val === fields[j].attributes.Value) {
 
-                  if(fields[j].attributes.nlcd_name !== "Rangeland"){
+                  if (fields[j].attributes.nlcd_name !== "Rangeland") {
                     mask[i] = 1;
                     rBand[i] = landTypeColors[fields[j].attributes.nlcd_name].color[0];
                     gBand[i] = landTypeColors[fields[j].attributes.nlcd_name].color[1];
@@ -208,14 +223,7 @@ define([
                     gBand[i] = fields[j].attributes.green;
                     bBand[i] = fields[j].attributes.blue;
                   }
-
                   break;
-                  // rBand[i] = 255;
-                  // gBand[i] = 0;
-                  // bBand[i] = 255;
-
-                  // if the pixel value matches the second field (LATAH COUNTY)
-                  // then assign it its preset RGB values
                 }
                 else {
                   // if the pixel value does not match the desired values
@@ -272,31 +280,45 @@ define([
               totId += rasterAttributes[i].attributes.area_ac;
             }
             fields = (choice === "management") ? rasterAttributes.filter(function (item, i) {
-              return (item.attributes.cnty_name === feature.attributes.NAME && item.attributes.nlcd_name === "Rangeland");
-            }) :
+                return (item.attributes.cnty_name === feature.attributes.NAME && item.attributes.nlcd_name === "Rangeland");
+              }) :
               rasterAttributes.filter(function (item, i) {
                 return (item.attributes.cnty_name === feature.attributes.NAME);
-              })
-            ;
-            // console.log(fields);
+              });
 
-            fields.forEach(function (item) {
-              var res = item.attributes;
-              // var clr = colorTypes[res.sma_name].color;
-              var clrs;
-              var clr;
-              var sma = colorTypes[res.sma_name].type;
-              if (choice === "cover") {
-                clrs = landTypeColors[res.nlcd_name].color;
-                clr = "rgb("+clrs[0]+","+clrs[1]+","+clrs[2]+")";
-                results += "<tr><td class='dlegend' style='background-color:" + clr + ";'>&nbsp;</td><td>" + res.nlcd_name.toString() + "</td><td>" + res.per_cnty.toFixed(2) + "</td><td>" + res.area_ac.toFixed(2) + "</td></tr>";
-              }
-              else if (choice === "management") {
-                clrs = [res.red, res.green, res.blue];
-                clr = "rgb("+clrs[0]+","+clrs[1]+","+clrs[2]+")";
+
+            if (choice === "management") {
+              fields.forEach(function (item, i) {
+                var res = item.attributes;
+                var sma = colorTypes[res.sma_name].type;
+                var clrs = [res.red, res.green, res.blue];
+                var clr = "rgb(" + clrs[0] + "," + clrs[1] + "," + clrs[2] + ")";
                 results += "<tr><td class='dlegend' style='background-color:" + clr + ";'>&nbsp;</td><td>" + sma + "</td><td>" + res.per_nlcd.toFixed(2) + "</td><td>" + res.per_cnty.toFixed(2) + "</td><td>" + res.area_ac.toFixed(2) + "</td></tr>";
+              });
+            }
+            else if (choice === "cover") {
+              var coverValue;
+              var covers = [];
+              for (var k = 0; k < landTypes.length; k++) {
+                coverValue = fields.filter(function (item) {
+                  return (item.attributes.nlcd_name === landTypes[k]);
+                });
+                covers.push(coverValue);
               }
-            });
+              console.log("covers: ", covers);
+              covers.forEach(function (item, i) {
+                var totalAc = item.reduce(function (prev, curr) {
+                  return prev + curr.attributes.area_ac;
+                }, 0);
+                var totalPer = item.reduce(function (prev, curr) {
+                  return prev + curr.attributes.per_cnty;
+                }, 0);
+                var nlcd_name = landTypes[i];
+                var clrs = landTypeColors[nlcd_name].color;
+                var clr = "rgb(" + clrs[0] + "," + clrs[1] + "," + clrs[2] + ")";
+                results += "<tr><td class='dlegend' style='background-color:" + clr + ";'>&nbsp;</td><td>" + nlcd_name.toString() + "</td><td>" + totalPer.toFixed(2) + "</td><td>" + totalAc.toFixed(2) + "</td></tr>";
+              });
+            }
 
             return new Promise(
               function (resolve, reject) {
