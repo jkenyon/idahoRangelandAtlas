@@ -132,19 +132,13 @@ define([
           var results = "";
           var landTypeColors = {
             "Rangeland": {
-              color: [56, 36, 61],
-              totalCountyPerc: 0,
-              totalAcr: 0
+              color: [255,153,102]
             },
             "Wetlands": {
-              color: [68, 147, 205],
-              totalCountyPerc: 0,
-              totalAcr: 0
+              color: [68, 147, 205]
             },
             "Water": {
-              color: [0, 44, 205],
-              totalCountyPerc: 0,
-              totalAcr: 0
+              color: [0, 44, 205]
             },
             "Forest": {
               color: [0, 125, 3],
@@ -152,21 +146,16 @@ define([
               totalAcr: 0
             },
             "Developed": {
-              color: [127, 71, 120],
-              totalCountyPerc: 0,
-              totalAcr: 0
+              color: [127, 71, 120]
             },
             "Cultivated Crops": {
-              color: [216, 217, 61],
-              totalCountyPerc: 0,
-              totalAcr: 0
+              color: [216, 217, 61]
             },
             "Pasture/Hay": {
-              color: [216, 20, 61],
-              totalCountyPerc: 0,
-              totalAcr: 0
+              color: [216, 20, 61]
             }
           };
+          // var landTypes = ["Rangeland", "Wetlands", "Water", "Forest", "Developed", "Cultivated Crops", "Pasture/Hay"];
           var landTypes = ["Rangeland", "Wetlands", "Water", "Forest", "Developed", "Cultivated Crops", "Pasture/Hay"];
 
           var rasterAttributes;
@@ -218,10 +207,18 @@ define([
                     bBand[i] = landTypeColors[fields[j].attributes.nlcd_name].color[2];
                   }
                   else {
-                    mask[i] = 1;
-                    rBand[i] = fields[j].attributes.red;
-                    gBand[i] = fields[j].attributes.green;
-                    bBand[i] = fields[j].attributes.blue;
+                    if(choice === "cover"){
+                      mask[i] = 1;
+                      rBand[i] = landTypeColors[fields[j].attributes.nlcd_name].color[0];
+                      gBand[i] = landTypeColors[fields[j].attributes.nlcd_name].color[1];
+                      bBand[i] = landTypeColors[fields[j].attributes.nlcd_name].color[2];
+                    }
+                    else {
+                      mask[i] = 1;
+                      rBand[i] = fields[j].attributes.red;
+                      gBand[i] = fields[j].attributes.green;
+                      bBand[i] = fields[j].attributes.blue;
+                    }
                   }
                   break;
                 }
