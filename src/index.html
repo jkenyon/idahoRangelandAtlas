@@ -30,11 +30,18 @@
 
   <!--<script src="//ajax.googleapis.com/ajax/libs/dojo/1.11.2/dojo/dojo.js"></script>-->
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+  <script type="text/javascript" src="./js/jquery.tablesorter.min.js"></script>
 
   <!-- Select2 -->
   <link rel="stylesheet" type='text/css' href="./css/select2.min.css"/>
   <script type="text/javascript" src="./js/select2.js"></script>
 
+  <script type="text/javascript">
+    $(document).ready(function(){
+      $('table').tablesorter();
+      console.log("tablesorter entry.");
+    });
+  </script>
 </head>
 
 <body>
@@ -49,15 +56,15 @@
       <button id="hamburger-button" type="button" class="navbar-toggle collapsed" data-toggle="collapse"
               data-target="#navbar"
               aria-controls="navbar">
-        <div id="navbar-open" class="navbar-open">
+        <span id="navbar-open" class="navbar-open">
           <span class="sr-only">Toggle navigation</span>
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
-        </div>
-        <div id="navbar-close" class="hidden navbar-close">
+        </span>
+        <span id="navbar-close" class="hidden navbar-close">
           <span class="glyphicon glyphicon-remove"></span>
-        </div>
+        </span>
 
       </button>
     </div>
@@ -186,7 +193,7 @@
       <!-- Map menu  -->
       <div id="map-menu" class="map-menu">
         <div id="topics" class="text-center topics">
-          <strong><h3>Welcome to the Idaho Rangeland Atlas</h3></strong>
+          <h3>Welcome to the Idaho Rangeland Atlas</h3>
           <p>Select a topic below</p>
           <div class="row">
             <div class="col-xs-6">
@@ -290,13 +297,11 @@
 
 </div>
 
-
 <!--Libraries scripts-->
 <!--<script type="text/javascript" src="./js/dojo.js"></script>-->
-<script type="text/javascript" src="./js/jquery.tablesorter.min.js"></script>
+<!--<script type="text/javascript" src="./js/jquery.tablesorter.min.js"></script>-->
 <script type="text/javascript" src="./js/jquery.custom-scrollbar.js"></script>
 <script type="text/javascript" src="./js/bootstrap.min.js"></script>
-
 
 
 <!-- Custom Scripts -->

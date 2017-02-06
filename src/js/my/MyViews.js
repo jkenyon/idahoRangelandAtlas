@@ -28,6 +28,7 @@ define([
     return declare(null, {
       myView: null,
       constructor: function () {
+        // TODO sort the table of result for land cover(% county) and land management(% rangeland)
         var myMap = new MyMap();
         var map = myMap.map;
 
@@ -132,30 +133,29 @@ define([
           var results = "";
           var landTypeColors = {
             "Rangeland": {
-              color: [255,153,102]
+              color: [255, 165, 0]
             },
             "Wetlands": {
-              color: [68, 147, 205]
+              color: [128, 0, 128]
             },
             "Water": {
               color: [0, 44, 205]
             },
             "Forest": {
-              color: [0, 125, 3],
+              color: [34, 139, 34],
               totalCountyPerc: 0,
               totalAcr: 0
             },
             "Developed": {
-              color: [127, 71, 120]
+              color: [128, 128, 128]
             },
             "Cultivated Crops": {
-              color: [216, 217, 61]
+              color: [255, 192, 203]
             },
             "Pasture/Hay": {
-              color: [216, 20, 61]
+              color: [255, 255, 0]
             }
           };
-          // var landTypes = ["Rangeland", "Wetlands", "Water", "Forest", "Developed", "Cultivated Crops", "Pasture/Hay"];
           var landTypes = ["Rangeland", "Wetlands", "Water", "Forest", "Developed", "Cultivated Crops", "Pasture/Hay"];
 
           var rasterAttributes;
@@ -207,7 +207,7 @@ define([
                     bBand[i] = landTypeColors[fields[j].attributes.nlcd_name].color[2];
                   }
                   else {
-                    if(choice === "cover"){
+                    if (choice === "cover") {
                       mask[i] = 1;
                       rBand[i] = landTypeColors[fields[j].attributes.nlcd_name].color[0];
                       gBand[i] = landTypeColors[fields[j].attributes.nlcd_name].color[1];
@@ -242,10 +242,6 @@ define([
             pixelData.pixelBlock.mask = mask;
           };
 
-          imgLayer.pixelFilter = colorize;
-
-          myMap.map.add(imgLayer);
-
           // var clipCRF = new RasterFunction({
           //   functionName: "Clip",
           //   functionArguments: {
@@ -265,72 +261,63 @@ define([
           //   }
           // });
 
+          imgLayer.pixelFilter = colorize;
+          myMap.map.add(imgLayer);
 
-          return imgLayer.then(function () {
-            var totA = 0;
-            var totPC = 0;
-            var totId = 0;
-            var perCty = 0;
-            var total;
-            rasterAttributes = imgLayer.rasterAttributeTable.features;
-            for (var i = 0; i < rasterAttributes.length; i++) {
-              totId += rasterAttributes[i].attributes.area_ac;
-            }
-            fields = (choice === "management") ? rasterAttributes.filter(function (item, i) {
-                return (item.attributes.cnty_name === feature.attributes.NAME && item.attributes.nlcd_name === "Rangeland");
-              }) :
-              rasterAttributes.filter(function (item, i) {
-                return (item.attributes.cnty_name === feature.attributes.NAME);
-              });
+          return new Promise(
+            function (resolve, reject) {
+              imgLayer.then(function () {
+                  rasterAttributes = imgLayer.rasterAttributeTable.features;
+                  fields = (choice === "management") ? rasterAttributes.filter(function (item) {
+                      return (item.attributes.cnty_name === feature.attributes.NAME && item.attributes.nlcd_name === "Rangeland");
+                    }) :
+                    rasterAttributes.filter(function (item) {
+                      return (item.attributes.cnty_name === feature.attributes.NAME);
+                    });
 
-
-            if (choice === "management") {
-              fields.forEach(function (item, i) {
-                var res = item.attributes;
-                var sma = colorTypes[res.sma_name].type;
-                var clrs = [res.red, res.green, res.blue];
-                var clr = "rgb(" + clrs[0] + "," + clrs[1] + "," + clrs[2] + ")";
-                results += "<tr><td class='dlegend' style='background-color:" + clr + ";'>&nbsp;</td><td>" + sma + "</td><td>" + res.per_nlcd.toFixed(2) + "</td><td>" + res.per_cnty.toFixed(2) + "</td><td>" + res.area_ac.toFixed(2) + "</td></tr>";
-              });
-            }
-            else if (choice === "cover") {
-              var coverValue;
-              var covers = [];
-              for (var k = 0; k < landTypes.length; k++) {
-                coverValue = fields.filter(function (item) {
-                  return (item.attributes.nlcd_name === landTypes[k]);
-                });
-                covers.push(coverValue);
-              }
-              console.log("covers: ", covers);
-              covers.forEach(function (item, i) {
-                var totalAc = item.reduce(function (prev, curr) {
-                  return prev + curr.attributes.area_ac;
-                }, 0);
-                var totalPer = item.reduce(function (prev, curr) {
-                  return prev + curr.attributes.per_cnty;
-                }, 0);
-                var nlcd_name = landTypes[i];
-                var clrs = landTypeColors[nlcd_name].color;
-                var clr = "rgb(" + clrs[0] + "," + clrs[1] + "," + clrs[2] + ")";
-                results += "<tr><td class='dlegend' style='background-color:" + clr + ";'>&nbsp;</td><td>" + nlcd_name.toString() + "</td><td>" + totalPer.toFixed(2) + "</td><td>" + totalAc.toFixed(2) + "</td></tr>";
-              });
-            }
-
-            return new Promise(
-              function (resolve, reject) {
-                resolve(results);
-                reject("an error occured");
-              }
-            );
-          });
+                  if (choice === "management") {
+                    fields.forEach(function (item) {
+                      var res = item.attributes;
+                      var sma = colorTypes[res.sma_name].type;
+                      var clrs = [res.red, res.green, res.blue];
+                      var clr = "rgb(" + clrs[0] + "," + clrs[1] + "," + clrs[2] + ")";
+                      results += "<tr><td class='dlegend' style='background-color:" + clr + ";'>&nbsp;</td><td>" + sma + "</td><td>" + res.per_nlcd.toFixed(2) + "</td><td>" + res.per_cnty.toFixed(2) + "</td><td>" + res.area_ac.toFixed(2) + "</td></tr>";
+                    });
+                  }
+                  else if (choice === "cover") {
+                    var coverValue;
+                    var covers = [];
+                    for (var k = 0; k < landTypes.length; k++) {
+                      coverValue = fields.filter(function (item) {
+                        return (item.attributes.nlcd_name === landTypes[k]);
+                      });
+                      covers.push(coverValue);
+                    }
+                    covers.forEach(function (item, i) {
+                      var totalAc = item.reduce(function (prev, curr) {
+                        return prev + curr.attributes.area_ac;
+                      }, 0);
+                      var totalPer = item.reduce(function (prev, curr) {
+                        return prev + curr.attributes.per_cnty;
+                      }, 0);
+                      var nlcd_name = landTypes[i];
+                      var clrs = landTypeColors[nlcd_name].color;
+                      var clr = "rgb(" + clrs[0] + "," + clrs[1] + "," + clrs[2] + ")";
+                      results += "<tr><td class='dlegend' style='background-color:" + clr + ";'>&nbsp;</td><td>" + nlcd_name.toString() + "</td><td>" + totalPer.toFixed(2) + "</td><td>" + totalAc.toFixed(2) + "</td></tr>";
+                    });
+                  }
+                  resolve(results);
+                  reject("an error occured");
+                }
+              );
+            });
         };
 
         myMap.map.add(countyLyr);
 
         var searchWidget = myWigets.search();
 
-        var selectWidget = domConstruct.toDom('<div id="select-county"><select class="select-counties" id="select"></select></div>');
+        var selectWidget = domConstruct.toDom('<div id="select-county"><select class="select-counties" id="select"><option value=""></option></select></div>');
 
         var full = false;
 
@@ -541,7 +528,7 @@ define([
           ];
 
           $(".select-counties").select2({
-            placeholder: "Select",
+            placeholder: "Select a county",
             data: counties
           });
 
@@ -601,10 +588,9 @@ define([
                   var managementResults;
                   getLandResults(feature, "management").then(function (searchResults) {
                     managementResults = searchResults;
-                  }).then(function () {
-                    dom.byId("table-div").innerHTML = "<table id='table' class='table table-bordered table-condensed text-center table-responsive table-fixed' cellspacing='0'>" + tbManagementHead + "<tbody>" + managementResults + "</tbody></table>";
+                    dom.byId("table-div").innerHTML = "<table id='table' class='table table-bordered table-condensed text-center table-responsive table-fixed tablesorter' cellspacing='0'>" + tbManagementHead + "<tbody>" + managementResults + "</tbody></table>";
+                    console.log("results: ", managementResults);
                   });
-
                 }
                 else if (choice === "cover") {
                   var coverResults;
@@ -612,9 +598,10 @@ define([
                     coverResults = searchResults;
 
                   }).then(function () {
-                    dom.byId("table-div").innerHTML = "<table id='table' class='table table-bordered table-condensed text-center table-responsive table-fixed' cellspacing='0'>" + tbCoverHead + "<tbody>" + coverResults + "</tbody></table>";
-                  });
-
+                    dom.byId("table-div").innerHTML = "<table id='table' class='table table-bordered table-condensed text-center table-responsive table-fixed tablesorter' cellspacing='0'>" + tbCoverHead + "<tbody>" + coverResults + "</tbody></table>";
+                  })/*.then(function () {
+                   $('#table').tablesorter();
+                   })*/;
                 }
 
               },
