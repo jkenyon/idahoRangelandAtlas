@@ -316,7 +316,7 @@ define([
                     });
                     cowAttributes = cowFields[0].attributes;
 
-                    // need to be added
+                    // need data to be added to remote
                     results += "";
                   });
                 });
