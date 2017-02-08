@@ -167,6 +167,10 @@ a:active {
   background: url('../assets/gears.svg') no-repeat center center;
 }
 
+.cow-img {
+  background: url('../assets/img/cow.png');
+}
+
 .butn:hover {
   cursor: hand;
 }

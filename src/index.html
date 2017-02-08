@@ -37,7 +37,7 @@
   <script type="text/javascript" src="./js/select2.js"></script>
 
   <script type="text/javascript">
-    $(document).ready(function(){
+    $(document).ready(function () {
       $('table').tablesorter();
       console.log("tablesorter entry.");
     });
@@ -92,11 +92,13 @@
               <h2>Technical Details</h2>
             </header>
             <p>
-              All application development uses a combination of HTML5, CSS3, and Javascript. The geoprocessing uses ESRI’s
+              All application development uses a combination of HTML5, CSS3, and Javascript. The geoprocessing uses
+              ESRI’s
               ArcGIS Javascript API. Our goal is to use basic, open W3C-endorsed web technologies that are supported by
               all
               web browsers and require no additional add-ins, plug-ins, or special software. All work will be done on
-              software/hardware provided by the University of Idaho Library Data & Digital Services Department and INSIDE
+              software/hardware provided by the University of Idaho Library Data & Digital Services Department and
+              INSIDE
               Idaho.
             </p>
           </div>
@@ -109,19 +111,25 @@
               <h2>Data</h2>
             </header>
             <p>
-              Data is obtained from available federal sources.<br/><br/>Land Cover: Land cover estimates are derived from
+              Data is obtained from available federal sources.<br/><br/>Land Cover: Land cover estimates are derived
+              from
               the
               National Land Cover Database (NLCD) 2011 using values 52 (Shrub/Scrub) and 71(Grassland/Herbaceous). The
               NLCD
               is
-              a national products based on a classification of 2011 Landsat satellite imagery of the United States. It is
+              a national products based on a classification of 2011 Landsat satellite imagery of the United States. It
+              is
               developed by the Multi-Resoultion Land Characteristics Consortium and available from the <a
-                href="http://www.mrlc.gov/nlcd2011.php">USGS</a>.<br/><br/>Land Management: Land management information is
-              obtained from the Bureau of Land Management\'s Surface Management Agency, which shows who manages the lands
+                href="http://www.mrlc.gov/nlcd2011.php">USGS</a>.<br/><br/>Land Management: Land management information
+              is
+              obtained from the Bureau of Land Management\'s Surface Management Agency, which shows who manages the
+              lands
               of
               the United States. The data is available from the <a
-                href="http://www.geocommunicator.gov/GeoComm/services.htm#Download">BLM</a>.<br/><br/>Processing: Using a
-              geoprocessing model in ArcGIS 10.4, we identified the two areas classified as rangeland. These choices were
+                href="http://www.geocommunicator.gov/GeoComm/services.htm#Download">BLM</a>.<br/><br/>Processing: Using
+              a
+              geoprocessing model in ArcGIS 10.4, we identified the two areas classified as rangeland. These choices
+              were
               verified with the UI Rangeland Center as the best two choices to represent rangeland land cover. Land
               management
               data was obtained by identifying the intersection between the land cover and land management data.
@@ -146,7 +154,8 @@
               <h2>About Us</h2>
             </header>
             <p>
-              The Idaho Rangeland Atlas is a collaboration of the University of Idaho Library and the University of Idaho
+              The Idaho Rangeland Atlas is a collaboration of the University of Idaho Library and the University of
+              Idaho
               Rangeland Center. Its purpose is to provide simple, clear information about Idaho's rangelands using open,
               accessible web technologies. Leveraging the University of Idaho's investements in geospatial data and
               infrastructure enable us to present this information. We believe that if an Idaho citizen wants to
@@ -157,7 +166,8 @@
               engage in advanced analysis or obtain new skills.<br/><br/>The lack of an aggregating resource, like a
               statistical abstract, adds time to process of discovery and delays the ability of users to move on, either
               to
-              advanced research questions, as they have to answer and prove more fundamental ones first, or to other tasks
+              advanced research questions, as they have to answer and prove more fundamental ones first, or to other
+              tasks
               based on the information that they now have. Given the increasing accessibility of web-based geospatial
               processing, and the improvement in technology to provide rich, informative, web-based queries of spatial
               data,
@@ -210,11 +220,20 @@
               </div>
             </div>
           </div>
+          <div class="row">
+            <div class="col-xs-6">
+              <div class="butn">
+              <span id="cow-management" aria-hidden="true"><img src="assets/img/cow.png" /></span><br/>
+                <h4>Cow Management</h4>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div id="back-button" class="text-left hidden">
           <span class="back-btn glyphicon glyphicon-share-alt"></span>
         </div>
+
         <div id="cover-info" class="hidden padding-bottom-16">
           <h3 class="text-center text-primary padding-bottom-16">Land Cover</h3>
           <p class="text-justify">
@@ -257,6 +276,32 @@
           <button type="button" class="btn btn-primary more-btn" data-toggle="collapse" data-target="#management-more">
             Learn More &raquo;</button>
           <div id="management-more" class="collapse">
+            <p class="text-justify">
+              Bacon ipsum dolor amet short loin brisket ground round, ribeye turducken corned beef rump pancetta shank
+              leberkas tri-tip. Beef ribs sausage cow salami swine, leberkas bacon flank doner meatloaf alcatra boudin
+              brisket pancetta shank. Bacon ipsum dolor amet short loin brisket ground round, ribeye turducken corned
+              beef rump pancetta shank leberkas tri-tip. Beef ribs sausage cow salami swine, leberkas bacon flank
+              doner meatloaf alcatra boudin brisket pancetta shank. Bacon ipsum dolor amet short loin brisket ground
+              round, ribeye turducken corned beef rump pancetta shank leberkas tri-tip. Beef ribs sausage cow salami
+              swine, leberkas bacon flank doner meatloaf alcatra boudin brisket pancetta shank.Bacon ipsum dolor amet
+              short loin brisket ground round, ribeye turducken corned beef rump pancetta shank leberkas tri-tip. Beef
+              ribs sausage cow salami swine, leberkas bacon flank doner meatloaf alcatra boudin brisket pancetta
+              shank.
+            </p>
+          </div>
+          <div class="text-center">
+            <h4><strong>Select a county on the map</strong></h4>
+          </div>
+        </div>
+
+        <div id="cow-info" class="hidden padding-bottom-16">
+          <h3 class="text-center text-primary padding-bottom-16">Cow Management</h3>
+          <p class="text-justify">
+            Idaho's rangelands play a significant role in agriculture.  Ranching is a major economic activity within the state, with cattle and calves producing nearly $1.7 billion in value in 2015 (USDA, 2016). Ranches and cattle farms are distributed across the state, with the majority in the southern region, with particular density near Boise and Twin Falls.  For these areas, sustainable grazing is a key feature of rangeland use.
+          </p>
+          <button type="button" class="btn btn-primary more-btn" data-toggle="collapse" data-target="#cow-more">
+            Learn More &raquo;</button>
+          <div id="cow-more" class="collapse">
             <p class="text-justify">
               Bacon ipsum dolor amet short loin brisket ground round, ribeye turducken corned beef rump pancetta shank
               leberkas tri-tip. Beef ribs sausage cow salami swine, leberkas bacon flank doner meatloaf alcatra boudin

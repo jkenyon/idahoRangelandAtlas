@@ -57,28 +57,25 @@ require([
 
   $('.back-btn').on('click', function () {
     $('#topics').removeClass('hidden');
-    $('#cover-info, #management-info, #back-button').addClass('hidden');
-    $('#select-county').addClass('hidden');
+    $('#cover-info, #management-info, #cow-info, #back-button, #select-county, #table-div').addClass('hidden');
     $('#table').replaceWith("");
-    $('#table-div').addClass('hidden');
   });
 
   $('#land-cover').on('click', function () {
     $('#topics').addClass('hidden');
-    $('#table-div').removeClass('hidden');
-    $('#cover-info').removeClass('hidden');
-    $('#back-button').removeClass('hidden');
-    $('#select-county').removeClass('hidden');
+    $('#table-div, #cover-info, #back-button, #select-county').removeClass('hidden');
   });
 
   $('#land-management').on('click', function () {
     $('#topics').addClass('hidden');
-    $('#table-div').removeClass('hidden');
-    $('#management-info').removeClass('hidden');
-    $('#back-button').removeClass('hidden');
-    $('#select-county').removeClass('hidden');
+    $('#table-div, #management-info, #back-button, #select-county').removeClass('hidden');
   });
 
+  $('#cow-management').on('click', function () {
+    console.log("clicked");
+    $('#topics').addClass('hidden');
+    $('#table-div, #cow-info, #back-button, #select-county').removeClass('hidden');
+  });
 
 
 });
