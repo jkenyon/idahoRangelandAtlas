@@ -178,6 +178,185 @@ define([
 
         var landTypes = ["Rangeland", "Wetlands", "Water", "Forest", "Developed", "Cultivated Crops", "Pasture/Hay"];
 
+        var counties = [
+          {
+            id: 0,
+            text: 'ADA'
+          },
+          {
+            id: 1,
+            text: 'ADAMS'
+          },
+          {
+            id: 2,
+            text: 'BANNOCK'
+          },
+          {
+            id: 3,
+            text: 'BEAR LAKE'
+          },
+          {
+            id: 4,
+            text: 'BENEWAH'
+          },
+          {
+            id: 5,
+            text: 'BINGHAM'
+          },
+          {
+            id: 6,
+            text: 'BLAINE'
+          },
+          {
+            id: 7,
+            text: 'BOISE'
+          },
+          {
+            id: 8,
+            text: 'BONNER'
+          },
+          {
+            id: 9,
+            text: 'BONNEVILLE'
+          },
+          {
+            id: 10,
+            text: 'BOUNDARY'
+          },
+          {
+            id: 11,
+            text: 'BUTTE'
+          },
+          {
+            id: 12,
+            text: 'CAMAS'
+          },
+          {
+            id: 13,
+            text: 'CANYON'
+          },
+          {
+            id: 14,
+            text: 'CARIBOU'
+          },
+          {
+            id: 15,
+            text: 'CASSIA'
+          },
+          {
+            id: 16,
+            text: 'CLARK'
+          },
+          {
+            id: 17,
+            text: 'CLEARWATER'
+          },
+          {
+            id: 18,
+            text: 'CUSTER'
+          },
+          {
+            id: 19,
+            text: 'ELMORE'
+          },
+          {
+            id: 20,
+            text: 'FRANKLIN'
+          },
+          {
+            id: 21,
+            text: 'FREMONT'
+          },
+          {
+            id: 22,
+            text: 'GEM'
+          },
+          {
+            id: 23,
+            text: 'GOODING'
+          },
+          {
+            id: 24,
+            text: 'IDAHO'
+          },
+          {
+            id: 25,
+            text: 'JEFFERSON'
+          },
+          {
+            id: 26,
+            text: 'JEROME'
+          },
+          {
+            id: 27,
+            text: 'KOOTENAI'
+          },
+          {
+            id: 28,
+            text: 'LATAH'
+          },
+          {
+            id: 29,
+            text: 'LEMHI'
+          },
+          {
+            id: 30,
+            text: 'LEWIS'
+          },
+          {
+            id: 31,
+            text: 'LINCOLN'
+          },
+          {
+            id: 32,
+            text: 'MADISON'
+          },
+          {
+            id: 33,
+            text: 'MINIDOKA'
+          },
+          {
+            id: 34,
+            text: 'NEZ PERCE'
+          },
+          {
+            id: 35,
+            text: 'ONEIDA'
+          },
+          {
+            id: 36,
+            text: 'OWYHEE'
+          },
+          {
+            id: 37,
+            text: 'PAYETTE'
+          },
+          {
+            id: 38,
+            text: 'POWER'
+          },
+          {
+            id: 39,
+            text: 'SHOSHONE'
+          },
+          {
+            id: 40,
+            text: 'TETON'
+          },
+          {
+            id: 41,
+            text: 'TWIN FALLS'
+          },
+          {
+            id: 42,
+            text: 'VALLEY'
+          },
+          {
+            id: 43,
+            text: 'WASHINGTON'
+          }
+        ];
+
         // var imgUrl = "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/idaho_rangeland_atlas_201701/ImageServer";
         var imgUrl = "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/idaho_rangeland_atlas_201702/ImageServer";
 
@@ -192,15 +371,42 @@ define([
           outFields: ['*']
         });
 
+        var getCowResults = function (feature) {
+          var results = "";
+          var cowAttributes;
+          var cowFields;
+          // resetZoom();
 
+          results += '<table class="table table-bordered table-condensed text-center table-responsive table-fixed tablesorter" cellspacing="0"><tbody>' +
+            '<tr><th class="text-center">' + feature.attributes.NAME + '</th><td></td></tr>';
+          console.log("top: ", results);
 
+          var promise;
+          cowLyr.then(function () {
+            promise = cowLyr.queryFeatures().then(function (cowData) {
+              cowFields = cowData.features.filter(function (item) {
+                return (item.attributes.NAME === feature.attributes.NAME);
+              });
+            }).then(function () {
+              console.log("inside");
+              cowAttributes = cowFields[0].attributes;
+              console.log("cow attributes: ", cowAttributes);
+              results += '<tr><th>Cattle Farms</th><td>' + cowFields[0].attributes.cattle_far + '</td></tr>';
+              results += '<tr><th>Number of Cattle</th><td>' + cowAttributes.cattle_num + '</td></tr>';
+              results += '<tr><th>Beef Farms</th><td>' + cowAttributes.beef_farms + '</td></tr>';
+              results += '<tr><th>Number of Beef</th><td>' + cowAttributes.beef_numbe + '</td></tr>';
+              results += '<tr><th>Ranches</th><td>' + cowAttributes.Ranches_11 + '</td></tr>';
+              results += '</tbody></table>';
+              dom.byId("table-div").innerHTML = results;
+            });
+          });
+
+        };
 
         var getLandResults = function (feature, choice) {
           var results = "";
-
           var rasterAttributes;
           var fields;
-          var cowFields;
 
           var colorize = function (pixelData) {
             if (pixelData === null || pixelData.pixelBlock === null ||
@@ -234,6 +440,8 @@ define([
             for (i = 0; i < numPixels; i++) {
               var val = band1[i]; // get the current pixel value
               // if the pixel value matches the first field (Rangeland)
+              // cycle through array fields
+              // j = i % fields.length;
 
               for (j = 0; j < fields.length; j++) {
                 // then assign it its preset RGB values
@@ -281,94 +489,64 @@ define([
             pixelData.pixelBlock.mask = mask;
           };
 
-          // var clipCRF = new RasterFunction({
-          //   functionName: "Clip",
-          //   functionArguments: {
-          //     ClippingGeometry: feature.geometry, //a polygon or envelope
-          //     ClippingType: 1, //int (1= clippingOutside, 2=clippingInside), use 1 to keep image inside of the geometry
-          //     raster: "$$"
-          //     // raster: colorRF
-          //   }
-          // });
-          //
-          // var clipRF = new RasterFunction({
-          //   functionName: "Clip",
-          //   functionArguments: {
-          //     ClippingGeometry: feature.geometry, //a polygon or envelope
-          //     ClippingType: 1, //int (1= clippingOutside, 2=clippingInside), use 1 to keep image inside of the geometry
-          //     raster: "$$"
-          //   }
-          // });
-
           imgLayer.pixelFilter = colorize;
+
           myMap.map.add(imgLayer);
 
-          return new Promise(
-            function (resolve, reject) {
-              if(choice === "cow"){
-                var cowAttributes;
-                console.log("in cow");
-                resetZoom();
-                cowLyr.then(function () {
-                  cowLyr.queryFeatures().then(function (cowData) {
-                    cowFields = cowData.features.filter(function (item) {
-                      return (item.attributes.NAME === feature.attributes.NAME);
-                    });
-                    cowAttributes = cowFields[0].attributes;
 
-                    // need data to be added to remote
-                    results += "";
-                  });
-                });
-              }
-              else {
-                imgLayer.then(function () {
-                  rasterAttributes = imgLayer.rasterAttributeTable.features;
-                  fields = (choice === "management") ? rasterAttributes.filter(function (item) {
-                      return (item.attributes.cnty_name === feature.attributes.NAME && item.attributes.nlcd_name === "Rangeland");
-                    }) :
-                    rasterAttributes.filter(function (item) {
-                      return (item.attributes.cnty_name === feature.attributes.NAME);
-                    });
-                }).then(function () {
-                  if (choice === "management") {
-                    fields.forEach(function (item) {
-                      var res = item.attributes;
-                      var sma = colorTypes[res.sma_name].type;
-                      var clrs = [res.red, res.green, res.blue];
-                      var clr = "rgb(" + clrs[0] + "," + clrs[1] + "," + clrs[2] + ")";
-                      results += "<tr><td class='dlegend' style='background-color:" + clr + ";'>&nbsp;</td><td>" + sma + "</td><td>" + res.per_nlcd.toFixed(2) + "</td><td>" + res.per_cnty.toFixed(2) + "</td><td>" + res.area_ac.toFixed(2) + "</td></tr>";
-                    });
-                    console.log("management results: ", results);
-                  }
-                  else if (choice === "cover") {
-                    var coverValue;
-                    var covers = [];
-                    for (var k = 0; k < landTypes.length; k++) {
-                      coverValue = fields.filter(function (item) {
-                        return (item.attributes.nlcd_name === landTypes[k]);
-                      });
-                      covers.push(coverValue);
-                    }
-                    covers.forEach(function (item, i) {
-                      var totalAc = item.reduce(function (prev, curr) {
-                        return prev + curr.attributes.area_ac;
-                      }, 0);
-                      var totalPer = item.reduce(function (prev, curr) {
-                        return prev + curr.attributes.per_cnty;
-                      }, 0);
-                      var nlcd_name = landTypes[i];
-                      var clrs = landTypeColors[nlcd_name].color;
-                      var clr = "rgb(" + clrs[0] + "," + clrs[1] + "," + clrs[2] + ")";
-                      results += "<tr><td class='dlegend' style='background-color:" + clr + ";'>&nbsp;</td><td>" + nlcd_name.toString() + "</td><td>" + totalPer.toFixed(2) + "</td><td>" + totalAc.toFixed(2) + "</td></tr>";
-                    });
-                  }
-                });
-              }
-              resolve(results);
-              reject("an error occured");
+          return imgLayer.then(function () {
+            var totId = 0;
+            rasterAttributes = imgLayer.rasterAttributeTable.features;
+            for (var i = 0; i < rasterAttributes.length; i++) {
+              totId += rasterAttributes[i].attributes.area_ac;
             }
-          );
+            fields = (choice === "management") ? rasterAttributes.filter(function (item, i) {
+                return (item.attributes.cnty_name === feature.attributes.NAME && item.attributes.nlcd_name === "Rangeland");
+              }) :
+              rasterAttributes.filter(function (item, i) {
+                return (item.attributes.cnty_name === feature.attributes.NAME);
+              });
+
+
+            if (choice === "management") {
+              fields.forEach(function (item, i) {
+                var res = item.attributes;
+                var sma = colorTypes[res.sma_name].type;
+                var clrs = [res.red, res.green, res.blue];
+                var clr = "rgb(" + clrs[0] + "," + clrs[1] + "," + clrs[2] + ")";
+                results += "<tr><td class='dlegend' style='background-color:" + clr + ";'>&nbsp;</td><td>" + sma + "</td><td>" + res.per_nlcd.toFixed(2) + "</td><td>" + res.per_cnty.toFixed(2) + "</td><td>" + res.area_ac.toFixed(2) + "</td></tr>";
+              });
+            }
+            else if (choice === "cover") {
+              var coverValue;
+              var covers = [];
+              for (var k = 0; k < landTypes.length; k++) {
+                coverValue = fields.filter(function (item) {
+                  return (item.attributes.nlcd_name === landTypes[k]);
+                });
+                covers.push(coverValue);
+              }
+              covers.forEach(function (item, i) {
+                var totalAc = item.reduce(function (prev, curr) {
+                  return prev + curr.attributes.area_ac;
+                }, 0);
+                var totalPer = item.reduce(function (prev, curr) {
+                  return prev + curr.attributes.per_cnty;
+                }, 0);
+                var nlcd_name = landTypes[i];
+                var clrs = landTypeColors[nlcd_name].color;
+                var clr = "rgb(" + clrs[0] + "," + clrs[1] + "," + clrs[2] + ")";
+                results += "<tr><td class='dlegend' style='background-color:" + clr + ";'>&nbsp;</td><td>" + nlcd_name.toString() + "</td><td>" + totalPer.toFixed(2) + "</td><td>" + totalAc.toFixed(2) + "</td></tr>";
+              });
+            }
+
+            return new Promise(
+              function (resolve, reject) {
+                resolve(results);
+                reject("an error occured");
+              }
+            );
+          });
         };
 
         myMap.map.add(countyLyr);
@@ -414,185 +592,6 @@ define([
             position: "top-left",
             index: 0
           });
-
-          var counties = [
-            {
-              id: 0,
-              text: 'ADA'
-            },
-            {
-              id: 1,
-              text: 'ADAMS'
-            },
-            {
-              id: 2,
-              text: 'BANNOCK'
-            },
-            {
-              id: 3,
-              text: 'BEAR LAKE'
-            },
-            {
-              id: 4,
-              text: 'BENEWAH'
-            },
-            {
-              id: 5,
-              text: 'BINGHAM'
-            },
-            {
-              id: 6,
-              text: 'BLAINE'
-            },
-            {
-              id: 7,
-              text: 'BOISE'
-            },
-            {
-              id: 8,
-              text: 'BONNER'
-            },
-            {
-              id: 9,
-              text: 'BONNEVILLE'
-            },
-            {
-              id: 10,
-              text: 'BOUNDARY'
-            },
-            {
-              id: 11,
-              text: 'BUTTE'
-            },
-            {
-              id: 12,
-              text: 'CAMAS'
-            },
-            {
-              id: 13,
-              text: 'CANYON'
-            },
-            {
-              id: 14,
-              text: 'CARIBOU'
-            },
-            {
-              id: 15,
-              text: 'CASSIA'
-            },
-            {
-              id: 16,
-              text: 'CLARK'
-            },
-            {
-              id: 17,
-              text: 'CLEARWATER'
-            },
-            {
-              id: 18,
-              text: 'CUSTER'
-            },
-            {
-              id: 19,
-              text: 'ELMORE'
-            },
-            {
-              id: 20,
-              text: 'FRANKLIN'
-            },
-            {
-              id: 21,
-              text: 'FREMONT'
-            },
-            {
-              id: 22,
-              text: 'GEM'
-            },
-            {
-              id: 23,
-              text: 'GOODING'
-            },
-            {
-              id: 24,
-              text: 'IDAHO'
-            },
-            {
-              id: 25,
-              text: 'JEFFERSON'
-            },
-            {
-              id: 26,
-              text: 'JEROME'
-            },
-            {
-              id: 27,
-              text: 'KOOTENAI'
-            },
-            {
-              id: 28,
-              text: 'LATAH'
-            },
-            {
-              id: 29,
-              text: 'LEMHI'
-            },
-            {
-              id: 30,
-              text: 'LEWIS'
-            },
-            {
-              id: 31,
-              text: 'LINCOLN'
-            },
-            {
-              id: 32,
-              text: 'MADISON'
-            },
-            {
-              id: 33,
-              text: 'MINIDOKA'
-            },
-            {
-              id: 34,
-              text: 'NEZ PERCE'
-            },
-            {
-              id: 35,
-              text: 'ONEIDA'
-            },
-            {
-              id: 36,
-              text: 'OWYHEE'
-            },
-            {
-              id: 37,
-              text: 'PAYETTE'
-            },
-            {
-              id: 38,
-              text: 'POWER'
-            },
-            {
-              id: 39,
-              text: 'SHOSHONE'
-            },
-            {
-              id: 40,
-              text: 'TETON'
-            },
-            {
-              id: 41,
-              text: 'TWIN FALLS'
-            },
-            {
-              id: 42,
-              text: 'VALLEY'
-            },
-            {
-              id: 43,
-              text: 'WASHINGTON'
-            }
-          ];
 
           $(".select-counties").select2({
             placeholder: "Select a county",
@@ -672,14 +671,9 @@ define([
                    $('#table').tablesorter();
                    })*/;
                 }
-                else if(choice === "cow") {
+                else if (choice === "cow") {
                   var cowResults;
-                  getLandResults(feature, "cow").then(function (searchResults) {
-                    cowResults = searchResults;
-
-                  }).then(function () {
-                    dom.byId("table-div").innerHTML = "<table id='table' class='table table-bordered table-condensed text-center table-responsive table-fixed tablesorter' cellspacing='0'>" + tbCowHead + "<tbody>" + cowResults + "</tbody></table>";
-                  });
+                  getCowResults(feature);
                 }
 
               },

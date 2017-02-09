@@ -11,7 +11,7 @@ module.exports = function(grunt) {
     // Task for minifying javascript files
     uglify: {
       build: {
-        src: 'src/js/*.js',
+        src: 'src/js/**/*.js',
         dest: 'build/js/app.min.js'
       }
     },
@@ -32,4 +32,4 @@ module.exports = function(grunt) {
 
   // Default task.
   grunt.registerTask('default', ["uglify", "cssmin"]);
-}
+};
