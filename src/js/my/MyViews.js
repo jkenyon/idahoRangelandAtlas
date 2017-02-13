@@ -44,7 +44,7 @@ define([
         });
         var view = this.myView;
 
-        var myWigets = new MyWidgets(this.myView);
+        var myWidgets = new MyWidgets(this.myView);
 
         // Creates the style for the county boundary layer
         var hid = new UniqueValueRenderer({
@@ -562,8 +562,7 @@ define([
 
         myMap.map.add(countyLyr);
 
-        var searchWidget = myWigets.search();
-
+        var searchWidget = myWidgets.searchWidget({view: view});
         var selectWidget = domConstruct.toDom('<div id="select-county"><select class="select-counties" id="select"><option value=""></option></select></div>');
 
         var full = false;
@@ -655,6 +654,12 @@ define([
 
           $('#select').on('select2:select', function (event) {
             var selectedText = event.target.selectedOptions["0"].text;
+            if(choice === "cow"){
+              myWidgets.searchWidgetSetup({zoomScale: 7, resultsGraphicEnabled: true});
+            }
+            else {
+              myWidgets.searchWidgetSetup({zoomScale: 5000, resultsGraphicEnabled: false});
+            }
             searchWidget.search(selectedText).then(
               function (success) {
                 myMap.map.remove(imgLayer);
