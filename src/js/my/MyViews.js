@@ -9,6 +9,7 @@ define([
     "my/MyUtils",
     "dojo/dom",
     "esri/views/MapView",
+    "esri/widgets/Legend",
     "esri/layers/ImageryLayer",
     "esri/layers/support/RasterFunction",
     "esri/renderers/UniqueValueRenderer",
@@ -24,7 +25,7 @@ define([
     "dojo/dom-style",
     "dojo/domReady!"
   ],
-  function (declare, MyMap, MyWidgets, Map, MyUtils, dom, MapView, ImageryLayer, RasterFunction, UniqueValueRenderer, SimpleFillSymbol, FeatureLayer, SimpleRenderer, SimpleMarkerSymbol, MosaicRule, Search, domConstruct, domClass, on, domStyle) {
+  function (declare, MyMap, MyWidgets, Map, MyUtils, dom, MapView, Legend, ImageryLayer, RasterFunction, UniqueValueRenderer, SimpleFillSymbol, FeatureLayer, SimpleRenderer, SimpleMarkerSymbol, MosaicRule, Search, domConstruct, domClass, on, domStyle) {
     return declare(null, {
       myView: null,
       constructor: function () {
@@ -371,14 +372,22 @@ define([
           outFields: ['*']
         });
 
+        var legend = new Legend({
+          view: view,
+          layerInfos: [{
+            layer: cowLyr,
+            title: "Legend"
+          }]
+        });
+
         var getCowResults = function (feature) {
           var results = "";
           var cowAttributes;
           var cowFields;
-          // resetZoom();
+          //resetZoom();
 
           results += '<table class="table table-bordered table-condensed text-center table-responsive table-fixed tablesorter" cellspacing="0"><tbody>' +
-            '<tr><th class="text-center">' + feature.attributes.NAME + '</th><td></td></tr>';
+            '<tr><th class="text-center">' + feature.attributes.NAME + '</th></tr>';
           console.log("top: ", results);
 
           var promise;
@@ -391,12 +400,14 @@ define([
               console.log("inside");
               cowAttributes = cowFields[0].attributes;
               console.log("cow attributes: ", cowAttributes);
-              results += '<tr><th>Cattle Farms</th><td>' + cowFields[0].attributes.cattle_far + '</td></tr>';
-              results += '<tr><th>Number of Cattle</th><td>' + cowAttributes.cattle_num + '</td></tr>';
-              results += '<tr><th>Beef Farms</th><td>' + cowAttributes.beef_farms + '</td></tr>';
-              results += '<tr><th>Number of Beef</th><td>' + cowAttributes.beef_numbe + '</td></tr>';
-              results += '<tr><th>Ranches</th><td>' + cowAttributes.Ranches_11 + '</td></tr>';
+              results += '<tr><th style="font-weight: normal;">USDA Census Year</th><td>' + cowFields[0].attributes.census_yea + '</td></tr>';
+              results += '<tr><th style="font-weight: normal;">Ranches</th><td>' + cowFields[0].attributes.Ranches_11 + '</td></tr>';
+              results += '<tr><th style="font-weight: normal;">Cattle Farms</th><td>' + cowAttributes.cattle_far + '</td></tr>';
+              results += '<tr><th style="font-weight: normal;">Number of Cattle</th><td>' + cowAttributes.cattle_num + '</td></tr>';
+              results += '<tr><th style="font-weight: normal;">Beef Farms</th><td>' + cowAttributes.beef_farms + '</td></tr>';
+              results += '<tr><th style="font-weight: normal;">Number of Beef</th><td>' + cowAttributes.beef_numbe + '</td></tr>';
               results += '</tbody></table>';
+              console.log(results);
               dom.byId("table-div").innerHTML = results;
             });
           });
@@ -570,14 +581,15 @@ define([
         on(cowManagement, 'click', function () {
           choice = "cow";
           myMap.map.add(cowLyr);
-
-          resetZoom();
+          view.ui.add(legend, "bottom-right");
         });
 
         var backBtn = dom.byId('back-button');
         on(backBtn, 'click', function () {
           map.remove(imgLayer);
           map.remove(cowLyr);
+          dom.byId("table-div").innerHTML  = "";
+          resetZoom();
         });
 
         view.then(function () {
@@ -685,14 +697,7 @@ define([
           });
 
         });
-      },
-
-      fixHeading: function (head, divID) {
-        var h = head.toLowerCase();
-        var hE = h.toTitleCase();
-        $(divID).html("<h3>" + hE + "</h3>");
       }
-
     })
   })
 ;

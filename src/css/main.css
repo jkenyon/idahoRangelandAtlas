@@ -19,18 +19,31 @@ p {
 a {
   cursor: hand;
 }
+
 a::selection {
   color: white;
   background-color: #2aabd2;
 }
+
 a:active {
   color: white;
 }
 
+.nav-brand {
+  color: #d3d3d3;
+  font-size: 150%;
+  padding-bottom: 10px;
+}
+
+.select-topic {
+  font-size: 130%;
+  padding-top: 25px;
+}
 
 .header {
   color: white;
   overflow-y: auto;
+  font-size: 120%;
 }
 
 .main {
@@ -52,14 +65,12 @@ a:active {
   overflow-y: visible;
 }
 
-
 .map {
   padding: 0;
   margin: 0;
 }
 
-.map-menu {
-}
+.map-menu {}
 
 .map-display {
   height: 680px;
@@ -73,20 +84,44 @@ a:active {
   overflow-y: auto;
 }
 
+
 /*.table-fixed tbody {*/
-  /*display:block;*/
-  /*height:350px;*/
-  /*overflow:auto;*/
-/*}*/
-/*.table-fixed thead, .table-fixed tbody tr {*/
-  /*display:table;*/
-  /*width:100%;*/
-  /*table-layout:fixed;*/
-/*}*/
-/*.table-fixed thead {*/
-  /*width: 100%;*/
+
+
+/*display:block;*/
+
+
+/*height:350px;*/
+
+
+/*overflow:auto;*/
+
+
 /*}*/
 
+
+/*.table-fixed thead, .table-fixed tbody tr {*/
+
+
+/*display:table;*/
+
+
+/*width:100%;*/
+
+
+/*table-layout:fixed;*/
+
+
+/*}*/
+
+
+/*.table-fixed thead {*/
+
+
+/*width: 100%;*/
+
+
+/*}*/
 
 .search-dropdown {
   z-index: 100;
@@ -97,14 +132,15 @@ a:active {
   color: #0f0f0f;
   width: 150px;
 }
+
 .select-counties option {
   color: #2b542c;
 }
 
 .navbar {
-  -webkit-box-shadow: 0 2px 5px 1px rgba(46,12,46,0.49);
-  -moz-box-shadow: 0 2px 5px 1px rgba(46,12,46,0.49);
-  box-shadow: 0 2px 5px 1px rgba(46,12,46,0.49);
+  -webkit-box-shadow: 0 2px 5px 1px rgba(46, 12, 46, 0.49);
+  -moz-box-shadow: 0 2px 5px 1px rgba(46, 12, 46, 0.49);
+  box-shadow: 0 2px 5px 1px rgba(46, 12, 46, 0.49);
 }
 
 .navbar-header {
@@ -123,13 +159,14 @@ a:active {
   display: none!important;
 }
 
-.navbar-collapse.collapse.in{
-  display:block !important;
+.navbar-collapse.collapse.in {
+  display: block !important;
 }
 
 .navbar-nav {
   float: none!important;
 }
+
 .navbar-nav>li {
   float: none;
 }
@@ -139,13 +176,8 @@ a:active {
   padding-top: 5px;
 }
 
-.nav-menu>ul>li{
-  background-color: #1b6d85;
-}
-
-
-.nav-menu>ul>li:active{
-  background-color: #00bcd4;
+.nav-menu>ul>li:active {
+  background-color: #d3d3d3;
 }
 
 .nav-menu-content {
@@ -158,7 +190,7 @@ a:active {
 }
 
 .logo {
-  height: 100px;
+  background-color: white;
   margin: 0;
   padding: 0;
 }
@@ -174,6 +206,7 @@ a:active {
 .butn:hover {
   cursor: hand;
 }
+
 .butn span:first-child {
   font-size: 240%;
   color: #D3D3D3;
@@ -187,25 +220,54 @@ a:active {
   -webkit-transform: scaleX(-1);
 }
 
+.back-button {
+  padding-top: 25px;
+}
+
 .more-btn {
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .table-dark-bg {
   color: white;
-  background-color: rgba(0,0,0,.35);
+  background-color: rgba(0, 0, 0, .35);
   margin: 0;
   padding: 0;
 }
 
 
 /*================= CUSTOM CLASS STYLES =======================*/
-.margin-top-55 {margin-top: 55px !important;}
-.margin-0 {margin: 0;}
-.padding-bottom-16 {padding-bottom: 16px!important;}
-.padding-left-5 {padding-bottom: 5px!important;}
-.padding-0 {padding:0!important}
-.fixed {position: fixed !important;}
-.selected {background-color: #1b6d85; color: white; }
+
+.margin-top-55 {
+  margin-top: 55px !important;
+}
+
+.margin-0 {
+  margin: 0;
+}
+
+.padding-bottom-16 {
+  padding-bottom: 16px!important;
+}
+
+.padding-left-5 {
+  padding-bottom: 5px!important;
+}
+
+.padding-0 {
+  padding: 0!important
+}
+
+.fixed {
+  position: fixed !important;
+}
+
+.selected {
+  background-color: #1b6d85;
+  color: white;
+}
+
 .fullscreen {
   height: 100vh !important;
   width: 100vw !important;
@@ -213,13 +275,43 @@ a:active {
   margin: 0 !important;
   border: 0 !important;
 }
+
 .z-index-100 {
   z-index: 100!important;
 }
+
+.section {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+.center-vertical {
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+
+.font-medium {
+  font-size: 150%;
+}
+
+.font-large {
+  font-size: 200%;
+}
+
+.font-small {
+  font-size: 130%;
+}
+
+.title {
+  color: #d3d3d3;
+}
+
+
 /*===============================================================*/
 
 
 /*======================== MEDIA QUERIES ==========================*/
+
 
 /*-------------------------------------------------------------------
   Responsive Grid Media Queries - 1280, 1024, 768, 480
@@ -228,21 +320,51 @@ a:active {
    768-480     - tablet
    480-less    - phone landscape & smaller
 -------------------------------------------------------------------*/
+
+
 /*-------------------------------------------------------------------------*/
-/*Desktops*/
-@media all and (min-width: 1024px) and (max-width: 1280px) {
+
+
+/*Larger Desktops*/
+
+@media all and (min-width: 1280px) {
   .map-display {
-    height: 720px;
+    height: 900px;
     width: 100%;
   }
   .nav-menu {
     border-right: 1px solid #ffffff;
   }
 }
-/*-------------------------------------------------------------------------*/
+
 
 /*-------------------------------------------------------------------------*/
+
+
+/*-------------------------------------------------------------------------*/
+
+
+/*Desktops*/
+
+@media all and (min-width: 1024px) and (max-width: 1280px) {
+  .map-display {
+    height: 900px;
+    width: 100%;
+  }
+  .nav-menu {
+    border-right: 1px solid #ffffff;
+  }
+}
+
+
+/*-------------------------------------------------------------------------*/
+
+
+/*-------------------------------------------------------------------------*/
+
+
 /*Tablets landscape*/
+
 @media all and (min-width: 768px) and (max-width: 1024px) {
   .map-display {
     height: 700px;
@@ -250,7 +372,9 @@ a:active {
   }
 }
 
+
 /*Tablets*/
+
 @media all and (min-width: 480px) and (max-width: 768px) {
   .map-display {
     height: 500px;
@@ -261,68 +385,90 @@ a:active {
     width: 100%;
   }
 }
+
+
 /*-------------------------------------------------------------------------*/
 
+
 /*Mobiles landscape*/
+
 @media all and (max-width: 480px) {
   .nav-menu {
     text-align: center;
     padding-top: 0;
   }
-  .nav-menu-content {
-  }
+  .nav-menu-content {}
   .logo {
     height: 70px;
     width: 100%;
   }
 }
-/*-------------------------------------------------------------------------*/
+
 
 /*-------------------------------------------------------------------------*/
+
+
+/*-------------------------------------------------------------------------*/
+
+
 /* Portrait */
-@media screen and (orientation:portrait) { /* Portrait styles here */ }
-/* Landscape */
-@media screen and (orientation:landscape) { /* Landscape styles here */ }
 
-/*-------------------------------------------------------------------------*/
-
-/*-------------------------------------------------------------------------*/
-/* CSS for iPhone, iPad, and Retina Displays */
-
-/* Non-Retina */
-@media screen and (-webkit-max-device-pixel-ratio: 1) {
+@media screen and (orientation:portrait) {
+  /* Portrait styles here */
 }
 
+
+/* Landscape */
+
+@media screen and (orientation:landscape) {
+  /* Landscape styles here */
+}
+
+
+/*-------------------------------------------------------------------------*/
+
+
+/*-------------------------------------------------------------------------*/
+
+
+/* CSS for iPhone, iPad, and Retina Displays */
+
+
+/* Non-Retina */
+
+@media screen and (-webkit-max-device-pixel-ratio: 1) {}
+
+
 /* Retina */
+
 @media only screen and (-webkit-min-device-pixel-ratio: 1.5),
 only screen and (-o-min-device-pixel-ratio: 3/2),
 only screen and (min--moz-device-pixel-ratio: 1.5),
-only screen and (min-device-pixel-ratio: 1.5) {
-}
+only screen and (min-device-pixel-ratio: 1.5) {}
+
 
 /* iPhone Portrait */
+
 @media screen and (max-device-width: 480px) and (orientation:portrait) {
   .map-display {
     height: 200px;
     width: 100%;
   }
-
-  .nav-menu {
-  }
-
+  .nav-menu {}
   .main-content {
     font-size: small;
     /*max-height: 460px;*/
     /*overflow-y: scroll;*/
   }
-
   .table-div {
     max-height: 300px;
     overflow-y: auto;
   }
 }
 
+
 /* iPhone Landscape */
+
 @media screen and (max-device-width: 480px) and (orientation:landscape) {
   .nav-menu {
     border-bottom: 1px solid #d9edf7;
@@ -333,12 +479,15 @@ only screen and (min-device-pixel-ratio: 1.5) {
   }
 }
 
-/* iPad Portrait */
-@media screen and (min-device-width: 481px) and (orientation:portrait) {
 
-}
+/* iPad Portrait */
+
+@media screen and (min-device-width: 481px) and (orientation:portrait) {}
+
 
 /* iPad Landscape */
-@media screen and (min-device-width: 481px) and (orientation:landscape) {
-}
+
+@media screen and (min-device-width: 481px) and (orientation:landscape) {}
+
+
 /*-------------------------------------------------------------------------*/
