@@ -450,7 +450,7 @@ only screen and (min-device-pixel-ratio: 1.5) {}
 
 @media screen and (max-device-width: 480px) and (orientation:portrait) {
   .map-display {
-    height: 200px;
+    height: 320px;
     width: 100%;
   }
   .nav-menu {}

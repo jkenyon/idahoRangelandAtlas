@@ -386,6 +386,18 @@ define([
           }]
         });
 
+
+
+        var countyNameLayer = new FeatureLayer({
+          url: featureLayerUrl,
+          minScale: 0,
+          maxScale: 0
+        });
+
+        var countyMarkerLayer = new FeatureLayer({
+          url: featureLayerUrl
+        });
+
         var getCowResults = function (countyName) {
           var results = "";
           var cowAttributes;
@@ -394,6 +406,33 @@ define([
           results += '<table class="table table-bordered table-condensed text-center table-responsive table-fixed tablesorter" cellspacing="0"><tbody>' +
             '<tr><th class="text-center">' + countyName + ' COUNTY';
 
+          var countyMarkerRenderer = new SimpleRenderer({
+            symbol: new SimpleMarkerSymbol({
+              size: 10,
+              color: "#2e47ff",
+              outline: { // autocasts as new SimpleLineSymbol()
+                color: [255, 64, 0, 0.4], // autocasts as new Color()
+                width: 7
+              }
+            })
+          });
+
+          var countyNameRenderer = new SimpleRenderer({
+            symbol: new TextSymbol({
+              color: "blue",
+              haloColor: "black",
+              haloSize: "1px",
+              text: countyName + " COUNTY",
+              xoffset: 3,
+              yoffset: 3,
+              font: {  // autocast as esri/symbols/Font
+                size: 12,
+                family: "sans-serif",
+                weight: "bolder"
+              }
+            })
+          });
+
           var promise;
           cowLyr.then(function () {
             promise = cowLyr.queryFeatures().then(function (cowData) {
@@ -401,7 +440,15 @@ define([
                 return (item.attributes.NAME === (countyName + ' COUNTY'));
               });
             }).then(function () {
+              countyMarkerLayer.renderer = countyMarkerRenderer;
+              countyNameLayer.renderer = countyNameRenderer;
+              countyMarkerLayer.definitionExpression = "NAME = '" + countyName + " COUNTY'";
+              countyNameLayer.definitionExpression = "NAME = '" + countyName + " COUNTY'";
+              myMap.map.add(countyNameLayer);
+              myMap.map.add(countyMarkerLayer);
+
               cowAttributes = cowFields[0].attributes;
+              console.log(cowAttributes);
               results += '<tr><th style="font-weight: normal;">USDA Census Year</th><td>' + cowFields[0].attributes.census_yea + '</td></tr>';
               results += '<tr><th style="font-weight: normal;">Ranches</th><td>' + cowFields[0].attributes.Ranches_11 + '</td></tr>';
               results += '<tr><th style="font-weight: normal;">Cattle Farms</th><td>' + cowAttributes.cattle_far + '</td></tr>';
@@ -588,6 +635,8 @@ define([
         on(backBtn, 'click', function () {
           map.remove(imgLayer);
           map.remove(cowLyr);
+          map.remove(countyNameLayer);
+          map.remove(countyMarkerLayer);
           dom.byId("table-div").innerHTML = "";
           view.ui.remove(legend);
         });
