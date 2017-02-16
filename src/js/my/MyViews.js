@@ -19,13 +19,15 @@ define([
     "esri/symbols/SimpleMarkerSymbol",
     "esri/layers/support/MosaicRule",
     "esri/widgets/Search",
+    "esri/symbols/TextSymbol",
+    "esri/layers/support/LabelClass",
     "dojo/dom-construct",
     "dojo/dom-class",
     "dojo/on",
     "dojo/dom-style",
     "dojo/domReady!"
   ],
-  function (declare, MyMap, MyWidgets, Map, MyUtils, dom, MapView, Legend, ImageryLayer, RasterFunction, UniqueValueRenderer, SimpleFillSymbol, FeatureLayer, SimpleRenderer, SimpleMarkerSymbol, MosaicRule, Search, domConstruct, domClass, on, domStyle) {
+  function (declare, MyMap, MyWidgets, Map, MyUtils, dom, MapView, Legend, ImageryLayer, RasterFunction, UniqueValueRenderer, SimpleFillSymbol, FeatureLayer, SimpleRenderer, SimpleMarkerSymbol, MosaicRule, Search, TextSymbol, LabelClass, domConstruct, domClass, on, domStyle) {
     return declare(null, {
       myView: null,
       constructor: function () {
@@ -40,7 +42,7 @@ define([
           container: "mapCanvas",
           map: myMap.map,
           center: [-115, 45.6],
-          zoom: 6
+          zoom: 7
         });
         var view = this.myView;
 
@@ -62,11 +64,6 @@ define([
           opacity: 0.7,
           renderer: hid
         });
-
-        var resetZoom = function () {
-          view.zoom = 6;
-          view.center = [-115, 45.6];
-        };
 
         var colorTypes = {
           "PRIVATE": {
@@ -369,7 +366,16 @@ define([
         var cowLyr = new FeatureLayer({
           url: featureLayerUrl,
           id: "cows",
-          outFields: ['*']
+          outFields: ['*'],
+          popupTemplate: {
+            title: "{NAME}",
+            content: '<b>USDA Census Year:</b> {census_yea} <br />' +
+            '<b>Number of Ranches:</b> {Ranches_11} <br />' +
+            '<b>Cattle Farms:</b> {cattle_far} <br />' +
+            '<b>Number of Cattle:</b> {cattle_num} <br />' +
+            '<b>Beef Farms:</b> {beef_farms} <br />' +
+            '<b>Number of Beef:</b> {beef_numbe} <br />'
+          }
         });
 
         var legend = new Legend({
@@ -380,26 +386,22 @@ define([
           }]
         });
 
-        var getCowResults = function (feature) {
+        var getCowResults = function (countyName) {
           var results = "";
           var cowAttributes;
           var cowFields;
-          //resetZoom();
 
           results += '<table class="table table-bordered table-condensed text-center table-responsive table-fixed tablesorter" cellspacing="0"><tbody>' +
-            '<tr><th class="text-center">' + feature.attributes.NAME + '</th></tr>';
-          console.log("top: ", results);
+            '<tr><th class="text-center">' + countyName + ' COUNTY';
 
           var promise;
           cowLyr.then(function () {
             promise = cowLyr.queryFeatures().then(function (cowData) {
               cowFields = cowData.features.filter(function (item) {
-                return (item.attributes.NAME === feature.attributes.NAME);
+                return (item.attributes.NAME === (countyName + ' COUNTY'));
               });
             }).then(function () {
-              console.log("inside");
               cowAttributes = cowFields[0].attributes;
-              console.log("cow attributes: ", cowAttributes);
               results += '<tr><th style="font-weight: normal;">USDA Census Year</th><td>' + cowFields[0].attributes.census_yea + '</td></tr>';
               results += '<tr><th style="font-weight: normal;">Ranches</th><td>' + cowFields[0].attributes.Ranches_11 + '</td></tr>';
               results += '<tr><th style="font-weight: normal;">Cattle Farms</th><td>' + cowAttributes.cattle_far + '</td></tr>';
@@ -407,7 +409,6 @@ define([
               results += '<tr><th style="font-weight: normal;">Beef Farms</th><td>' + cowAttributes.beef_farms + '</td></tr>';
               results += '<tr><th style="font-weight: normal;">Number of Beef</th><td>' + cowAttributes.beef_numbe + '</td></tr>';
               results += '</tbody></table>';
-              console.log(results);
               dom.byId("table-div").innerHTML = results;
             });
           });
@@ -587,8 +588,7 @@ define([
         on(backBtn, 'click', function () {
           map.remove(imgLayer);
           map.remove(cowLyr);
-          dom.byId("table-div").innerHTML  = "";
-          resetZoom();
+          dom.byId("table-div").innerHTML = "";
         });
 
         view.then(function () {
@@ -651,54 +651,45 @@ define([
             }
           });
 
-
           $('#select').on('select2:select', function (event) {
             var selectedText = event.target.selectedOptions["0"].text;
-            if(choice === "cow"){
-              myWidgets.searchWidgetSetup({zoomScale: 7, resultsGraphicEnabled: true});
+            if (choice === "cow") {
+              getCowResults(selectedText);
             }
             else {
-              myWidgets.searchWidgetSetup({zoomScale: 5000, resultsGraphicEnabled: false});
+              searchWidget.search(selectedText).then(
+                function (success) {
+                  myMap.map.remove(imgLayer);
+                  var feature = success[0].results[0].feature;
+                  var tbManagementHead = "<thead><tr><th class='header legend'></th><th class='header'>Manager</th><th class='header' >% of Rangeland</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
+                  var tbCoverHead = "<thead><tr><th class='header legend'></th><th class='header'>Type of Land</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
+                  var tbCowHead = "<thead><tr><th class='header legend'></th><th class='header'>Type of Land</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
+                  if (choice === "management") {
+                    var managementResults;
+                    getLandResults(feature, "management").then(function (searchResults) {
+                      managementResults = searchResults;
+                    }).then(function () {
+                      dom.byId("table-div").innerHTML = "<table id='table' class='table table-bordered table-condensed text-center table-responsive table-fixed tablesorter' cellspacing='0'>" + tbManagementHead + "<tbody>" + managementResults + "</tbody></table>";
+                    });
+                  }
+                  else if (choice === "cover") {
+                    var coverResults;
+                    getLandResults(feature, "cover").then(function (searchResults) {
+                      coverResults = searchResults;
+
+                    }).then(function () {
+                      dom.byId("table-div").innerHTML = "<table id='table' class='table table-bordered table-condensed text-center table-responsive table-fixed tablesorter' cellspacing='0'>" + tbCoverHead + "<tbody>" + coverResults + "</tbody></table>";
+                    })/*.then(function () {
+                     $('#table').tablesorter();
+                     })*/;
+                  }
+                },
+                function (error) {
+                  console.log(error);
+                }
+              );
+
             }
-            searchWidget.search(selectedText).then(
-              function (success) {
-                myMap.map.remove(imgLayer);
-                var feature = success[0].results[0].feature;
-                var tbManagementHead = "<thead><tr><th class='header legend'></th><th class='header'>Manager</th><th class='header' >% of Rangeland</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
-                var tbCoverHead = "<thead><tr><th class='header legend'></th><th class='header'>Type of Land</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
-                var tbCowHead = "<thead><tr><th class='header legend'></th><th class='header'>Type of Land</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
-
-                if (choice === "management") {
-                  var managementResults;
-                  getLandResults(feature, "management").then(function (searchResults) {
-                    managementResults = searchResults;
-                  }).then(function () {
-                    dom.byId("table-div").innerHTML = "<table id='table' class='table table-bordered table-condensed text-center table-responsive table-fixed tablesorter' cellspacing='0'>" + tbManagementHead + "<tbody>" + managementResults + "</tbody></table>";
-                    // console.log("results: ", managementResults);
-                  });
-                }
-                else if (choice === "cover") {
-                  var coverResults;
-                  getLandResults(feature, "cover").then(function (searchResults) {
-                    coverResults = searchResults;
-
-                  }).then(function () {
-                    dom.byId("table-div").innerHTML = "<table id='table' class='table table-bordered table-condensed text-center table-responsive table-fixed tablesorter' cellspacing='0'>" + tbCoverHead + "<tbody>" + coverResults + "</tbody></table>";
-                  })/*.then(function () {
-                   $('#table').tablesorter();
-                   })*/;
-                }
-                else if (choice === "cow") {
-                  var cowResults;
-                  getCowResults(feature);
-                }
-
-              },
-
-              function (error) {
-                console.log(error);
-              }
-            );
           });
 
         });
