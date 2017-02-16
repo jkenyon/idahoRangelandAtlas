@@ -589,6 +589,7 @@ define([
           map.remove(imgLayer);
           map.remove(cowLyr);
           dom.byId("table-div").innerHTML = "";
+          view.ui.remove(legend);
         });
 
         view.then(function () {

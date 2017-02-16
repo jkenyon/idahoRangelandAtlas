@@ -337,7 +337,6 @@ a:active {
   }
 }
 
-
 /*-------------------------------------------------------------------------*/
 
 
@@ -348,7 +347,7 @@ a:active {
 
 @media all and (min-width: 1024px) and (max-width: 1280px) {
   .map-display {
-    height: 900px;
+    height: 720px;
     width: 100%;
   }
   .nav-menu {
@@ -367,7 +366,7 @@ a:active {
 
 @media all and (min-width: 768px) and (max-width: 1024px) {
   .map-display {
-    height: 700px;
+    height: 650px;
     width: 100%;
   }
 }
