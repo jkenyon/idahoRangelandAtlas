@@ -359,7 +359,11 @@ define([
         var imgUrl = "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/idaho_rangeland_atlas_201702/ImageServer";
 
         var imgLayer = new ImageryLayer({
-          url: imgUrl
+          url: imgUrl,
+          popupTemplate: {
+            title: '{Raster.cnty_name}',
+            content: '{Raster.nlcd_name}'
+          }
         });
 
         var featureLayerUrl = "http://services.arcgis.com/WLhB60Nqwp4NnHz3/arcgis/rest/services/Kenyon_AgCensus_2012/FeatureServer/0";
@@ -403,8 +407,7 @@ define([
           var cowAttributes;
           var cowFields;
 
-          results += '<table class="table table-bordered table-condensed text-center table-responsive table-fixed tablesorter" cellspacing="0"><tbody>' +
-            '<tr><th class="text-center">' + countyName + ' COUNTY';
+          results += '<h4 class="text-center">' + countyName + ' COUNTY</h4><table class="table table-bordered table-condensed text-center table-responsive table-fixed tablesorter" cellspacing="0"><tbody>';
 
           var countyMarkerRenderer = new SimpleRenderer({
             symbol: new SimpleMarkerSymbol({
@@ -448,7 +451,6 @@ define([
               myMap.map.add(countyMarkerLayer);
 
               cowAttributes = cowFields[0].attributes;
-              console.log(cowAttributes);
               results += '<tr><th style="font-weight: normal;">USDA Census Year</th><td>' + cowFields[0].attributes.census_yea + '</td></tr>';
               results += '<tr><th style="font-weight: normal;">Ranches</th><td>' + cowFields[0].attributes.Ranches_11 + '</td></tr>';
               results += '<tr><th style="font-weight: normal;">Cattle Farms</th><td>' + cowAttributes.cattle_far + '</td></tr>';
@@ -555,6 +557,7 @@ define([
 
           return imgLayer.then(function () {
             var totId = 0;
+            console.log(imgLayer);
             rasterAttributes = imgLayer.rasterAttributeTable.features;
             for (var i = 0; i < rasterAttributes.length; i++) {
               totId += rasterAttributes[i].attributes.area_ac;
@@ -719,7 +722,7 @@ define([
                     getLandResults(feature, "management").then(function (searchResults) {
                       managementResults = searchResults;
                     }).then(function () {
-                      dom.byId("table-div").innerHTML = "<table id='table' class='table table-bordered table-condensed text-center table-responsive table-fixed tablesorter' cellspacing='0'>" + tbManagementHead + "<tbody>" + managementResults + "</tbody></table>";
+                      dom.byId("table-div").innerHTML = "<h4 class='text-center'>" + selectedText + " COUNTY</h4><table id='table' class='table table-bordered table-condensed text-center table-responsive table-fixed tablesorter' cellspacing='0'>" + tbManagementHead + "<tbody>" + managementResults + "</tbody></table>";
                     });
                   }
                   else if (choice === "cover") {
@@ -728,7 +731,7 @@ define([
                       coverResults = searchResults;
 
                     }).then(function () {
-                      dom.byId("table-div").innerHTML = "<table id='table' class='table table-bordered table-condensed text-center table-responsive table-fixed tablesorter' cellspacing='0'>" + tbCoverHead + "<tbody>" + coverResults + "</tbody></table>";
+                      dom.byId("table-div").innerHTML = "<h4 class='text-center'>" + selectedText + " COUNTY</h4><table id='table' class='table table-bordered table-condensed text-center table-responsive table-fixed tablesorter' cellspacing='0'>" + tbCoverHead + "<tbody>" + coverResults + "</tbody></table>";
                     })/*.then(function () {
                      $('#table').tablesorter();
                      })*/;
