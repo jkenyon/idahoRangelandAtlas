@@ -21,13 +21,15 @@ define([
     "esri/widgets/Search",
     "esri/symbols/TextSymbol",
     "esri/layers/support/LabelClass",
+    "esri/tasks/QueryTask",
+    "esri/tasks/support/Query",
     "dojo/dom-construct",
     "dojo/dom-class",
     "dojo/on",
     "dojo/dom-style",
     "dojo/domReady!"
   ],
-  function (declare, MyMap, MyWidgets, Map, MyUtils, dom, MapView, Legend, ImageryLayer, RasterFunction, UniqueValueRenderer, SimpleFillSymbol, FeatureLayer, SimpleRenderer, SimpleMarkerSymbol, MosaicRule, Search, TextSymbol, LabelClass, domConstruct, domClass, on, domStyle) {
+  function (declare, MyMap, MyWidgets, Map, MyUtils, dom, MapView, Legend, ImageryLayer, RasterFunction, UniqueValueRenderer, SimpleFillSymbol, FeatureLayer, SimpleRenderer, SimpleMarkerSymbol, MosaicRule, Search, TextSymbol, LabelClass, QueryTask, Query, domConstruct, domClass, on, domStyle) {
     return declare(null, {
       myView: null,
       constructor: function () {
@@ -62,7 +64,11 @@ define([
           id: "counties",
           outFields: ['*'],
           opacity: 0.7,
-          renderer: hid
+          renderer: hid,
+          popupTemplate: {
+            title: '{NAME}',
+            content: 'display info here'
+          }
         });
 
         var colorTypes = {
@@ -359,11 +365,7 @@ define([
         var imgUrl = "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/idaho_rangeland_atlas_201702/ImageServer";
 
         var imgLayer = new ImageryLayer({
-          url: imgUrl,
-          popupTemplate: {
-            title: '{Raster.cnty_name}',
-            content: '{Raster.nlcd_name}'
-          }
+          url: imgUrl
         });
 
         var featureLayerUrl = "http://services.arcgis.com/WLhB60Nqwp4NnHz3/arcgis/rest/services/Kenyon_AgCensus_2012/FeatureServer/0";
@@ -391,7 +393,6 @@ define([
         });
 
 
-
         var countyNameLayer = new FeatureLayer({
           url: featureLayerUrl,
           minScale: 0,
@@ -407,7 +408,7 @@ define([
           var cowAttributes;
           var cowFields;
 
-          results += '<h4 class="text-center">' + countyName + ' COUNTY</h4><table class="table table-bordered table-condensed text-center table-responsive table-fixed tablesorter" cellspacing="0"><tbody>';
+          results += '<h4 class="text-center">' + countyName + '</h4><table class="table table-bordered table-condensed text-center table-responsive table-fixed tablesorter" cellspacing="0"><tbody>';
 
           var countyMarkerRenderer = new SimpleRenderer({
             symbol: new SimpleMarkerSymbol({
@@ -425,7 +426,7 @@ define([
               color: "blue",
               haloColor: "black",
               haloSize: "1px",
-              text: countyName + " COUNTY",
+              text: countyName,
               xoffset: 3,
               yoffset: 3,
               font: {  // autocast as esri/symbols/Font
@@ -436,17 +437,16 @@ define([
             })
           });
 
-          var promise;
           cowLyr.then(function () {
-            promise = cowLyr.queryFeatures().then(function (cowData) {
+            cowLyr.queryFeatures().then(function (cowData) {
               cowFields = cowData.features.filter(function (item) {
-                return (item.attributes.NAME === (countyName + ' COUNTY'));
+                return (item.attributes.NAME === countyName);
               });
             }).then(function () {
               countyMarkerLayer.renderer = countyMarkerRenderer;
               countyNameLayer.renderer = countyNameRenderer;
-              countyMarkerLayer.definitionExpression = "NAME = '" + countyName + " COUNTY'";
-              countyNameLayer.definitionExpression = "NAME = '" + countyName + " COUNTY'";
+              countyMarkerLayer.definitionExpression = "NAME = '" + countyName + "'";
+              countyNameLayer.definitionExpression = "NAME = '" + countyName + "'";
               myMap.map.add(countyNameLayer);
               myMap.map.add(countyMarkerLayer);
 
@@ -468,6 +468,8 @@ define([
           var results = "";
           var rasterAttributes;
           var fields;
+          var tbManagementHead = "<thead><tr><th class='header legend'></th><th class='header'>Manager</th><th class='header' >% of Rangeland</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
+          var tbCoverHead = "<thead><tr><th class='header legend'></th><th class='header'>Type of Land</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
 
           var colorize = function (pixelData) {
             if (pixelData === null || pixelData.pixelBlock === null ||
@@ -554,10 +556,8 @@ define([
 
           myMap.map.add(imgLayer);
 
-
-          return imgLayer.then(function () {
+          imgLayer.then(function () {
             var totId = 0;
-            console.log(imgLayer);
             rasterAttributes = imgLayer.rasterAttributeTable.features;
             for (var i = 0; i < rasterAttributes.length; i++) {
               totId += rasterAttributes[i].attributes.area_ac;
@@ -568,8 +568,7 @@ define([
               rasterAttributes.filter(function (item, i) {
                 return (item.attributes.cnty_name === feature.attributes.NAME);
               });
-
-
+          }).then(function(){
             if (choice === "management") {
               fields.forEach(function (item, i) {
                 var res = item.attributes;
@@ -578,6 +577,7 @@ define([
                 var clr = "rgb(" + clrs[0] + "," + clrs[1] + "," + clrs[2] + ")";
                 results += "<tr><td class='dlegend' style='background-color:" + clr + ";'>&nbsp;</td><td>" + sma + "</td><td>" + res.per_nlcd.toFixed(2) + "</td><td>" + res.per_cnty.toFixed(2) + "</td><td>" + res.area_ac.toFixed(2) + "</td></tr>";
               });
+              dom.byId("table-div").innerHTML = "<h4 class='text-center'>" + feature.attributes.NAME + "</h4><table id='table' class='table table-bordered table-condensed text-center table-responsive table-fixed tablesorter' cellspacing='0'>" + tbManagementHead + "<tbody>" + results + "</tbody></table>";
             }
             else if (choice === "cover") {
               var coverValue;
@@ -600,14 +600,10 @@ define([
                 var clr = "rgb(" + clrs[0] + "," + clrs[1] + "," + clrs[2] + ")";
                 results += "<tr><td class='dlegend' style='background-color:" + clr + ";'>&nbsp;</td><td>" + nlcd_name.toString() + "</td><td>" + totalPer.toFixed(2) + "</td><td>" + totalAc.toFixed(2) + "</td></tr>";
               });
+              console.log("Results: ", results);
+              dom.byId("table-div").innerHTML = "<h4 class='text-center'>" + feature.attributes.NAME + "</h4><table id='table' class='table table-bordered table-condensed text-center table-responsive table-fixed tablesorter' cellspacing='0'>" + tbCoverHead + "<tbody>" + results + "</tbody></table>";
             }
 
-            return new Promise(
-              function (resolve, reject) {
-                resolve(results);
-                reject("an error occured");
-              }
-            );
           });
         };
 
@@ -645,6 +641,29 @@ define([
         });
 
         view.then(function () {
+
+          view.on('click', function (event) {
+            var params = new Query({
+              returnGeometry: true,
+              outFields: ["NAME"],
+              geometry: event.mapPoint
+            });
+            myMap.map.remove(imgLayer);
+            countyLyr.queryFeatures(params).then(function (results) {
+              var selectionOnMap = results.features[0];
+              console.log(results.features[0].attributes.NAME);
+              if(choice === "cow"){
+                getCowResults(selectionOnMap.attributes.NAME);
+              }
+              else if(choice === "management"){
+                getLandResults(selectionOnMap, "management");
+              }
+              else if(choice === "cover"){
+                getLandResults(selectionOnMap, "cover");
+              }
+            });
+
+          });
 
           view.ui.add(searchWidget, {
             position: "top-right",
@@ -707,34 +726,19 @@ define([
           $('#select').on('select2:select', function (event) {
             var selectedText = event.target.selectedOptions["0"].text;
             if (choice === "cow") {
-              getCowResults(selectedText);
+              getCowResults(selectedText + ' COUNTY');
             }
             else {
               searchWidget.search(selectedText).then(
                 function (success) {
                   myMap.map.remove(imgLayer);
                   var feature = success[0].results[0].feature;
-                  var tbManagementHead = "<thead><tr><th class='header legend'></th><th class='header'>Manager</th><th class='header' >% of Rangeland</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
-                  var tbCoverHead = "<thead><tr><th class='header legend'></th><th class='header'>Type of Land</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
-                  var tbCowHead = "<thead><tr><th class='header legend'></th><th class='header'>Type of Land</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
+
                   if (choice === "management") {
-                    var managementResults;
-                    getLandResults(feature, "management").then(function (searchResults) {
-                      managementResults = searchResults;
-                    }).then(function () {
-                      dom.byId("table-div").innerHTML = "<h4 class='text-center'>" + selectedText + " COUNTY</h4><table id='table' class='table table-bordered table-condensed text-center table-responsive table-fixed tablesorter' cellspacing='0'>" + tbManagementHead + "<tbody>" + managementResults + "</tbody></table>";
-                    });
+                    getLandResults(feature, "management");
                   }
                   else if (choice === "cover") {
-                    var coverResults;
-                    getLandResults(feature, "cover").then(function (searchResults) {
-                      coverResults = searchResults;
-
-                    }).then(function () {
-                      dom.byId("table-div").innerHTML = "<h4 class='text-center'>" + selectedText + " COUNTY</h4><table id='table' class='table table-bordered table-condensed text-center table-responsive table-fixed tablesorter' cellspacing='0'>" + tbCoverHead + "<tbody>" + coverResults + "</tbody></table>";
-                    })/*.then(function () {
-                     $('#table').tablesorter();
-                     })*/;
+                    getLandResults(feature, "cover");
                   }
                 },
                 function (error) {
