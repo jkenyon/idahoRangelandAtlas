@@ -21,6 +21,7 @@ define([
     "esri/widgets/Search",
     "esri/symbols/TextSymbol",
     "esri/layers/support/LabelClass",
+    "esri/widgets/BasemapToggle",
     "esri/tasks/QueryTask",
     "esri/tasks/support/Query",
     "dojo/dom-construct",
@@ -29,7 +30,7 @@ define([
     "dojo/dom-style",
     "dojo/domReady!"
   ],
-  function (declare, MyMap, MyWidgets, Map, MyUtils, dom, MapView, Legend, ImageryLayer, RasterFunction, UniqueValueRenderer, SimpleFillSymbol, FeatureLayer, SimpleRenderer, SimpleMarkerSymbol, MosaicRule, Search, TextSymbol, LabelClass, QueryTask, Query, domConstruct, domClass, on, domStyle) {
+  function (declare, MyMap, MyWidgets, Map, MyUtils, dom, MapView, Legend, ImageryLayer, RasterFunction, UniqueValueRenderer, SimpleFillSymbol, FeatureLayer, SimpleRenderer, SimpleMarkerSymbol, MosaicRule, Search, TextSymbol, LabelClass, BasemapToggle, QueryTask, Query, domConstruct, domClass, on, domStyle) {
     return declare(null, {
       myView: null,
       constructor: function () {
@@ -49,6 +50,11 @@ define([
         var view = this.myView;
 
         var myWidgets = new MyWidgets(this.myView);
+
+        var basemapToggle = new BasemapToggle({
+          view: view, // view that provides access to the map's 'topo' basemap
+          nextBasemap: "satellite" // allows for toggling to the 'hybrid' basemap
+        });
 
         // Creates the style for the county boundary layer
         var hid = new UniqueValueRenderer({
@@ -658,6 +664,8 @@ define([
         });
 
         view.then(function () {
+
+          view.ui.add(basemapToggle, "top-right");
 
           view.on('click', function (event) {
             var params = new Query({
