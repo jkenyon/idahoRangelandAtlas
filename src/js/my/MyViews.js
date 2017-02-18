@@ -157,6 +157,12 @@ define([
           "BOR": {
             color: "#FFF7C9",
             type: "Bureau of Reclamation"
+          },
+          "GSA": {
+            type: "GSA"
+          },
+          "DOI": {
+            type: "DOI"
           }
         };
 
@@ -590,6 +596,7 @@ define([
               });
           }).then(function(){
             if (choice === "management") {
+              console.log(fields);
               fields.forEach(function (item, i) {
                 var res = item.attributes;
                 var sma = colorTypes[res.sma_name].type;
