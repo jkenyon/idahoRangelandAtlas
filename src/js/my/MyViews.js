@@ -403,6 +403,20 @@ define([
           url: featureLayerUrl
         });
 
+        var resetZoom = function(){
+          view.goTo({
+            center: [-115, 45.6],
+            zoom: 7
+          });
+        };
+
+        var setZoom = function(value, mapPoint){
+          view.goTo({
+            target: mapPoint,
+            zoom: value
+          })
+        };
+
         var getCowResults = function (countyName) {
           var results = "";
           var cowAttributes;
@@ -600,7 +614,6 @@ define([
                 var clr = "rgb(" + clrs[0] + "," + clrs[1] + "," + clrs[2] + ")";
                 results += "<tr><td class='dlegend' style='background-color:" + clr + ";'>&nbsp;</td><td>" + nlcd_name.toString() + "</td><td>" + totalPer.toFixed(2) + "</td><td>" + totalAc.toFixed(2) + "</td></tr>";
               });
-              console.log("Results: ", results);
               dom.byId("table-div").innerHTML = "<h4 class='text-center'>" + feature.attributes.NAME + "</h4><table id='table' class='table table-bordered table-condensed text-center table-responsive table-fixed tablesorter' cellspacing='0'>" + tbCoverHead + "<tbody>" + results + "</tbody></table>";
             }
 
@@ -619,12 +632,15 @@ define([
         var landManagement = dom.byId('land-management');
         var cowManagement = dom.byId('cow-management');
         on(landCover, 'click', function () {
+          resetZoom();
           choice = "cover";
         });
         on(landManagement, 'click', function () {
+          resetZoom();
           choice = "management";
         });
         on(cowManagement, 'click', function () {
+          resetZoom();
           choice = "cow";
           myMap.map.add(cowLyr);
           view.ui.add(legend, "bottom-right");
@@ -632,6 +648,7 @@ define([
 
         var backBtn = dom.byId('back-button');
         on(backBtn, 'click', function () {
+          resetZoom();
           map.remove(imgLayer);
           map.remove(cowLyr);
           map.remove(countyNameLayer);
@@ -651,17 +668,20 @@ define([
             myMap.map.remove(imgLayer);
             countyLyr.queryFeatures(params).then(function (results) {
               var selectionOnMap = results.features[0];
-              console.log(results.features[0].attributes.NAME);
               if(choice === "cow"){
                 getCowResults(selectionOnMap.attributes.NAME);
+                setZoom(7, event.mapPoint);
               }
               else if(choice === "management"){
                 getLandResults(selectionOnMap, "management");
+                setZoom(9, event.mapPoint);
               }
               else if(choice === "cover"){
                 getLandResults(selectionOnMap, "cover");
+                setZoom(9, event.mapPoint);
               }
             });
+
 
           });
 
