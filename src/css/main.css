@@ -29,6 +29,37 @@ a:active {
   color: white;
 }
 
+.modal-fullscreen {
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+}
+
+.modal-dialog {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  color: whitesmoke;
+}
+
+.modal-content {
+  height: auto;
+  min-height: 100%;
+  border-radius: 0;
+  background-color: rgba(46, 12, 46, 1);
+  margin: 0;
+  border: 0;
+}
+
+.modal-body {
+  padding-top: 0;
+}
+
+.modal-footer{
+  padding: 0;
+}
+
 .nav-brand {
   color: #d3d3d3;
   font-size: 150%;
@@ -70,7 +101,8 @@ a:active {
   margin: 0;
 }
 
-.map-menu {}
+.map-menu {
+}
 
 .map-display {
   height: 680px;
@@ -84,42 +116,29 @@ a:active {
   overflow-y: auto;
 }
 
-
 /*.table-fixed tbody {*/
-
 
 /*display:block;*/
 
-
 /*height:350px;*/
-
 
 /*overflow:auto;*/
 
-
 /*}*/
-
 
 /*.table-fixed thead, .table-fixed tbody tr {*/
 
-
 /*display:table;*/
-
 
 /*width:100%;*/
 
-
 /*table-layout:fixed;*/
-
 
 /*}*/
 
-
 /*.table-fixed thead {*/
 
-
 /*width: 100%;*/
-
 
 /*}*/
 
@@ -156,7 +175,7 @@ a:active {
 }
 
 .navbar-collapse.collapse {
-  display: none!important;
+  display: none !important;
 }
 
 .navbar-collapse.collapse.in {
@@ -164,10 +183,10 @@ a:active {
 }
 
 .navbar-nav {
-  float: none!important;
+  float: none !important;
 }
 
-.navbar-nav>li {
+.navbar-nav > li {
   float: none;
 }
 
@@ -176,7 +195,7 @@ a:active {
   padding-top: 5px;
 }
 
-.nav-menu>ul>li:active {
+.nav-menu > ul > li:active {
   background-color: #d3d3d3;
 }
 
@@ -236,7 +255,6 @@ a:active {
   padding: 0;
 }
 
-
 /*================= CUSTOM CLASS STYLES =======================*/
 
 .margin-top-55 {
@@ -248,15 +266,15 @@ a:active {
 }
 
 .padding-bottom-16 {
-  padding-bottom: 16px!important;
+  padding-bottom: 16px !important;
 }
 
 .padding-left-5 {
-  padding-bottom: 5px!important;
+  padding-bottom: 5px !important;
 }
 
 .padding-0 {
-  padding: 0!important
+  padding: 0 !important
 }
 
 .fixed {
@@ -277,7 +295,7 @@ a:active {
 }
 
 .z-index-100 {
-  z-index: 100!important;
+  z-index: 100 !important;
 }
 
 .section {
@@ -306,12 +324,13 @@ a:active {
   color: #d3d3d3;
 }
 
+.padding {
+  padding: 15px;
+}
 
 /*===============================================================*/
 
-
 /*======================== MEDIA QUERIES ==========================*/
-
 
 /*-------------------------------------------------------------------
   Responsive Grid Media Queries - 1280, 1024, 768, 480
@@ -321,9 +340,7 @@ a:active {
    480-less    - phone landscape & smaller
 -------------------------------------------------------------------*/
 
-
 /*-------------------------------------------------------------------------*/
-
 
 /*Larger Desktops*/
 
@@ -332,6 +349,7 @@ a:active {
     height: 900px;
     width: 100%;
   }
+
   .nav-menu {
     border-right: 1px solid #ffffff;
   }
@@ -339,9 +357,7 @@ a:active {
 
 /*-------------------------------------------------------------------------*/
 
-
 /*-------------------------------------------------------------------------*/
-
 
 /*Desktops*/
 
@@ -350,17 +366,15 @@ a:active {
     height: 720px;
     width: 100%;
   }
+
   .nav-menu {
     border-right: 1px solid #ffffff;
   }
 }
 
-
 /*-------------------------------------------------------------------------*/
 
-
 /*-------------------------------------------------------------------------*/
-
 
 /*Tablets landscape*/
 
@@ -371,7 +385,6 @@ a:active {
   }
 }
 
-
 /*Tablets*/
 
 @media all and (min-width: 480px) and (max-width: 768px) {
@@ -379,15 +392,14 @@ a:active {
     height: 500px;
     width: 100%;
   }
+
   .logo {
     height: 80px;
     width: 100%;
   }
 }
 
-
 /*-------------------------------------------------------------------------*/
-
 
 /*Mobiles landscape*/
 
@@ -396,97 +408,92 @@ a:active {
     text-align: center;
     padding-top: 0;
   }
-  .nav-menu-content {}
+
+  .nav-menu-content {
+  }
+
   .logo {
     height: 70px;
     width: 100%;
   }
 }
 
-
 /*-------------------------------------------------------------------------*/
 
-
 /*-------------------------------------------------------------------------*/
-
 
 /* Portrait */
 
-@media screen and (orientation:portrait) {
+@media screen and (orientation: portrait) {
   /* Portrait styles here */
 }
 
-
 /* Landscape */
 
-@media screen and (orientation:landscape) {
+@media screen and (orientation: landscape) {
   /* Landscape styles here */
 }
 
-
 /*-------------------------------------------------------------------------*/
 
-
 /*-------------------------------------------------------------------------*/
-
 
 /* CSS for iPhone, iPad, and Retina Displays */
 
-
 /* Non-Retina */
 
-@media screen and (-webkit-max-device-pixel-ratio: 1) {}
-
+@media screen and (-webkit-max-device-pixel-ratio: 1) {
+}
 
 /* Retina */
 
-@media only screen and (-webkit-min-device-pixel-ratio: 1.5),
-only screen and (-o-min-device-pixel-ratio: 3/2),
-only screen and (min--moz-device-pixel-ratio: 1.5),
-only screen and (min-device-pixel-ratio: 1.5) {}
-
+@media only screen and (-webkit-min-device-pixel-ratio: 1.5), only screen and (-o-min-device-pixel-ratio: 3/2), only screen and (min--moz-device-pixel-ratio: 1.5), only screen and (min-device-pixel-ratio: 1.5) {
+}
 
 /* iPhone Portrait */
 
-@media screen and (max-device-width: 480px) and (orientation:portrait) {
+@media screen and (max-device-width: 480px) and (orientation: portrait) {
   .map-display {
     height: 320px;
     width: 100%;
   }
-  .nav-menu {}
+
+  .nav-menu {
+  }
+
   .main-content {
     font-size: small;
     /*max-height: 460px;*/
     /*overflow-y: scroll;*/
   }
+
   .table-div {
     max-height: 300px;
     overflow-y: auto;
   }
 }
 
-
 /* iPhone Landscape */
 
-@media screen and (max-device-width: 480px) and (orientation:landscape) {
+@media screen and (max-device-width: 480px) and (orientation: landscape) {
   .nav-menu {
     border-bottom: 1px solid #d9edf7;
   }
+
   .map-display {
     height: 300px;
     width: 100%;
   }
 }
 
-
 /* iPad Portrait */
 
-@media screen and (min-device-width: 481px) and (orientation:portrait) {}
-
+@media screen and (min-device-width: 481px) and (orientation: portrait) {
+}
 
 /* iPad Landscape */
 
-@media screen and (min-device-width: 481px) and (orientation:landscape) {}
-
+@media screen and (min-device-width: 481px) and (orientation: landscape) {
+}
 
 /*-------------------------------------------------------------------------*/

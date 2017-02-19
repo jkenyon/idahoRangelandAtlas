@@ -6,7 +6,6 @@ define([
     "my/MyMap",
     "my/MyWidgets",
     "esri/Map",
-    "my/MyUtils",
     "dojo/dom",
     "esri/views/MapView",
     "esri/widgets/Legend",
@@ -30,7 +29,7 @@ define([
     "dojo/dom-style",
     "dojo/domReady!"
   ],
-  function (declare, MyMap, MyWidgets, Map, MyUtils, dom, MapView, Legend, ImageryLayer, RasterFunction, UniqueValueRenderer, SimpleFillSymbol, FeatureLayer, SimpleRenderer, SimpleMarkerSymbol, MosaicRule, Search, TextSymbol, LabelClass, BasemapToggle, QueryTask, Query, domConstruct, domClass, on, domStyle) {
+  function (declare, MyMap, MyWidgets, Map, dom, MapView, Legend, ImageryLayer, RasterFunction, UniqueValueRenderer, SimpleFillSymbol, FeatureLayer, SimpleRenderer, SimpleMarkerSymbol, MosaicRule, Search, TextSymbol, LabelClass, BasemapToggle, QueryTask, Query, domConstruct, domClass, on, domStyle) {
     return declare(null, {
       myView: null,
       constructor: function () {
@@ -38,8 +37,6 @@ define([
         // TODO no zoom, search for county for the new layer, display everything for now, display the legend
         var myMap = new MyMap();
         var map = myMap.map;
-
-        // var myUtils = new MyUtils();
 
         this.myView = new MapView({
           container: "mapCanvas",
@@ -653,27 +650,32 @@ define([
         on(landCover, 'click', function () {
           resetZoom();
           choice = "cover";
+          view.popup.visible = !view.popup.visible;
         });
         on(landManagement, 'click', function () {
           resetZoom();
           choice = "management";
+          view.popup.visible = !view.popup.visible;
         });
         on(cowManagement, 'click', function () {
           resetZoom();
           choice = "cow";
           myMap.map.add(cowLyr);
           view.ui.add(legend, "bottom-right");
+          view.popup.visible = !view.popup.visible;
         });
 
         var backBtn = dom.byId('back-button');
         on(backBtn, 'click', function () {
           resetZoom();
+          choice = "";
           map.remove(imgLayer);
           map.remove(cowLyr);
           map.remove(countyNameLayer);
           map.remove(countyMarkerLayer);
           dom.byId("table-div").innerHTML = "";
           view.ui.remove(legend);
+          view.popup.visible = !view.popup.visible;
         });
 
         view.then(function () {
