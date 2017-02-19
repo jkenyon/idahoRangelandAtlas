@@ -6,7 +6,7 @@
   <meta name="googlebot" content="noindex">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
-  <meta name="google-site-verification" content="DKdA4QeI3k0yD7IlDfgBa6aEeRLnbIEHBCysqKTWpC4" />
+  <meta name="google-site-verification" content="DKdA4QeI3k0yD7IlDfgBa6aEeRLnbIEHBCysqKTWpC4"/>
   <title>Idaho Rangeland Atlas - Draft</title>
 
 
@@ -27,22 +27,28 @@
 
   <link rel="stylesheet" type='text/css' href="./css/bootstrap.min.css"/>
   <!--<link rel="stylesheet" type='text/css' href="css/w3.css" />-->
+
+  <!-- UIkit-->
+  <link rel="stylesheet" type="text/css" href="css/uikit.min.css">
+
+  <!-- main.css -->
   <link rel="stylesheet" type='text/css' href="css/main.css"/>
 
   <!--<script src="//ajax.googleapis.com/ajax/libs/dojo/1.11.2/dojo/dojo.js"></script>-->
+
+  <!-- Jquery -->
+  <!--<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>-->
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-  <script type="text/javascript" src="./js/jquery.tablesorter.min.js"></script>
+
+  <!-- tablesort -->
+  <!--<script type="text/javascript" src="js/tablesort.js"></script>-->
+
+  <!-- stupidtable -->
+  <script type="text/javascript" src="js/stupidtable.min.js"></script>
 
   <!-- Select2 -->
   <link rel="stylesheet" type='text/css' href="./css/select2.min.css"/>
   <script type="text/javascript" src="./js/select2.js"></script>
-
-  <script type="text/javascript">
-    $(document).ready(function () {
-      $('table').tablesorter();
-      console.log("tablesorter entry.");
-    });
-  </script>
 </head>
 
 <body>
@@ -204,7 +210,7 @@
       <!-- Map menu  -->
       <div id="map-menu" class="map-menu">
         <div id="topics" class="text-center topics">
-          <br /><br />
+          <br/><br/>
           <h3>Welcome to the Idaho Rangeland Atlas</h3>
           <p class="select-topic">Select a topic below</p>
           <div class="row">
@@ -225,7 +231,7 @@
           <div class="row center-vertical">
             <div class="col-xs-6">
               <div class="butn">
-                <span id="cow-management" aria-hidden="true"><img src="assets/img/cow.png" /></span><br/>
+                <span id="cow-management" aria-hidden="true"><img src="assets/img/cow.png"/></span><br/>
                 <h4>Ranches</h4>
               </div>
             </div>
@@ -275,7 +281,8 @@
             minerals, water, fish and wildlife, wilderness, air and soils, and scenic, scientific, and cultural
             values.
           </p>
-          <button type="button" class="btn btn-primary more-btn center-vertical" data-toggle="collapse" data-target="#management-more">
+          <button type="button" class="btn btn-primary more-btn center-vertical" data-toggle="collapse"
+                  data-target="#management-more">
             Learn More &raquo;</button>
           <div id="management-more" class="collapse">
             <p class="text-justify">
@@ -296,10 +303,13 @@
           </div>
         </div>
 
-        <div id="cow-info" class="section hidden padding-bottom-16" >
+        <div id="cow-info" class="section hidden padding-bottom-16">
           <h3 class="text-center text-primary padding-bottom-16 title font-medium">Ranches</h3>
           <p class="text-justify">
-            Idaho's rangelands play a significant role in agriculture.  Ranching is a major economic activity within the state, with cattle and calves producing nearly $1.7 billion in value in 2015 (USDA, 2016). Ranches and cattle farms are distributed across the state, with the majority in the southern region, with particular density near Boise and Twin Falls.  For these areas, sustainable grazing is a key feature of rangeland use.
+            Idaho's rangelands play a significant role in agriculture. Ranching is a major economic activity within the
+            state, with cattle and calves producing nearly $1.7 billion in value in 2015 (USDA, 2016). Ranches and
+            cattle farms are distributed across the state, with the majority in the southern region, with particular
+            density near Boise and Twin Falls. For these areas, sustainable grazing is a key feature of rangeland use.
           </p>
           <button type="button" class="btn btn-primary more-btn" data-toggle="collapse" data-target="#cow-more">
             Learn More &raquo;</button>
@@ -344,6 +354,26 @@
 
 </div>
 
+<a class="uk-button uk-button-default" href="#modal-full" uk-toggle>Open</a>
+
+<div id="modal-full" class="uk-modal-full" uk-modal>
+  <div class="uk-modal-dialog">
+    <button class="uk-modal-close-full" type="button" uk-close></button>
+    <div class="uk-grid-collapse uk-child-width-1-2@s uk-flex-middle" uk-grid>
+      <div class="uk-background-cover" uk-height-viewport></div>
+      <div class="uk-padding-large">
+        <h1>Headline</h1>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+          magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+          est laborum.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <!--Libraries scripts-->
 <!--<script type="text/javascript" src="./js/dojo.js"></script>-->
 <!--<script type="text/javascript" src="./js/jquery.tablesorter.min.js"></script>-->
@@ -357,10 +387,17 @@
 <!--<script type="text/javascript" src="./js/range.js"></script>-->
 
 <script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  (function (i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r;
+    i[r] = i[r] || function () {
+        (i[r].q = i[r].q || []).push(arguments)
+      }, i[r].l = 1 * new Date();
+    a = s.createElement(o),
+      m = s.getElementsByTagName(o)[0];
+    a.async = 1;
+    a.src = g;
+    m.parentNode.insertBefore(a, m)
+  })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
   ga('create', 'UA-91765437-1', 'auto');
   ga('send', 'pageview');

@@ -434,7 +434,7 @@ define([
           var cowAttributes;
           var cowFields;
 
-          results += '<h4 class="text-center">' + countyName + '</h4><table class="table table-bordered table-condensed text-center table-responsive table-fixed tablesorter" cellspacing="0"><tbody>';
+          results += '<h4 class="text-center">' + countyName + '</h4><table class="table table-bordered table-condensed text-center table-responsive table-fixed" cellspacing="0"><tbody>';
 
           var countyMarkerRenderer = new SimpleRenderer({
             symbol: new SimpleMarkerSymbol({
@@ -494,8 +494,8 @@ define([
           var results = "";
           var rasterAttributes;
           var fields;
-          var tbManagementHead = "<thead><tr><th class='header legend'></th><th class='header'>Manager</th><th class='header' >% of Rangeland</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
-          var tbCoverHead = "<thead><tr><th class='header legend'></th><th class='header'>Type of Land</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
+          var tbManagementHead = "<thead><tr><th class='header legend'></th><th class='header'>Manager</th><th data-sort='float' data-sort-default='desc' class='header default-sort'>% of Rangeland</th><th class='header' >% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
+          var tbCoverHead = "<thead><tr><th class='header legend'></th><th class='header'>Type of Land</th><th class='header default-sort' data-sort='float' data-sort-default='desc'>% of County</th><th class='header' >Acreage (acres)</th></tr></thead>";
 
           var colorize = function (pixelData) {
             if (pixelData === null || pixelData.pixelBlock === null ||
@@ -596,7 +596,6 @@ define([
               });
           }).then(function(){
             if (choice === "management") {
-              console.log(fields);
               fields.forEach(function (item, i) {
                 var res = item.attributes;
                 var sma = colorTypes[res.sma_name].type;
@@ -604,7 +603,7 @@ define([
                 var clr = "rgb(" + clrs[0] + "," + clrs[1] + "," + clrs[2] + ")";
                 results += "<tr><td class='dlegend' style='background-color:" + clr + ";'>&nbsp;</td><td>" + sma + "</td><td>" + res.per_nlcd.toFixed(2) + "</td><td>" + res.per_cnty.toFixed(2) + "</td><td>" + res.area_ac.toFixed(2) + "</td></tr>";
               });
-              dom.byId("table-div").innerHTML = "<h4 class='text-center'>" + feature.attributes.NAME + "</h4><table id='table' class='table table-bordered table-condensed text-center table-responsive table-fixed tablesorter' cellspacing='0'>" + tbManagementHead + "<tbody>" + results + "</tbody></table>";
+              dom.byId("table-div").innerHTML = "<h4 class='text-center'>" + feature.attributes.NAME + "</h4><table id='table' class='table table-bordered table-condensed text-center table-responsive table-fixed sortable' cellspacing='0'>" + tbManagementHead + "<tbody>" + results + "</tbody></table>";
             }
             else if (choice === "cover") {
               var coverValue;
@@ -627,9 +626,16 @@ define([
                 var clr = "rgb(" + clrs[0] + "," + clrs[1] + "," + clrs[2] + ")";
                 results += "<tr><td class='dlegend' style='background-color:" + clr + ";'>&nbsp;</td><td>" + nlcd_name.toString() + "</td><td>" + totalPer.toFixed(2) + "</td><td>" + totalAc.toFixed(2) + "</td></tr>";
               });
-              dom.byId("table-div").innerHTML = "<h4 class='text-center'>" + feature.attributes.NAME + "</h4><table id='table' class='table table-bordered table-condensed text-center table-responsive table-fixed tablesorter' cellspacing='0'>" + tbCoverHead + "<tbody>" + results + "</tbody></table>";
+              dom.byId("table-div").innerHTML = "<h4 class='text-center'>" + feature.attributes.NAME + "</h4><table id='table' class='table table-bordered table-condensed text-center table-responsive table-fixed sortable' cellspacing='0'>" + tbCoverHead + "<tbody>" + results + "</tbody></table>";
             }
 
+          }).then(function () {
+            setTimeout(function () {
+              // $('table.sortable').tablesort().data('tablesort').sort($("th.default-sort"));
+              var $table = $("table.sortable").stupidtable();
+              var $th_to_sort = $table.find("thead th.default-sort").eq(0);
+              $th_to_sort.stupidsort('desc');
+            }, 1500);
           });
         };
 
