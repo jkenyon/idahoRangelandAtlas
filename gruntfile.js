@@ -13,14 +13,14 @@ module.exports = function (grunt) {
       build: {
         src: 'src/js/*.js',
         dest: 'build/js/app.min.js'
+      },
+      custom: {
+        files: {
+          'build/js/my/MyViews.js': 'src/js/my/MyViews.js',
+          'build/js/my/MyMap.js': 'src/js/my/MyMap.js',
+          'build/js/my/MyWidgets.js': 'src/js/my/MyWidgets.js'
+        }
       }
-      // custom: {
-      //   files: {
-      //     'build/js/my/MyViews.js': 'src/js/my/MyViews.js',
-      //     'build/js/my/MyMap.js': 'src/js/my/MyMap.js',
-      //     'build/js/my/MyWidgets.js': 'src/js/my/MyWidgets.js'
-      //   }
-      // }
     },
 
 
