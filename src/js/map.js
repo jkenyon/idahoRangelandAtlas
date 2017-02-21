@@ -29,7 +29,6 @@ require([
   });
 
   $('#cow-management').on('click', function () {
-    console.log("clicked");
     $('#topics').addClass('hidden');
     $('#table-div, #cow-info, #back-button, #select-county').removeClass('hidden');
   });
