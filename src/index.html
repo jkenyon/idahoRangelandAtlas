@@ -26,24 +26,20 @@
   <script src="https://js.arcgis.com/4.2/"></script>
 
   <link rel="stylesheet" type='text/css' href="./css/bootstrap.min.css"/>
-  <!--<link rel="stylesheet" type='text/css' href="css/w3.css" />-->
 
   <link rel="stylesheet" type="text/css" href="css/bootstrap.vertical-tabs.min.css">
-  <!-- main.css -->
-  <link rel="stylesheet" type='text/css' href="css/main.css"/>
-
-  <!--<script src="//ajax.googleapis.com/ajax/libs/dojo/1.11.2/dojo/dojo.js"></script>-->
-
-  <!-- Jquery -->
-  <!--<script type="text/javascript" src="js/jquery-3.1.1.min.js"></script>-->
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-
-  <!-- tablesort -->
-  <!--<script type="text/javascript" src="js/tablesort.js"></script>-->
-
 
   <!-- Select2 -->
   <link rel="stylesheet" type='text/css' href="./css/select2.min.css"/>
+
+  <!-- main.css -->
+  <link rel="stylesheet" type='text/css' href="css/main.css"/>
+
+  <script
+      src="https://code.jquery.com/jquery-2.2.4.min.js"
+      integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+      crossorigin="anonymous"></script>
+
 </head>
 
 <body>
@@ -355,29 +351,13 @@
 
 
 <!--Libraries scripts-->
-<!--<script type="text/javascript" src="./js/dojo.js"></script>-->
-<!--<script type="text/javascript" src="./js/jquery.tablesorter.min.js"></script>-->
-<!--<script type="text/javascript" src="./js/jquery.custom-scrollbar.js"></script>-->
 <script type="text/javascript" src="./js/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/stupidtable.min.js"></script>
-<script type="text/javascript" src="./js/select2.js"></script>
+<script type="text/javascript" src="./js/select2.min.js"></script>
 
 
 <!-- Custom Scripts -->
-<script type="text/javascript" src="./js/main.js"></script>
 <script type="text/javascript" src="./js/map.js"></script>
-<!--<script type="text/javascript" src="./js/range.js"></script>-->
-
-<script>
-  require([
-    "esri/config",
-    "dojo/domReady!"
-  ], function (esriConfig) {
-    // Fixes CORS problems.
-    esriConfig.request.corsDetection = false;
-    esriConfig.request.corsEnabledServers.push("gis-sandbox.northwestknowledge.net");
-  });
-</script>
 
 <script>
   (function (i, s, o, g, r, a, m) {

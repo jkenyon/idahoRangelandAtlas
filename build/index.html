@@ -1,341 +1,367 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
-	<meta name="robots" content="noindex">
-	<meta name="googlebot" content="noindex">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
-	<title>Idaho Rangeland Atlas - Draft</title>
+  <meta charset="utf-8">
+  <meta name="robots" content="noindex">
+  <meta name="googlebot" content="noindex">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="google-site-verification" content="DKdA4QeI3k0yD7IlDfgBa6aEeRLnbIEHBCysqKTWpC4"/>
+  <title>Idaho Rangeland Atlas - Draft</title>
 
 
-	<!-- Make custom available on dojo CDN-->
-	<!--<script>-->
-    <!--var dojoConfig = {-->
-      <!--parseOnLoad: true,-->
-      <!--packages: [{-->
-        <!--"name": "my",-->
-        <!--"location": location.pathname.replace(/\/[^/]+$/, "") + "/js/my"-->
-      <!--}]-->
-    <!--};-->
-	<!--</script>-->
+  <!-- Make custom available on dojo CDN-->
+  <script>
+    var dojoConfig = {
+      parseOnLoad: true,
+      packages: [{
+        "name": "my",
+        "location": location.pathname.replace(/\/[^/]+$/, "") + "/js/my"
+      }]
+    };
+  </script>
 
-	<!--Esri Api -->
-	<link rel="stylesheet" href="https://js.arcgis.com/4.2/esri/css/main.css">
-	<script src="https://js.arcgis.com/4.2/"></script>
-	<!--<link rel="stylesheet" type='text/css' href="css/w3.css" />-->
-	<link rel="stylesheet" type='text/css' href="css/app.min.css"/>
+  <!--Esri Api -->
+  <link rel="stylesheet" href="https://js.arcgis.com/4.2/esri/css/main.css">
+  <script src="https://js.arcgis.com/4.2/"></script>
+  <!-- main.css -->
+  <link rel="stylesheet" type='text/css' href="css/app.min.css"/>
 
-	<!--<script src="//ajax.googleapis.com/ajax/libs/dojo/1.11.2/dojo/dojo.js"></script>-->
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-	<script type="text/javascript" src="js/app.min.js"></script>
+  <script
+      src="https://code.jquery.com/jquery-2.2.4.min.js"
+      integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+      crossorigin="anonymous"></script>
 
-	<script type="text/javascript">
-    $(document).ready(function () {
-      $('table').tablesorter();
-      console.log("tablesorter entry.");
-    });
-	</script>
 </head>
 
 <body>
 
 <!-- Main -->
 <div id="main" class="row main margin-top-55">
-	<!-- Header -->
-	<nav id="header" class="navbar navbar-inverse navbar-fixed-top header">
+  <!-- Header -->
+  <nav id="header" class="navbar navbar-inverse navbar-fixed-top header">
 
-		<div class="navbar-header container-fluid">
-			<a href="#map" class="navbar-brand">Idaho Rangeland Atlas</a>
-			<button id="hamburger-button" type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-							data-target="#navbar"
-							aria-controls="navbar">
-        <span id="navbar-open" class="navbar-open">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
+    <div class="navbar-header container-fluid">
+      <a href="#map" class="navbar-brand title font-small">Idaho Rangeland Atlas</a>
+
+      <!-- Button trigger modal -->
+      <button type="button" class="navbar-toggle" data-toggle="modal" data-target="#myModal">
+        <span class="navbar-open">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
         </span>
-				<span id="navbar-close" class="hidden navbar-close">
-          <span class="glyphicon glyphicon-remove"></span>
-        </span>
+      </button>
+    </div>
 
-			</button>
-		</div>
+    <div id="navbar" class="navbar-collapse collapse row navbar-overlay">
+    </div>
+  </nav>
 
-		<div id="navbar" class="navbar-collapse collapse row navbar-overlay">
-			<div id="nav-menu" class="col-md-6 col-lg-4 nav-menu">
-				<ul class="nav navbar-nav">
-					<li aria-selected="true"><a id="about-project" href="#about">About the Project</a></li>
-					<li><a href="#data">Data and Methods</a></li>
-					<li><a href="#technical">Technical Details</a></li>
-					<li><a href="#disclaimer">Accuracy and Disclaimer</a></li>
-					<li><a href="#contact">Contact</a></li>
-				</ul>
-				<div class="row imgs-range">
-					<img src="assets/img/dds_logo.png" class="img-responsive col-sm-6 col-md-6 col-lg-6 logo"/>
-					<img src="assets/img/rc_logo.png" class="img-responsive col-sm-6 col-md-6 col-lg-6 logo"/>
-				</div>
-			</div>
+  <div class="row margin-0">
+    <!-- Main Content-->
+    <div id="main-content" align="center" class="col-lg-6 col-md-5 container-fluid main-content">
 
-			<div id="nav-menu-content" class="col-md-6 col-lg-8 nav-menu-content">
-				<!-- Technical Details -->
-				<div id="technical" class="hidden">
-					<div>
-						<header class="text-center">
-							<h2>Technical Details</h2>
-						</header>
-						<p>
-							All application development uses a combination of HTML5, CSS3, and Javascript. The geoprocessing uses
-							ESRI’s
-							ArcGIS Javascript API. Our goal is to use basic, open W3C-endorsed web technologies that are supported by
-							all
-							web browsers and require no additional add-ins, plug-ins, or special software. All work will be done on
-							software/hardware provided by the University of Idaho Library Data & Digital Services Department and
-							INSIDE
-							Idaho.
-						</p>
-					</div>
-				</div>
-
-				<!-- Data -->
-				<div id="data" class="hidden">
-					<div>
-						<header class="text-center">
-							<h2>Data</h2>
-						</header>
-						<p>
-							Data is obtained from available federal sources.<br/><br/>Land Cover: Land cover estimates are derived
-							from
-							the
-							National Land Cover Database (NLCD) 2011 using values 52 (Shrub/Scrub) and 71(Grassland/Herbaceous). The
-							NLCD
-							is
-							a national products based on a classification of 2011 Landsat satellite imagery of the United States. It
-							is
-							developed by the Multi-Resoultion Land Characteristics Consortium and available from the <a
-								href="http://www.mrlc.gov/nlcd2011.php">USGS</a>.<br/><br/>Land Management: Land management information
-							is
-							obtained from the Bureau of Land Management\'s Surface Management Agency, which shows who manages the
-							lands
-							of
-							the United States. The data is available from the <a
-								href="http://www.geocommunicator.gov/GeoComm/services.htm#Download">BLM</a>.<br/><br/>Processing: Using
-							a
-							geoprocessing model in ArcGIS 10.4, we identified the two areas classified as rangeland. These choices
-							were
-							verified with the UI Rangeland Center as the best two choices to represent rangeland land cover. Land
-							management
-							data was obtained by identifying the intersection between the land cover and land management data.
-						</p>
-					</div>
-				</div>
-
-				<!-- Accuracy and Disclaimer -->
-				<div id="disclaimer" class="hidden">
-					<div>
-						<header class="text-center">
-							<h2>Accuracy and Disclaimer</h2>
-						</header>
-						<p>Not sure what to say here yet.</p>
-					</div>
-				</div>
-
-				<!-- About -->
-				<div id="about" class="hidden">
-					<div>
-						<header class="text-center">
-							<h2>About Us</h2>
-						</header>
-						<p>
-							The Idaho Rangeland Atlas is a collaboration of the University of Idaho Library and the University of
-							Idaho
-							Rangeland Center. Its purpose is to provide simple, clear information about Idaho's rangelands using open,
-							accessible web technologies. Leveraging the University of Idaho's investements in geospatial data and
-							infrastructure enable us to present this information. We believe that if an Idaho citizen wants to
-							understand
-							the basic facts of rangeland ecology and space in our state, those facts should be available without the
-							need
-							to
-							engage in advanced analysis or obtain new skills.<br/><br/>The lack of an aggregating resource, like a
-							statistical abstract, adds time to process of discovery and delays the ability of users to move on, either
-							to
-							advanced research questions, as they have to answer and prove more fundamental ones first, or to other
-							tasks
-							based on the information that they now have. Given the increasing accessibility of web-based geospatial
-							processing, and the improvement in technology to provide rich, informative, web-based queries of spatial
-							data,
-							the opportunity exists to re-invent the statistical abstract for natural resource and agricultural
-							questions,
-							providing a simple interface to gather facts about the state of Idaho’s rangelands.
-						</p>
-					</div>
-				</div>
-
-				<!-- Contact -->
-				<div id="contact" class="hidden">
-					<div>
-						<header class="text-center">
-							<h2>Contact</h2>
-						</header>
-						<p class="text-center">
-							Any questions or comments should be directed to either Jeremy Kenyon (jkenyon@uidaho.edu) or Bruce Godfrey
-							(bgodfrey@uidaho.edu).
-						</p>
-					</div>
-				</div>
-
-			</div>
-
-		</div>
-	</nav>
-
-	<div class="row margin-0">
-		<!-- Main Content-->
-		<div id="main-content" align="center" class="col-lg-6 col-md-5 container-fluid main-content">
-
-			<!-- Map menu  -->
-			<div id="map-menu" class="map-menu">
-				<div id="topics" class="text-center topics">
-					<h3>Welcome to the Idaho Rangeland Atlas</h3>
-					<p>Select a topic below</p>
-					<div class="row">
-						<div class="col-xs-6">
-							<div class="butn">
-								<span id="land-cover" class="glyphicon glyphicon-leaf" aria-hidden="true"></span><br/>
-								<h4>Land Cover</h4>
-							</div>
-						</div>
-						<div class="col-xs-6">
-							<div class="butn">
+      <!-- Map menu  -->
+      <div id="map-menu" class="map-menu">
+        <div id="topics" class="text-center topics">
+          <br/><br/>
+          <h3>Welcome to the Idaho Rangeland Atlas</h3>
+          <p class="select-topic">Select a topic below</p>
+          <div class="row">
+            <div class="col-xs-6">
+              <div class="butn">
+                <span id="land-cover" class="glyphicon glyphicon-leaf" aria-hidden="true"></span><br/>
+                <h4>Land Cover</h4>
+              </div>
+            </div>
+            <div class="col-xs-6">
+              <div class="butn">
               <span id="land-management" class="glyphicon glyphicon-user"
-										aria-hidden="true"></span><br/>
-								<h4>Land Management</h4>
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-xs-6">
-							<div class="butn">
-								<span id="cow-management" aria-hidden="true"><img src="assets/img/cow.png" /></span><br/>
-								<h4>Ranching</h4>
-							</div>
-						</div>
-					</div>
-				</div>
+                    aria-hidden="true"></span><br/>
+                <h4>Land Management</h4>
+              </div>
+            </div>
+          </div>
+          <div class="row center-vertical">
+            <div class="col-xs-6">
+              <div class="butn">
+                <span id="cow-management" aria-hidden="true"><img src="assets/img/cow.png"/></span><br/>
+                <h4>Ranches</h4>
+              </div>
+            </div>
+          </div>
+        </div>
 
-				<div id="back-button" class="text-left hidden">
-					<span class="back-btn glyphicon glyphicon-share-alt"></span>
-				</div>
+        <div id="back-button" class="text-left back-button hidden">
+          <span class="back-btn glyphicon glyphicon-share-alt"></span>
+        </div>
 
-				<div id="cover-info" class="hidden padding-bottom-16">
-					<h3 class="text-center text-primary padding-bottom-16">Land Cover</h3>
-					<p class="text-justify">
-						Idaho is contains numerous types of land. The largest of these broadly categorized as 'rangeland'.
-						Here in Idaho, these vast tracts of open space provide important habitat to wildlife and forage for
-						livestock, offer a multitude of recreation opportunities and are a key source of renewable energy and
-						minerals.
-					</p>
-					<button type="button" class="btn btn-primary more-btn" data-toggle="collapse" data-target="#cover-more">Learn
-						More &raquo;</button>
-					<div id="cover-more" class="collapse">
-						<p class="text-justify">
-							Bacon ipsum dolor amet short loin brisket ground round, ribeye turducken corned beef rump pancetta
-							shank leberkas tri-tip. Beef ribs sausage cow salami swine, leberkas bacon flank doner meatloaf
-							alcatra boudin brisket pancetta shank. Bacon ipsum dolor amet short loin brisket ground round, ribeye
-							turducken corned beef rump pancetta shank leberkas tri-tip. Beef ribs sausage cow salami swine,
-							leberkas bacon flank doner meatloaf alcatra boudin brisket pancetta shank. Bacon ipsum dolor amet
-							short loin brisket ground round, ribeye turducken corned beef rump pancetta shank leberkas tri-tip.
-							Beef ribs sausage cow salami swine, leberkas bacon flank doner meatloaf alcatra boudin brisket
-							pancetta shank.Bacon ipsum dolor amet short loin brisket ground round, ribeye turducken corned beef
-							rump pancetta shank leberkas tri-tip. Beef ribs sausage cow salami swine, leberkas bacon flank doner
-							meatloaf alcatra boudin brisket pancetta shank.
-						</p>
-					</div>
-					<div class="text-center">
-						<h4><strong>Select a county on the map</strong></h4>
-					</div>
-				</div>
+        <div id="cover-info" class="section hidden padding-bottom-16">
+          <h3 class="text-center text-primary padding-bottom-16 title font-medium">Land Cover</h3>
+          <p class="text-justify">
+            Idaho contains numerous types of land. The largest of these broadly categorized as 'rangeland'.
+            Here in Idaho, these vast tracts of open space provide important habitat to wildlife and forage for
+            livestock, offer a multitude of recreation opportunities and are a key source of renewable energy and
+            minerals.
+          </p>
+          <button type="button" class="btn btn-primary more-btn" data-toggle="collapse" data-target="#cover-more">Learn
+            More &raquo;</button>
+          <div id="cover-more" class="collapse">
+            <p class="text-justify">
+              Bacon ipsum dolor amet short loin brisket ground round, ribeye turducken corned beef rump pancetta
+              shank leberkas tri-tip. Beef ribs sausage cow salami swine, leberkas bacon flank doner meatloaf
+              alcatra boudin brisket pancetta shank. Bacon ipsum dolor amet short loin brisket ground round, ribeye
+              turducken corned beef rump pancetta shank leberkas tri-tip. Beef ribs sausage cow salami swine,
+              leberkas bacon flank doner meatloaf alcatra boudin brisket pancetta shank. Bacon ipsum dolor amet
+              short loin brisket ground round, ribeye turducken corned beef rump pancetta shank leberkas tri-tip.
+              Beef ribs sausage cow salami swine, leberkas bacon flank doner meatloaf alcatra boudin brisket
+              pancetta shank.Bacon ipsum dolor amet short loin brisket ground round, ribeye turducken corned beef
+              rump pancetta shank leberkas tri-tip. Beef ribs sausage cow salami swine, leberkas bacon flank doner
+              meatloaf alcatra boudin brisket pancetta shank.
+            </p>
+          </div>
+          <div class="text-center">
+            <h4 id="selectCountyHere"><strong>Select a county on the map</strong></h4>
+          </div>
+        </div>
 
-				<div id="management-info" class="hidden padding-bottom-16">
-					<h3 class="text-center text-primary padding-bottom-16">Land Management</h3>
-					<p class="text-justify">
-						Rangeland in Idaho is primarily managed by three parties, private land owners, the Bureau of Land
-						Management, and the US Forest Service. These groups administer the public lands in Idaho with a mission
-						of sustaining the health, diversity and productivity of the public lands for the use and enjoyment of
-						present and future generations. Resources on the public lands include recreation, rangelands, timber,
-						minerals, water, fish and wildlife, wilderness, air and soils, and scenic, scientific, and cultural
-						values.
-					</p>
-					<button type="button" class="btn btn-primary more-btn" data-toggle="collapse" data-target="#management-more">
-						Learn More &raquo;</button>
-					<div id="management-more" class="collapse">
-						<p class="text-justify">
-							Bacon ipsum dolor amet short loin brisket ground round, ribeye turducken corned beef rump pancetta shank
-							leberkas tri-tip. Beef ribs sausage cow salami swine, leberkas bacon flank doner meatloaf alcatra boudin
-							brisket pancetta shank. Bacon ipsum dolor amet short loin brisket ground round, ribeye turducken corned
-							beef rump pancetta shank leberkas tri-tip. Beef ribs sausage cow salami swine, leberkas bacon flank
-							doner meatloaf alcatra boudin brisket pancetta shank. Bacon ipsum dolor amet short loin brisket ground
-							round, ribeye turducken corned beef rump pancetta shank leberkas tri-tip. Beef ribs sausage cow salami
-							swine, leberkas bacon flank doner meatloaf alcatra boudin brisket pancetta shank.Bacon ipsum dolor amet
-							short loin brisket ground round, ribeye turducken corned beef rump pancetta shank leberkas tri-tip. Beef
-							ribs sausage cow salami swine, leberkas bacon flank doner meatloaf alcatra boudin brisket pancetta
-							shank.
-						</p>
-					</div>
-					<div class="text-center">
-						<h4><strong>Select a county on the map</strong></h4>
-					</div>
-				</div>
+        <div id="management-info" class="section hidden padding-bottom-16">
+          <h3 class="text-center text-primary padding-bottom-16 title font-medium">Land Management</h3>
+          <p class="text-justify">
+            Rangeland in Idaho is primarily managed by three parties, private land owners, the Bureau of Land
+            Management, and the US Forest Service. These groups administer the public lands in Idaho with a mission
+            of sustaining the health, diversity and productivity of the public lands for the use and enjoyment of
+            present and future generations. Resources on the public lands include recreation, rangelands, timber,
+            minerals, water, fish and wildlife, wilderness, air and soils, and scenic, scientific, and cultural
+            values.
+          </p>
+          <button type="button" class="btn btn-primary more-btn center-vertical" data-toggle="collapse"
+                  data-target="#management-more">
+            Learn More &raquo;</button>
+          <div id="management-more" class="collapse">
+            <p class="text-justify">
+              Bacon ipsum dolor amet short loin brisket ground round, ribeye turducken corned beef rump pancetta shank
+              leberkas tri-tip. Beef ribs sausage cow salami swine, leberkas bacon flank doner meatloaf alcatra boudin
+              brisket pancetta shank. Bacon ipsum dolor amet short loin brisket ground round, ribeye turducken corned
+              beef rump pancetta shank leberkas tri-tip. Beef ribs sausage cow salami swine, leberkas bacon flank
+              doner meatloaf alcatra boudin brisket pancetta shank. Bacon ipsum dolor amet short loin brisket ground
+              round, ribeye turducken corned beef rump pancetta shank leberkas tri-tip. Beef ribs sausage cow salami
+              swine, leberkas bacon flank doner meatloaf alcatra boudin brisket pancetta shank.Bacon ipsum dolor amet
+              short loin brisket ground round, ribeye turducken corned beef rump pancetta shank leberkas tri-tip. Beef
+              ribs sausage cow salami swine, leberkas bacon flank doner meatloaf alcatra boudin brisket pancetta
+              shank.
+            </p>
+          </div>
+          <div class="text-center">
+            <h4><strong>Select a county on the map</strong></h4>
+          </div>
+        </div>
 
-				<div id="cow-info" class="hidden padding-bottom-16">
-					<h3 class="text-center text-primary padding-bottom-16">Ranching</h3>
-					<p class="text-justify">
-						Idaho's rangelands play a significant role in agriculture.  Ranching is a major economic activity within the state, with cattle and calves producing nearly $1.7 billion in value in 2015 (USDA, 2016). Ranches and cattle farms are distributed across the state, with the majority in the southern region, with particular density near Boise and Twin Falls.  For these areas, sustainable grazing is a key feature of rangeland use.
-					</p>
-					<button type="button" class="btn btn-primary more-btn" data-toggle="collapse" data-target="#cow-more">
-						Learn More &raquo;</button>
-					<div id="cow-more" class="collapse">
-						<p class="text-justify">
-							Bacon ipsum dolor amet short loin brisket ground round, ribeye turducken corned beef rump pancetta shank
-							leberkas tri-tip. Beef ribs sausage cow salami swine, leberkas bacon flank doner meatloaf alcatra boudin
-							brisket pancetta shank. Bacon ipsum dolor amet short loin brisket ground round, ribeye turducken corned
-							beef rump pancetta shank leberkas tri-tip. Beef ribs sausage cow salami swine, leberkas bacon flank
-							doner meatloaf alcatra boudin brisket pancetta shank. Bacon ipsum dolor amet short loin brisket ground
-							round, ribeye turducken corned beef rump pancetta shank leberkas tri-tip. Beef ribs sausage cow salami
-							swine, leberkas bacon flank doner meatloaf alcatra boudin brisket pancetta shank.Bacon ipsum dolor amet
-							short loin brisket ground round, ribeye turducken corned beef rump pancetta shank leberkas tri-tip. Beef
-							ribs sausage cow salami swine, leberkas bacon flank doner meatloaf alcatra boudin brisket pancetta
-							shank.
-						</p>
-					</div>
-					<div class="text-center">
-						<h4><strong>Select a county on the map</strong></h4>
-					</div>
-				</div>
+        <div id="cow-info" class="section hidden padding-bottom-16">
+          <h3 class="text-center text-primary padding-bottom-16 title font-medium">Ranches</h3>
+          <p class="text-justify">
+            Idaho's rangelands play a significant role in agriculture. Ranching is a major economic activity within the
+            state, with cattle and calves producing nearly $1.7 billion in value in 2015 (USDA, 2016). Ranches and
+            cattle farms are distributed across the state, with the majority in the southern region, with particular
+            density near Boise and Twin Falls. For these areas, sustainable grazing is a key feature of rangeland use.
+          </p>
+          <button type="button" class="btn btn-primary more-btn" data-toggle="collapse" data-target="#cow-more">
+            Learn More &raquo;</button>
+          <div id="cow-more" class="collapse">
+            <p class="text-justify">
+              Bacon ipsum dolor amet short loin brisket ground round, ribeye turducken corned beef rump pancetta shank
+              leberkas tri-tip. Beef ribs sausage cow salami swine, leberkas bacon flank doner meatloaf alcatra boudin
+              brisket pancetta shank. Bacon ipsum dolor amet short loin brisket ground round, ribeye turducken corned
+              beef rump pancetta shank leberkas tri-tip. Beef ribs sausage cow salami swine, leberkas bacon flank
+              doner meatloaf alcatra boudin brisket pancetta shank. Bacon ipsum dolor amet short loin brisket ground
+              round, ribeye turducken corned beef rump pancetta shank leberkas tri-tip. Beef ribs sausage cow salami
+              swine, leberkas bacon flank doner meatloaf alcatra boudin brisket pancetta shank.Bacon ipsum dolor amet
+              short loin brisket ground round, ribeye turducken corned beef rump pancetta shank leberkas tri-tip. Beef
+              ribs sausage cow salami swine, leberkas bacon flank doner meatloaf alcatra boudin brisket pancetta
+              shank.
+            </p>
+          </div>
+          <div class="text-center">
+            <h4><strong>Select a county on the map</strong></h4>
+          </div>
+        </div>
 
-				<div id="table-div" class="table-div">
-				</div>
-			</div>
+        <div id="table-div" class="table-div">
+        </div>
+      </div>
 
-		</div>
+    </div>
 
-		<!-- Map  -->
-		<div id="map" class="container-fluid col-lg-6 col-md-7 map">
-			<!-- Map content -->
-			<!--<div id="mapCanvas" class="map-display loading">-->
-			<div id="mapCanvas" class="map-display">
-				<!--<img id="loadingImg" src="img/gears.gif" style="position:relative; left: 40%; top: 40%; z-index:100;"/>-->
-				<!--<img src="assets/gears.svg" class="loading">-->
-			</div>
+    <!-- Map  -->
+    <div id="map" class="container-fluid col-lg-6 col-md-7 map">
+      <!-- Map content -->
+      <!--<div id="mapCanvas" class="map-display loading">-->
+      <div id="mapCanvas" class="map-display">
+        <!--<img id="loadingImg" src="img/gears.gif" style="position:relative; left: 40%; top: 40%; z-index:100;"/>-->
+        <!--<img src="assets/gears.svg" class="loading">-->
+      </div>
 
-		</div>
+    </div>
 
-	</div>
-
+  </div>
 
 </div>
 
+
+<!-- Modal -->
+<div class="modal modal-fullscreen fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+            aria-hidden="true" class="close-btn font-medium padding">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Idaho Rangeland Atlas</h4>
+      </div>
+      <div class="modal-body row">
+
+        <div class="col-xs-4 col-lg-3"> <!-- required for floating -->
+          <!-- Nav tabs -->
+          <ul class="nav nav-tabs tabs-left text-center"><!-- 'tabs-right' for right tabs -->
+            <li class="active"><a href="#technical" data-toggle="tab">Technical</a></li>
+            <li><a href="#data" data-toggle="tab">Data</a></li>
+            <li><a href="#disclaimer" data-toggle="tab">Disclaimer</a></li>
+            <li><a href="#about" data-toggle="tab">About</a></li>
+            <li><a href="#contact" data-toggle="tab">Contact</a></li>
+          </ul>
+        </div>
+        <div class="col-xs-8 col-lg-9">
+          <!-- Tab panes -->
+          <div class="tab-content">
+            <div class="tab-pane active" id="technical">
+              <header class="text-center">
+                <h2>Technical Details</h2>
+              </header>
+              <p>
+                All application development uses a combination of HTML5, CSS3, and Javascript. The geoprocessing uses
+                ESRI’s
+                ArcGIS Javascript API. Our goal is to use basic, open W3C-endorsed web technologies that are supported
+                by
+                all
+                web browsers and require no additional add-ins, plug-ins, or special software. All work will be done on
+                software/hardware provided by the University of Idaho Library Data & Digital Services Department and
+                INSIDE
+                Idaho.
+              </p>
+            </div>
+            <div class="tab-pane" id="data">
+              <header class="text-center">
+                <h2>Data</h2>
+              </header>
+              <p>
+                Data is obtained from available federal sources.<br/><br/>Land Cover: Land cover estimates are derived
+                from
+                the
+                National Land Cover Database (NLCD) 2011 using values 52 (Shrub/Scrub) and 71(Grassland/Herbaceous).
+                The
+                NLCD
+                is
+                a national products based on a classification of 2011 Landsat satellite imagery of the United States.
+                It
+                is
+                developed by the Multi-Resoultion Land Characteristics Consortium and available from the <a
+                  href="http://www.mrlc.gov/nlcd2011.php">USGS</a>.<br/><br/>Land Management: Land management
+                information
+                is
+                obtained from the Bureau of Land Management\'s Surface Management Agency, which shows who manages the
+                lands
+                of
+                the United States. The data is available from the <a
+                  href="http://www.geocommunicator.gov/GeoComm/services.htm#Download">BLM</a>.<br/><br/>Processing:
+                Using
+                a
+                geoprocessing model in ArcGIS 10.4, we identified the two areas classified as rangeland. These choices
+                were
+                verified with the UI Rangeland Center as the best two choices to represent rangeland land cover. Land
+                management
+                data was obtained by identifying the intersection between the land cover and land management data.
+              </p>
+            </div>
+            <div class="tab-pane" id="disclaimer">
+              <header class="text-center">
+                <h2>Accuracy and Disclaimer</h2>
+              </header>
+              <p>Not sure what to say here yet.</p>
+            </div>
+            <div class="tab-pane" id="about">
+              <header class="text-center">
+                <h2>About Us</h2>
+              </header>
+              <p>
+                The Idaho Rangeland Atlas is a collaboration of the University of Idaho Library and the University of
+                Idaho
+                Rangeland Center. Its purpose is to provide simple, clear information about Idaho's rangelands using
+                open,
+                accessible web technologies. Leveraging the University of Idaho's investements in geospatial data and
+                infrastructure enable us to present this information. We believe that if an Idaho citizen wants to
+                understand
+                the basic facts of rangeland ecology and space in our state, those facts should be available without the
+                need
+                to
+                engage in advanced analysis or obtain new skills.<br/><br/>The lack of an aggregating resource, like a
+                statistical abstract, adds time to process of discovery and delays the ability of users to move on,
+                either
+                to
+                advanced research questions, as they have to answer and prove more fundamental ones first, or to other
+                tasks
+                based on the information that they now have. Given the increasing accessibility of web-based geospatial
+                processing, and the improvement in technology to provide rich, informative, web-based queries of spatial
+                data,
+                the opportunity exists to re-invent the statistical abstract for natural resource and agricultural
+                questions,
+                providing a simple interface to gather facts about the state of Idaho’s rangelands.
+              </p>
+            </div>
+            <div class="tab-pane" id="contact">
+              <header class="text-center">
+                <h2>Contact</h2>
+              </header>
+              <p class="text-center">
+                Any questions or comments should be directed to either Jeremy Kenyon (jkenyon@uidaho.edu) or Bruce
+                Godfrey
+                (bgodfrey@uidaho.edu).
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="row imgs-range">
+          <img src="assets/img/dds_logo.png" class="img-responsive col-sm-6 col-md-6 col-lg-6 logo"/>
+          <img src="assets/img/rc_logo.png" class="img-responsive col-sm-6 col-md-6 col-lg-6 logo"/>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Custom Scripts -->
+<script type="text/javascript" src="./js/app.min.js"></script>
+
+<script>
+  (function (i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r;
+    i[r] = i[r] || function () {
+        (i[r].q = i[r].q || []).push(arguments)
+      }, i[r].l = 1 * new Date();
+    a = s.createElement(o),
+      m = s.getElementsByTagName(o)[0];
+    a.async = 1;
+    a.src = g;
+    m.parentNode.insertBefore(a, m)
+  })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+
+  ga('create', 'UA-91765437-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
 
 </body>
 

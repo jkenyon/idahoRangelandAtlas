@@ -1,9 +1,9 @@
 /*
-  Grunt file for minifying the javascript and css sources for a faster loading time.
-*/
+ Grunt file for minifying the javascript and css sources for a faster loading time.
+ */
 
-module.exports = function(grunt) {
-  
+module.exports = function (grunt) {
+
   // Different configuration for the project
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
@@ -11,16 +11,24 @@ module.exports = function(grunt) {
     // Task for minifying javascript files
     uglify: {
       build: {
-        src: 'src/js/**/*.js',
+        src: 'src/js/*.js',
         dest: 'build/js/app.min.js'
       }
+      // custom: {
+      //   files: {
+      //     'build/js/my/MyViews.js': 'src/js/my/MyViews.js',
+      //     'build/js/my/MyMap.js': 'src/js/my/MyMap.js',
+      //     'build/js/my/MyWidgets.js': 'src/js/my/MyWidgets.js'
+      //   }
+      // }
     },
+
 
     // Task for minifying css files
     cssmin: {
       build: {
         files: {
-          'build/css/app.min.css' : ['src/css/*.css']
+          'build/css/app.min.css': ['src/css/*.css']
         }
       }
     }

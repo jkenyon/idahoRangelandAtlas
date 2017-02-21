@@ -70,6 +70,10 @@ a:active {
   height: 420px;
 }
 
+.nav-tabs > li {
+  color: #D3D3D3;
+}
+
 .nav-brand {
   color: #d3d3d3;
   font-size: 150%;
