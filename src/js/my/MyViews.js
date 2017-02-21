@@ -650,19 +650,22 @@ define([
         on(landCover, 'click', function () {
           resetZoom();
           choice = "cover";
-          view.popup.visible = !view.popup.visible;
+          view.popup.visible = false;
+          // view.popup.visible = !view.popup.visible;
         });
         on(landManagement, 'click', function () {
           resetZoom();
           choice = "management";
-          view.popup.visible = !view.popup.visible;
+          view.popup.visible = false;
+          // view.popup.visible = !view.popup.visible;
         });
         on(cowManagement, 'click', function () {
           resetZoom();
           choice = "cow";
           myMap.map.add(cowLyr);
           view.ui.add(legend, "bottom-right");
-          view.popup.visible = !view.popup.visible;
+          // view.popup.visible = !view.popup.visible;
+          view.popup.visible = false;
         });
 
         var backBtn = dom.byId('back-button');
@@ -675,7 +678,8 @@ define([
           map.remove(countyMarkerLayer);
           dom.byId("table-div").innerHTML = "";
           view.ui.remove(legend);
-          view.popup.visible = !view.popup.visible;
+          // view.popup.visible = !view.popup.visible;
+          view.popup.visible = false;
         });
 
         view.then(function () {

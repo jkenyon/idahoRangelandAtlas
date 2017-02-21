@@ -227,15 +227,15 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close font-large padding" data-dismiss="modal" aria-label="Close"><span
-            aria-hidden="true">&times;</span></button>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+            aria-hidden="true" class="close-btn font-medium padding">&times;</span></button>
         <h4 class="modal-title" id="myModalLabel">Idaho Rangeland Atlas</h4>
       </div>
       <div class="modal-body row">
 
-        <div class="col-xs-4"> <!-- required for floating -->
+        <div class="col-xs-4 col-lg-3"> <!-- required for floating -->
           <!-- Nav tabs -->
-          <ul class="nav nav-tabs tabs-left"><!-- 'tabs-right' for right tabs -->
+          <ul class="nav nav-tabs tabs-left text-center"><!-- 'tabs-right' for right tabs -->
             <li class="active"><a href="#technical" data-toggle="tab">Technical</a></li>
             <li><a href="#data" data-toggle="tab">Data</a></li>
             <li><a href="#disclaimer" data-toggle="tab">Disclaimer</a></li>
@@ -243,7 +243,7 @@
             <li><a href="#contact" data-toggle="tab">Contact</a></li>
           </ul>
         </div>
-        <div class="col-xs-8">
+        <div class="col-xs-8 col-lg-9">
           <!-- Tab panes -->
           <div class="tab-content">
             <div class="tab-pane active" id="technical">
@@ -263,47 +263,43 @@
               </p>
             </div>
             <div class="tab-pane" id="data">
-              <div>
-                <header class="text-center">
-                  <h2>Data</h2>
-                </header>
-                <p>
-                  Data is obtained from available federal sources.<br/><br/>Land Cover: Land cover estimates are derived
-                  from
-                  the
-                  National Land Cover Database (NLCD) 2011 using values 52 (Shrub/Scrub) and 71(Grassland/Herbaceous).
-                  The
-                  NLCD
-                  is
-                  a national products based on a classification of 2011 Landsat satellite imagery of the United States.
-                  It
-                  is
-                  developed by the Multi-Resoultion Land Characteristics Consortium and available from the <a
-                    href="http://www.mrlc.gov/nlcd2011.php">USGS</a>.<br/><br/>Land Management: Land management
-                  information
-                  is
-                  obtained from the Bureau of Land Management\'s Surface Management Agency, which shows who manages the
-                  lands
-                  of
-                  the United States. The data is available from the <a
-                    href="http://www.geocommunicator.gov/GeoComm/services.htm#Download">BLM</a>.<br/><br/>Processing:
-                  Using
-                  a
-                  geoprocessing model in ArcGIS 10.4, we identified the two areas classified as rangeland. These choices
-                  were
-                  verified with the UI Rangeland Center as the best two choices to represent rangeland land cover. Land
-                  management
-                  data was obtained by identifying the intersection between the land cover and land management data.
-                </p>
-              </div>
+              <header class="text-center">
+                <h2>Data</h2>
+              </header>
+              <p>
+                Data is obtained from available federal sources.<br/><br/>Land Cover: Land cover estimates are derived
+                from
+                the
+                National Land Cover Database (NLCD) 2011 using values 52 (Shrub/Scrub) and 71(Grassland/Herbaceous).
+                The
+                NLCD
+                is
+                a national products based on a classification of 2011 Landsat satellite imagery of the United States.
+                It
+                is
+                developed by the Multi-Resoultion Land Characteristics Consortium and available from the <a
+                  href="http://www.mrlc.gov/nlcd2011.php">USGS</a>.<br/><br/>Land Management: Land management
+                information
+                is
+                obtained from the Bureau of Land Management\'s Surface Management Agency, which shows who manages the
+                lands
+                of
+                the United States. The data is available from the <a
+                  href="http://www.geocommunicator.gov/GeoComm/services.htm#Download">BLM</a>.<br/><br/>Processing:
+                Using
+                a
+                geoprocessing model in ArcGIS 10.4, we identified the two areas classified as rangeland. These choices
+                were
+                verified with the UI Rangeland Center as the best two choices to represent rangeland land cover. Land
+                management
+                data was obtained by identifying the intersection between the land cover and land management data.
+              </p>
             </div>
             <div class="tab-pane" id="disclaimer">
-              <div>
-                <header class="text-center">
-                  <h2>Accuracy and Disclaimer</h2>
-                </header>
-                <p>Not sure what to say here yet.</p>
-              </div>
+              <header class="text-center">
+                <h2>Accuracy and Disclaimer</h2>
+              </header>
+              <p>Not sure what to say here yet.</p>
             </div>
             <div class="tab-pane" id="about">
               <header class="text-center">
@@ -358,37 +354,48 @@
 </div>
 
 
-  <!--Libraries scripts-->
-  <!--<script type="text/javascript" src="./js/dojo.js"></script>-->
-  <!--<script type="text/javascript" src="./js/jquery.tablesorter.min.js"></script>-->
-  <!--<script type="text/javascript" src="./js/jquery.custom-scrollbar.js"></script>-->
-  <script type="text/javascript" src="./js/bootstrap.min.js"></script>
-  <script type="text/javascript" src="js/stupidtable.min.js"></script>
-  <script type="text/javascript" src="./js/select2.js"></script>
+<!--Libraries scripts-->
+<!--<script type="text/javascript" src="./js/dojo.js"></script>-->
+<!--<script type="text/javascript" src="./js/jquery.tablesorter.min.js"></script>-->
+<!--<script type="text/javascript" src="./js/jquery.custom-scrollbar.js"></script>-->
+<script type="text/javascript" src="./js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/stupidtable.min.js"></script>
+<script type="text/javascript" src="./js/select2.js"></script>
 
 
-  <!-- Custom Scripts -->
-  <script type="text/javascript" src="./js/main.js"></script>
-  <script type="text/javascript" src="./js/map.js"></script>
-  <!--<script type="text/javascript" src="./js/range.js"></script>-->
+<!-- Custom Scripts -->
+<script type="text/javascript" src="./js/main.js"></script>
+<script type="text/javascript" src="./js/map.js"></script>
+<!--<script type="text/javascript" src="./js/range.js"></script>-->
 
-  <script>
-    (function (i, s, o, g, r, a, m) {
-      i['GoogleAnalyticsObject'] = r;
-      i[r] = i[r] || function () {
-          (i[r].q = i[r].q || []).push(arguments)
-        }, i[r].l = 1 * new Date();
-      a = s.createElement(o),
-        m = s.getElementsByTagName(o)[0];
-      a.async = 1;
-      a.src = g;
-      m.parentNode.insertBefore(a, m)
-    })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+<script>
+  require([
+    "esri/config",
+    "dojo/domReady!"
+  ], function (esriConfig) {
+    // Fixes CORS problems.
+    esriConfig.request.corsDetection = false;
+    esriConfig.request.corsEnabledServers.push("gis-sandbox.northwestknowledge.net");
+  });
+</script>
 
-    ga('create', 'UA-91765437-1', 'auto');
-    ga('send', 'pageview');
+<script>
+  (function (i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r;
+    i[r] = i[r] || function () {
+        (i[r].q = i[r].q || []).push(arguments)
+      }, i[r].l = 1 * new Date();
+    a = s.createElement(o),
+      m = s.getElementsByTagName(o)[0];
+    a.async = 1;
+    a.src = g;
+    m.parentNode.insertBefore(a, m)
+  })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
-  </script>
+  ga('create', 'UA-91765437-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
 
 </body>
 
