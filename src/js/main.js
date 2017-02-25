@@ -28,12 +28,11 @@ $(document).ready(function(){
 
 function exportPDF(){
   var filename = document.getElementsByClassName('county-title')[0].textContent.toLowerCase() + " result.pdf";
-  console.log(filename);
+  var map = document.getElementById("mapCanvas");
+  console.log("map: ", map);
   var doc = new jsPDF('p', 'pt');
   var elem = document.getElementsByClassName('table-result')[0];
-  console.log("elem: ", elem);
   var res = doc.autoTableHtmlToJson(elem);
-  console.log("res: ", res);
   doc.autoTable(res.columns, res.data);
   doc.save(filename);
 }

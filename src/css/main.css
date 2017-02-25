@@ -22,7 +22,6 @@ a {
 
 a::selection {
   color: white;
-  background-color: #2aabd2;
 }
 
 a:active {
@@ -47,7 +46,7 @@ a:active {
   height: auto;
   min-height: 100%;
   border-radius: 0;
-  background-color: rgba(46, 12, 46, 1);
+  background-color: black;
   margin: 0;
   border: 0;
 }
@@ -59,9 +58,13 @@ a:active {
 .modal-footer {
   position: absolute;
   top: 80%;
-  padding: 0;
+  padding: 70px;
+  background-color: white;
 }
 
+#myModal li {
+  color: white;
+}
 .tab-pane {
 
 }
@@ -193,14 +196,14 @@ a:active {
 }
 
 .imgs-range {
-  padding-bottom: 5px;
   margin: 0;
-  max-height: 10%;
+  max-height: 4%;
+  text-align: center;
+  padding: 2%;
 }
 
 .logo {
-  padding: 0;
-  height: 150px;
+  height: 100px;
 }
 
 .loading {
@@ -275,8 +278,6 @@ a:active {
 }
 
 .selected {
-  background-color: #1b6d85;
-  color: white;
 }
 
 .fullscreen {
@@ -352,7 +353,7 @@ a:active {
   }
 
   .logo {
-    height: 150px;
+    /*height: 150px;*/
   }
 }
 
@@ -395,7 +396,7 @@ a:active {
   }
 
   .logo {
-    height: 100px;
+    /*height: 100px;*/
     width: 100%;
   }
 }
