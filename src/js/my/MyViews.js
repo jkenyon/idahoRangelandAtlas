@@ -430,11 +430,13 @@ define([
           "<span class='glyphicon glyphicon-export'></span>" +
           " Export as PDF</button></table>";
 
+        var printBtn = domConstruct.toDom('<button type="button" id="print-btn" class="btn btn-success" onclick="exportPDF()"><span class="glyphicon glyphicon-print"></span></button>');
+
         var getCowResults = function (countyName) {
           var results = "";
           var cowAttributes;
           var cowFields;
-
+          printBtn.style.display = 'block';
           results += '<h4 class="text-center county-title">' + countyName + '</h4><table class="table table-bordered table-condensed text-center table-responsive table-fixed table-result" cellspacing="0"><tbody>';
 
           var countyMarkerRenderer = new SimpleRenderer({
@@ -496,6 +498,7 @@ define([
           var results = "";
           var rasterAttributes;
           var fields;
+          printBtn.style.display = 'block';
           var tbManagementHead = "<thead><tr><th class='header legend'></th><th class='header'>Manager</th><th data-sort='float' data-sort-default='desc' class='header default-sort text-center'>% of Rangeland</th><th class='header text-center' >% of County</th><th class='header text-center' >Acreage (acres)</th></tr></thead>";
           var tbCoverHead = "<thead><tr><th class='header legend'></th><th class='header text-center'>Type of Land</th><th class='header default-sort text-center' data-sort='float' data-sort-default='desc'>% of County</th><th class='header text-center' >Acreage (acres)</th></tr></thead>";
 
@@ -674,6 +677,7 @@ define([
 
         var backBtn = dom.byId('back-button');
         on(backBtn, 'click', function () {
+          printBtn.style.display = 'none';
           resetZoom();
           choice = "";
           map.remove(imgLayer);
@@ -738,6 +742,9 @@ define([
           var fullscreenBtn = domConstruct.toDom('<button type="button" id="fullscreen-btn" class="btn btn-info"><span class="glyphicon glyphicon-fullscreen"></span></button>');
 
           view.ui.add(fullscreenBtn, {position: "top-right", index: 0});
+
+          view.ui.add(printBtn, {position: "top-right", index: 1});
+          printBtn.style.display = 'none';
 
           var mainDiv = dom.byId('main');
           var mapCanvas = dom.byId('mapCanvas');
