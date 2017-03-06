@@ -53,7 +53,7 @@ function exportPDF() {
   var elem = document.getElementsByClassName('table-result')[0];
   var res = doc.autoTableHtmlToJson(elem);
   // hide map widgets
-  $('.esri-ui-top-left.esri-ui-corner', '.esri-ui-top-right', '.esri-ui-corner').hide();
+  $('.esri-ui-top-left.esri-ui-corner .esri-ui-top-right').hide();
   html2canvas($("#mapCanvas"), {
     useCORS: true
   })
@@ -63,11 +63,17 @@ function exportPDF() {
       canvas.crossOrigin = 'Anonymous';
       canvas.allowTaint = true;
       imgData = canvas.toDataURL('image/jpeg');
+      doc.text(countyName + "'S MAP", 20, 20);
       doc.addImage(imgData, 'JPEG', 15, 40, 180, 180);
+      doc.addPage();
 
     }).then(function () {
-    doc.text(countyName.toUpperCase(), 75, 30);
-    doc.autoTable(res.columns, res.data);
+    doc.autoTable(res.columns, res.data, {
+      margin: {top: 40},
+      addPageContent: function(data){
+        doc.text(countyName.toUpperCase(), 20, 20);
+      }
+    });
     doc.save(filename);
     $('.esri-ui-top-left, .esri-ui-top-right').show();
   });
