@@ -67,12 +67,9 @@ define([
           id: "counties",
           outFields: ['*'],
           opacity: 0.7,
-          renderer: hid,
-          popupTemplate: {
-            title: '{NAME}',
-            content: 'display info here'
-          }
+          renderer: hid
         });
+        myMap.map.add(countyLyr);
 
         var colorTypes = {
           "PRIVATE": {
@@ -426,7 +423,7 @@ define([
           })
         };
 
-        var exportBtn =  "<button class='btn btn-success export-pdf-btn' onclick='exportPDF()'>" +
+        var exportBtn = "<button class='btn btn-success export-pdf-btn' onclick='exportPDF()'>" +
           "<span class='glyphicon glyphicon-export'></span>" +
           " Export as PDF</button></table>";
 
@@ -643,8 +640,6 @@ define([
           });
         };
 
-        myMap.map.add(countyLyr);
-
         var searchWidget = myWidgets.searchWidget({view: view});
         var selectWidget = domConstruct.toDom('<div id="select-county"><select class="select-counties" id="select"><option value=""></option></select></div>');
 
@@ -700,7 +695,7 @@ define([
               outFields: ["NAME"],
               geometry: event.mapPoint
             });
-            myMap.map.remove(imgLayer);
+            // myMap.map.remove(imgLayer);
             countyLyr.queryFeatures(params).then(function (results) {
               var selectionOnMap = results.features[0];
               if (choice === "cow") {
@@ -810,5 +805,4 @@ define([
         });
       }
     })
-  })
-;
+  });
