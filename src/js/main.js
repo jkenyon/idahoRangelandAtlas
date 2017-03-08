@@ -46,9 +46,9 @@ function exportPDF() {
       imgData.crossOrigin = "Anonymous";
       canvas.crossOrigin = 'Anonymous';
       canvas.allowTaint = true;
-      imgData = canvas.toDataURL('image/jpeg');
+      imgData = canvas.toDataURL('image/jpg');
       doc.text(countyName + "'S MAP", 20, 20);
-      doc.addImage(imgData, 'JPEG', 15, 40, 180, 150);
+      doc.addImage(imgData, 'JPG', 15, 40, 180, 150);
       doc.addPage();
 
     }).then(function () {
