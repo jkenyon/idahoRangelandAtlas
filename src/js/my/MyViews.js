@@ -378,16 +378,16 @@ define([
         var cowLyr = new FeatureLayer({
           url: featureLayerUrl,
           id: "cows",
-          outFields: ['*'],
-          popupTemplate: {
-            title: "{NAME}",
-            content: '<b>USDA Census Year:</b> {census_yea} <br />' +
-            '<b>Number of Ranches:</b> {Ranches_11} <br />' +
-            '<b>Cattle Farms:</b> {cattle_far} <br />' +
-            '<b>Number of Cattle:</b> {cattle_num} <br />' +
-            '<b>Beef Farms:</b> {beef_farms} <br />' +
-            '<b>Number of Beef:</b> {beef_numbe} <br />'
-          }
+          outFields: ['*']
+          // popupTemplate: {
+          //   title: "{NAME}",
+          //   content: '<b>USDA Census Year:</b> {census_yea} <br />' +
+          //   '<b>Number of Ranches:</b> {Ranches_11} <br />' +
+          //   '<b>Cattle Farms:</b> {cattle_far} <br />' +
+          //   '<b>Number of Cattle:</b> {cattle_num} <br />' +
+          //   '<b>Beef Farms:</b> {beef_farms} <br />' +
+          //   '<b>Number of Beef:</b> {beef_numbe} <br />'
+          // }
         });
 
         var legend = new Legend({
