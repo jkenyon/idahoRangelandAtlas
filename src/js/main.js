@@ -38,23 +38,23 @@ function exportPDF() {
   // hide map widgets
   // $('.esri-ui-inner-container, .esri-ui-corner-container').hide();
   $('.esri-ui-top-right, .esri-ui-top-left, .esri-ui-bottom-left').hide();
+
   html2canvas($("#mapCanvas"), {
     useCORS: true
-  })
-    .then(function (canvas) {
-      var imgData = new Image();
-      imgData.crossOrigin = "Anonymous";
-      canvas.crossOrigin = 'Anonymous';
-      canvas.allowTaint = true;
-      imgData = canvas.toDataURL('image/jpg');
-      doc.text(countyName + "'S MAP", 20, 20);
-      doc.addImage(imgData, 'JPG', 15, 40, 180, 150);
-      doc.addPage();
+  }).then(function (canvas) {
+    var imgData = new Image();
+    imgData.crossOrigin = "Anonymous";
+    canvas.crossOrigin = 'Anonymous';
+    canvas.allowTaint = true;
+    imgData = canvas.toDataURL('image/jpg');
+    doc.text(countyName + "'S MAP", 20, 20);
+    doc.addImage(imgData, 'JPG', 15, 40, 180, 150);
+    doc.addPage();
 
-    }).then(function () {
+  }).then(function () {
     doc.autoTable(res.columns, res.data, {
       margin: {top: 40},
-      addPageContent: function(data){
+      addPageContent: function (data) {
         doc.text(countyName.toUpperCase(), 20, 20);
       }
     });

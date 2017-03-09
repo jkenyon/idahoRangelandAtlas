@@ -409,6 +409,7 @@ define([
           url: featureLayerUrl
         });
 
+
         var resetZoom = function () {
           view.goTo({
             center: [-115, 45.6],
@@ -429,10 +430,11 @@ define([
 
         var printBtn = domConstruct.toDom('<button type="button" id="print-btn" class="btn btn-success" onclick="exportPDF()"><span class="glyphicon glyphicon-print"></span></button>');
 
-        var getCowResults = function (countyName) {
+        var getCowResults = function (feature) {
           var results = "";
           var cowAttributes;
           var cowFields;
+          var countyName = feature.attributes.NAME;
           printBtn.style.display = 'block';
           results += '<h4 class="text-center county-title">' + countyName + '</h4><table class="table table-bordered table-condensed text-center table-responsive table-fixed table-result" cellspacing="0"><tbody>';
 
@@ -462,7 +464,9 @@ define([
               }
             })
           });
-
+          myMap.map.remove(countyNameLayer);
+          myMap.map.remove(countyMarkerLayer);
+          
           cowLyr.then(function () {
             cowLyr.queryFeatures().then(function (cowData) {
               cowFields = cowData.features.filter(function (item) {
@@ -524,7 +528,6 @@ define([
 
             // The number of pixels in the pixelBlock
             var numPixels = pixelBlock.width * pixelBlock.height;
-
             var j;
             var i;
             // for each pixel in the block
@@ -699,7 +702,7 @@ define([
             countyLyr.queryFeatures(params).then(function (results) {
               var selectionOnMap = results.features[0];
               if (choice === "cow") {
-                getCowResults(selectionOnMap.attributes.NAME);
+                getCowResults(selectionOnMap);
                 setZoom(7, event.mapPoint);
               }
               else if (choice === "management") {
