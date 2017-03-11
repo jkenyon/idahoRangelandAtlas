@@ -424,9 +424,11 @@ define([
           })
         };
 
-        var exportBtn = "<button class='btn btn-success export-pdf-btn' onclick='exportPDF()'>" +
-          "<span class='glyphicon glyphicon-export'></span>" +
-          " Export as PDF</button></table>";
+
+        var pdf = "<button class=\"btn btn-success export-pdf-btn\" onclick=\"exportResults(\'pdf\')\"><span class=\"glyphicon glyphicon-export\"></span>Export as PDF</button>";
+        var csv = "<button class=\"btn btn-success export-pdf-btn\" onclick=\"exportResults(\'csv\')\"><span class=\"glyphicon glyphicon-export\"></span>Export as CSV</button>";
+
+        var exportBtn = pdf + csv +"</table>";
 
         var printBtn = domConstruct.toDom('<button type="button" id="print-btn" class="btn btn-success" onclick="exportPDF()"><span class="glyphicon glyphicon-print"></span></button>');
 
@@ -464,8 +466,6 @@ define([
               }
             })
           });
-          myMap.map.remove(countyNameLayer);
-          myMap.map.remove(countyMarkerLayer);
           
           cowLyr.then(function () {
             cowLyr.queryFeatures().then(function (cowData) {

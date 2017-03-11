@@ -29,7 +29,26 @@ $(document)
 
   });
 
-function exportPDF() {
+const exportResults = function(format) {
+  var countyName = document.getElementsByClassName('county-title')[0].textContent;
+  var filename = countyName.toLowerCase() + " result.csv";
+  if(format === "pdf"){
+    exportPDF("pdf");
+  }
+  else if(format === "csv"){
+    exportCSV(filename);
+  }
+
+};
+
+function exportCSV(filename){
+  $('.table-result').tableToCSV({
+    filename: filename,
+    rowFilter: '.dlegend'
+  });
+}
+
+const exportPDF = function(format){
   var countyName = document.getElementsByClassName('county-title')[0].textContent;
   var filename = countyName.toLowerCase() + " result.pdf";
   var doc = new jsPDF('p', 'mm');
@@ -39,6 +58,7 @@ function exportPDF() {
   // $('.esri-ui-inner-container, .esri-ui-corner-container').hide();
   $('.esri-ui-top-right, .esri-ui-top-left, .esri-ui-bottom-left').hide();
 
+  console.log("format: ", format);
   html2canvas($("#mapCanvas"), {
     useCORS: true
   }).then(function (canvas) {
@@ -46,20 +66,19 @@ function exportPDF() {
     imgData.crossOrigin = "Anonymous";
     canvas.crossOrigin = 'Anonymous';
     canvas.allowTaint = true;
-    imgData = canvas.toDataURL('image/jpg');
+    imgData = canvas.toDataURL('image/' + format.toLowerCase());
     doc.text(countyName + "'S MAP", 20, 20);
-    doc.addImage(imgData, 'JPG', 15, 40, 180, 150);
+    doc.addImage(imgData, format.toUpperCase(), 15, 40, 180, 150);
     doc.addPage();
 
   }).then(function () {
     doc.autoTable(res.columns, res.data, {
       margin: {top: 40},
-      addPageContent: function (data) {
+      addPageContent: function () {
         doc.text(countyName.toUpperCase(), 20, 20);
       }
     });
     doc.save(filename);
     $('.esri-ui-top-right, .esri-ui-top-left, .esri-ui-bottom-left').show();
   });
-
 }
