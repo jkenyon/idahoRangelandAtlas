@@ -29,10 +29,10 @@ define([
     "dojo/dom-style",
     "dojo/domReady!"
   ],
-  function (declare, MyMap, MyWidgets, Map, dom, MapView, Legend, ImageryLayer, RasterFunction, UniqueValueRenderer, SimpleFillSymbol, FeatureLayer, SimpleRenderer, SimpleMarkerSymbol, MosaicRule, Search, TextSymbol, LabelClass, BasemapToggle, QueryTask, Query, domConstruct, domClass, on, domStyle) {
+  function(declare, MyMap, MyWidgets, Map, dom, MapView, Legend, ImageryLayer, RasterFunction, UniqueValueRenderer, SimpleFillSymbol, FeatureLayer, SimpleRenderer, SimpleMarkerSymbol, MosaicRule, Search, TextSymbol, LabelClass, BasemapToggle, QueryTask, Query, domConstruct, domClass, on, domStyle) {
     return declare(null, {
       myView: null,
-      constructor: function () {
+      constructor: function() {
         // TODO sort the table of result for land cover(% county) and land management(% rangeland)
         // TODO no zoom, search for county for the new layer, display everything for now, display the legend
         var myMap = new MyMap();
@@ -188,8 +188,7 @@ define([
 
         var landTypes = ["Rangeland", "Wetlands", "Water", "Forest", "Developed", "Cultivated Crops", "Pasture/Hay"];
 
-        var counties = [
-          {
+        var counties = [{
             id: 0,
             text: 'ADA'
           },
@@ -410,14 +409,14 @@ define([
         });
 
 
-        var resetZoom = function () {
+        var resetZoom = function() {
           view.goTo({
             center: [-115, 45.6],
             zoom: 7
           });
         };
 
-        var setZoom = function (value, mapPoint) {
+        var setZoom = function(value, mapPoint) {
           view.goTo({
             target: mapPoint,
             zoom: value
@@ -428,11 +427,11 @@ define([
         var pdf = "<button class=\"btn btn-success export-pdf-btn\" onclick=\"exportResults(\'pdf\')\"><span class=\"glyphicon glyphicon-export\"></span>Export as PDF</button>";
         var csv = "<button class=\"btn btn-success export-pdf-btn\" onclick=\"exportResults(\'csv\')\"><span class=\"glyphicon glyphicon-export\"></span>Export as CSV</button>";
 
-        var exportBtn = pdf + csv +"</table>";
+        var exportBtn = pdf + csv + "</table>";
 
-        var printBtn = domConstruct.toDom('<button type="button" id="print-btn" class="btn btn-success" onclick="exportPDF()"><span class="glyphicon glyphicon-print"></span></button>');
+        var printBtn = domConstruct.toDom('<button type="button" id="print-btn" class="btn btn-success" onclick="exportResults(\'pdf\')"><span class="glyphicon glyphicon-print"></span></button>');
 
-        var getCowResults = function (feature) {
+        var getCowResults = function(feature) {
           var results = "";
           var cowAttributes;
           var cowFields;
@@ -459,20 +458,20 @@ define([
               text: countyName,
               xoffset: 3,
               yoffset: 3,
-              font: {  // autocast as esri/symbols/Font
+              font: { // autocast as esri/symbols/Font
                 size: 12,
                 family: "sans-serif",
                 weight: "bolder"
               }
             })
           });
-          
-          cowLyr.then(function () {
-            cowLyr.queryFeatures().then(function (cowData) {
-              cowFields = cowData.features.filter(function (item) {
+
+          cowLyr.then(function() {
+            cowLyr.queryFeatures().then(function(cowData) {
+              cowFields = cowData.features.filter(function(item) {
                 return (item.attributes.NAME === countyName);
               });
-            }).then(function () {
+            }).then(function() {
               countyMarkerLayer.renderer = countyMarkerRenderer;
               countyNameLayer.renderer = countyNameRenderer;
               countyMarkerLayer.definitionExpression = "NAME = '" + countyName + "'";
@@ -490,12 +489,18 @@ define([
               results += '</tbody></table>';
               results += exportBtn;
               dom.byId("table-div").innerHTML = results;
+              $('#table').DataTable({
+                dom: 'Bfrtip',
+                buttons: [
+                  'copy', 'csv', 'excel', 'pdf'
+                ]
+              });
             });
           });
 
         };
 
-        var getLandResults = function (feature, choice) {
+        var getLandResults = function(feature, choice) {
           var results = "";
           var rasterAttributes;
           var fields;
@@ -503,7 +508,7 @@ define([
           var tbManagementHead = "<thead><tr><th class='header legend'></th><th class='header'>Manager</th><th data-sort='float' data-sort-default='desc' class='header default-sort text-center'>% of Rangeland</th><th class='header text-center' >% of County</th><th class='header text-center' >Acreage (acres)</th></tr></thead>";
           var tbCoverHead = "<thead><tr><th class='header legend'></th><th class='header text-center'>Type of Land</th><th class='header default-sort text-center' data-sort='float' data-sort-default='desc'>% of County</th><th class='header text-center' >Acreage (acres)</th></tr></thead>";
 
-          var colorize = function (pixelData) {
+          var colorize = function(pixelData) {
             if (pixelData === null || pixelData.pixelBlock === null ||
               pixelData.pixelBlock.pixels === null) {
               return;
@@ -546,15 +551,13 @@ define([
                     rBand[i] = landTypeColors[fields[j].attributes.nlcd_name].color[0];
                     gBand[i] = landTypeColors[fields[j].attributes.nlcd_name].color[1];
                     bBand[i] = landTypeColors[fields[j].attributes.nlcd_name].color[2];
-                  }
-                  else {
+                  } else {
                     if (choice === "cover") {
                       mask[i] = 1;
                       rBand[i] = landTypeColors[fields[j].attributes.nlcd_name].color[0];
                       gBand[i] = landTypeColors[fields[j].attributes.nlcd_name].color[1];
                       bBand[i] = landTypeColors[fields[j].attributes.nlcd_name].color[2];
-                    }
-                    else {
+                    } else {
                       mask[i] = 1;
                       rBand[i] = fields[j].attributes.red;
                       gBand[i] = fields[j].attributes.green;
@@ -562,8 +565,7 @@ define([
                     }
                   }
                   break;
-                }
-                else {
+                } else {
                   // if the pixel value does not match the desired values
                   // then exclude it from the mask so it doesn't display
                   mask[i] = 0;
@@ -587,21 +589,21 @@ define([
 
           myMap.map.add(imgLayer);
 
-          imgLayer.then(function () {
+          imgLayer.then(function() {
             var totId = 0;
             rasterAttributes = imgLayer.rasterAttributeTable.features;
             for (var i = 0; i < rasterAttributes.length; i++) {
               totId += rasterAttributes[i].attributes.area_ac;
             }
-            fields = (choice === "management") ? rasterAttributes.filter(function (item, i) {
+            fields = (choice === "management") ? rasterAttributes.filter(function(item, i) {
                 return (item.attributes.cnty_name === feature.attributes.NAME && item.attributes.nlcd_name === "Rangeland");
               }) :
-              rasterAttributes.filter(function (item, i) {
+              rasterAttributes.filter(function(item, i) {
                 return (item.attributes.cnty_name === feature.attributes.NAME);
               });
-          }).then(function () {
+          }).then(function() {
             if (choice === "management") {
-              fields.forEach(function (item, i) {
+              fields.forEach(function(item, i) {
                 var res = item.attributes;
                 var sma = colorTypes[res.sma_name].type;
                 var clrs = [res.red, res.green, res.blue];
@@ -609,21 +611,20 @@ define([
                 results += "<tr><td class='dlegend' style='background-color:" + clr + ";'>&nbsp;</td><td>" + sma + "</td><td>" + res.per_nlcd.toFixed(2) + "</td><td>" + res.per_cnty.toFixed(2) + "</td><td>" + res.area_ac.toFixed(2) + "</td></tr>";
               });
               dom.byId("table-div").innerHTML = "<h4 class='text-center county-title'>" + feature.attributes.NAME + "</h4><table id='table' class='table table-bordered table-condensed text-center table-responsive table-fixed sortable table-result' cellspacing='0'>" + tbManagementHead + "<tbody>" + results + "</tbody></table>" + exportBtn;
-            }
-            else if (choice === "cover") {
+            } else if (choice === "cover") {
               var coverValue;
               var covers = [];
               for (var k = 0; k < landTypes.length; k++) {
-                coverValue = fields.filter(function (item) {
+                coverValue = fields.filter(function(item) {
                   return (item.attributes.nlcd_name === landTypes[k]);
                 });
                 covers.push(coverValue);
               }
-              covers.forEach(function (item, i) {
-                var totalAc = item.reduce(function (prev, curr) {
+              covers.forEach(function(item, i) {
+                var totalAc = item.reduce(function(prev, curr) {
                   return prev + curr.attributes.area_ac;
                 }, 0);
-                var totalPer = item.reduce(function (prev, curr) {
+                var totalPer = item.reduce(function(prev, curr) {
                   return prev + curr.attributes.per_cnty;
                 }, 0);
                 var nlcd_name = landTypes[i];
@@ -634,8 +635,14 @@ define([
               dom.byId("table-div").innerHTML = "<h4 class='text-center county-title'>" + feature.attributes.NAME + "</h4><table id='table' class='table table-bordered table-condensed text-center table-responsive table-fixed sortable table-result' cellspacing='0'>" + tbCoverHead + "<tbody>" + results + "</tbody></table>" + exportBtn;
             }
 
-          }).then(function () {
-            setTimeout(function () {
+          }).then(function() {
+            $('#table').DataTable({
+              dom: 'Bfrtip',
+              buttons: [
+                'copy', 'csv', 'excel', 'pdf'
+              ]
+            });
+            setTimeout(function() {
               var $table = $("table.sortable").stupidtable();
               var $th_to_sort = $table.find("thead th.default-sort").eq(0);
               $th_to_sort.stupidsort('desc');
@@ -643,7 +650,9 @@ define([
           });
         };
 
-        var searchWidget = myWidgets.searchWidget({view: view});
+        var searchWidget = myWidgets.searchWidget({
+          view: view
+        });
         var selectWidget = domConstruct.toDom('<div id="select-county"><select class="select-counties" id="select"><option value=""></option></select></div>');
 
         var full = false;
@@ -652,19 +661,19 @@ define([
         var landCover = dom.byId('land-cover');
         var landManagement = dom.byId('land-management');
         var cowManagement = dom.byId('cow-management');
-        on(landCover, 'click', function () {
+        on(landCover, 'click', function() {
           resetZoom();
           choice = "cover";
           view.popup.visible = false;
           // view.popup.visible = !view.popup.visible;
         });
-        on(landManagement, 'click', function () {
+        on(landManagement, 'click', function() {
           resetZoom();
           choice = "management";
           view.popup.visible = false;
           // view.popup.visible = !view.popup.visible;
         });
-        on(cowManagement, 'click', function () {
+        on(cowManagement, 'click', function() {
           resetZoom();
           choice = "cow";
           myMap.map.add(cowLyr);
@@ -674,7 +683,7 @@ define([
         });
 
         var backBtn = dom.byId('back-button');
-        on(backBtn, 'click', function () {
+        on(backBtn, 'click', function() {
           printBtn.style.display = 'none';
           resetZoom();
           choice = "";
@@ -688,28 +697,26 @@ define([
           view.popup.visible = false;
         });
 
-        view.then(function () {
+        view.then(function() {
 
           view.ui.add(basemapToggle, "top-right");
 
-          view.on('click', function (event) {
+          view.on('click', function(event) {
             var params = new Query({
               returnGeometry: true,
               outFields: ["NAME"],
               geometry: event.mapPoint
             });
             // myMap.map.remove(imgLayer);
-            countyLyr.queryFeatures(params).then(function (results) {
+            countyLyr.queryFeatures(params).then(function(results) {
               var selectionOnMap = results.features[0];
               if (choice === "cow") {
                 getCowResults(selectionOnMap);
                 setZoom(7, event.mapPoint);
-              }
-              else if (choice === "management") {
+              } else if (choice === "management") {
                 getLandResults(selectionOnMap, "management");
                 setZoom(9, event.mapPoint);
-              }
-              else if (choice === "cover") {
+              } else if (choice === "cover") {
                 getLandResults(selectionOnMap, "cover");
                 setZoom(9, event.mapPoint);
               }
@@ -739,9 +746,15 @@ define([
 
           var fullscreenBtn = domConstruct.toDom('<button type="button" id="fullscreen-btn" class="btn btn-info"><span class="glyphicon glyphicon-fullscreen"></span></button>');
 
-          view.ui.add(fullscreenBtn, {position: "top-right", index: 0});
+          view.ui.add(fullscreenBtn, {
+            position: "top-right",
+            index: 0
+          });
 
-          view.ui.add(printBtn, {position: "top-right", index: 1});
+          view.ui.add(printBtn, {
+            position: "top-right",
+            index: 1
+          });
           printBtn.style.display = 'none';
 
           var mainDiv = dom.byId('main');
@@ -750,7 +763,7 @@ define([
           var mapStyle = domStyle.getComputedStyle(mapCanvas);
           var mapDiv = dom.byId('map');
           var mapDivStyle = domStyle.getComputedStyle(mapDiv);
-          on(fullscreenBtn, 'click', function (evt) {
+          on(fullscreenBtn, 'click', function(evt) {
             if (full === true) {
               dom.byId('header').style.display = 'block';
               dom.byId('main-content').style.display = 'block';
@@ -764,8 +777,7 @@ define([
               domClass.remove(table, "table-dark-bg");
               domConstruct.place(table, dom.byId('map-menu'), "last");
               full = false;
-            }
-            else {
+            } else {
               dom.byId('header').style.display = 'none';
               dom.byId('main-content').style.display = 'none';
               domClass.add(mapCanvas, "fullscreen");
@@ -773,36 +785,34 @@ define([
               domClass.remove(mainDiv, "margin-top-55");
               domClass.remove(mapDiv, "container-fluid");
               domClass.remove(mapDiv, "padding-top");
-              view.ui.add(table, {position: "bottom-left", index: 0});
+              view.ui.add(table, {
+                position: "bottom-left",
+                index: 0
+              });
               domClass.add(table, "table-dark-bg");
               full = true;
             }
           });
 
-          $('#select').on('select2:select', function (event) {
+          $('#select').on('select2:select', function(event) {
             var selectedText = event.target.selectedOptions["0"].text;
-            if (choice === "cow") {
-              getCowResults(selectedText + ' COUNTY');
-            }
-            else {
-              searchWidget.search(selectedText).then(
-                function (success) {
-                  myMap.map.remove(imgLayer);
-                  var feature = success[0].results[0].feature;
-
-                  if (choice === "management") {
-                    getLandResults(feature, "management");
-                  }
-                  else if (choice === "cover") {
-                    getLandResults(feature, "cover");
-                  }
-                },
-                function (error) {
-                  console.log(error);
+            searchWidget.search(selectedText).then(
+              function(success) {
+                myMap.map.remove(imgLayer);
+                var feature = success[0].results[0].feature;
+                if (choice === "cow") {
+                  getCowResults(feature);
+                } else if (choice === "management") {
+                  getLandResults(feature, "management");
+                } else if (choice === "cover") {
+                  getLandResults(feature, "cover");
                 }
-              );
+              },
+              function(error) {
+                console.log(error);
+              }
+            );
 
-            }
           });
 
         });

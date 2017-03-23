@@ -29,26 +29,27 @@ $(document)
 
   });
 
-const exportResults = function(format) {
+
+const exportResults = function (format) {
   var countyName = document.getElementsByClassName('county-title')[0].textContent;
   var filename = countyName.toLowerCase() + " result.csv";
-  if(format === "pdf"){
-    exportPDF("pdf");
+  if (format === "pdf") {
+    exportPDF("png");
   }
-  else if(format === "csv"){
+  else if (format === "csv") {
     exportCSV(filename);
   }
 
 };
 
-function exportCSV(filename){
+function exportCSV(filename) {
   $('.table-result').tableToCSV({
     filename: filename,
     rowFilter: '.dlegend'
   });
 }
 
-const exportPDF = function(format){
+const exportPDF = function (format) {
   var countyName = document.getElementsByClassName('county-title')[0].textContent;
   var filename = countyName.toLowerCase() + " result.pdf";
   var doc = new jsPDF('p', 'mm');
@@ -81,4 +82,4 @@ const exportPDF = function(format){
     doc.save(filename);
     $('.esri-ui-top-right, .esri-ui-top-left, .esri-ui-bottom-left').show();
   });
-}
+};
