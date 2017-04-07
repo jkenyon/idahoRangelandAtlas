@@ -1,0 +1,80 @@
+var colorizeCover = function (pixelData) {
+            if (pixelData === null || pixelData.pixelBlock === null ||
+              pixelData.pixelBlock.pixels === null) {
+              return;
+            }
+
+            // The pixelBlock stores the values of all pixels visible in the view
+            var pixelBlock = pixelData.pixelBlock;
+
+            // The pixels visible in the view
+            var pixels = pixelBlock.pixels;
+
+            // Get the pixels from the only band of the data
+            var band1 = pixels[0];
+
+            // Create empty arrays for each of the RGB bands to set on the pixelBlock
+            var rBand = [];
+            var gBand = [];
+            var bBand = [];
+
+            // the mask will be used to filter unwanted data
+            var mask = [];
+
+            // The number of pixels in the pixelBlock
+            var numPixels = pixelBlock.width * pixelBlock.height;
+            var j;
+            var i;
+
+            // console.log("imgLyr: ", imgLayer);
+            console.log("pixelData: ", pixelData.pixelBlock);
+            // console.log("fields: ", fields);
+            // for each pixel in the block
+            for (i = 0; i < numPixels; i++) {
+              var val = band1[i]; // get the current pixel value
+              // if the pixel value matches the first field (Rangeland)
+              // cycle through array fields
+              // j = i % fields.length;
+
+              for (j = 0; j < fields.length ; j++) {
+                // then assign it its preset RGB values
+                if (val === fields[j].attributes.Value) {
+
+                  if (fields[j].attributes.nlcd_name !== "Rangeland") {
+                    mask[i] = 1;
+                    rBand[i] = landTypeColors[fields[j].attributes.nlcd_name].color[0];
+                    gBand[i] = landTypeColors[fields[j].attributes.nlcd_name].color[1];
+                    bBand[i] = landTypeColors[fields[j].attributes.nlcd_name].color[2];
+                  } else {
+                    if (choice === "cover") {
+                      mask[i] = 1;
+                      rBand[i] = landTypeColors[fields[j].attributes.nlcd_name].color[0];
+                      gBand[i] = landTypeColors[fields[j].attributes.nlcd_name].color[1];
+                      bBand[i] = landTypeColors[fields[j].attributes.nlcd_name].color[2];
+                    } else {
+                      mask[i] = 1;
+                      rBand[i] = fields[j].attributes.red;
+                      gBand[i] = fields[j].attributes.green;
+                      bBand[i] = fields[j].attributes.blue;
+                    }
+                  }
+                  break;
+                } else {
+                  // if the pixel value does not match the desired values
+                  // then exclude it from the mask so it doesn't display
+                  mask[i] = 0;
+                  rBand[i] = 0;
+                  gBand[i] = 0;
+                  bBand[i] = 0;
+                }
+
+              }
+
+            }
+
+            // Set the new pixel values on the pixelBlock
+            pixelData.pixelBlock.pixels = [rBand, gBand, bBand];
+            pixelData.pixelBlock.statistics = null;
+            pixelData.pixelBlock.pixelType = "U8"; // U8 is used for color
+            pixelData.pixelBlock.mask = mask;
+          };
