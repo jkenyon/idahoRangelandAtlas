@@ -29,12 +29,11 @@ define([
     "dojo/dom-style",
     "dojo/domReady!"
   ],
-  function(declare, MyMap, MyWidgets, Map, dom, MapView, Legend, ImageryLayer, RasterFunction, UniqueValueRenderer, SimpleFillSymbol, FeatureLayer, SimpleRenderer, SimpleMarkerSymbol, MosaicRule, Search, TextSymbol, LabelClass, BasemapToggle, QueryTask, Query, domConstruct, domClass, on, domStyle) {
+  function (declare, MyMap, MyWidgets, Map, dom, MapView, Legend, ImageryLayer, RasterFunction, UniqueValueRenderer, SimpleFillSymbol, FeatureLayer, SimpleRenderer, SimpleMarkerSymbol, MosaicRule, Search, TextSymbol, LabelClass, BasemapToggle, QueryTask, Query, domConstruct, domClass, on, domStyle) {
     return declare(null, {
       myView: null,
-      constructor: function() {
-        // TODO sort the table of result for land cover(% county) and land management(% rangeland)
-        // TODO no zoom, search for county for the new layer, display everything for now, display the legend
+      constructor: function () {
+
         var myMap = new MyMap();
         var map = myMap.map;
 
@@ -188,10 +187,34 @@ define([
 
         var landTypes = ["Rangeland", "Wetlands", "Water", "Forest", "Developed", "Cultivated Crops", "Pasture/Hay"];
 
+        var agencyTypes = [
+          "PRIVATE",
+          "USFS",
+          "BLM",
+          "STATEPR",
+          "STATE",
+          "STATEOTH",
+          "STATEFG",
+          "HSTRCWTR",
+          "BIA",
+          "IR",
+          "NPS",
+          "NWR",
+          "LU_USDA",
+          "LU_DOI",
+          "FAA",
+          "COE",
+          "DOE",
+          "MIL",
+          "BOR",
+          "GSA",
+          "DOI"
+        ];
+
         var counties = [{
-            id: 0,
-            text: 'ADA'
-          },
+          id: 0,
+          text: 'ADA'
+        },
           {
             id: 1,
             text: 'ADAMS'
@@ -367,26 +390,18 @@ define([
         ];
 
         // var imgUrl = "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/idaho_rangeland_atlas_201701/ImageServer";
-        var imgUrl = "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/idaho_rangeland_atlas_201702/ImageServer";
+        // var imgLyrUrl = "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/idaho_rangeland_atlas_201702/ImageServer";
+        var imgLyrUrl = "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/idaho_rangeland_atlas_20170409/ImageServer";
 
         var imgLayer = new ImageryLayer({
-          url: imgUrl
+          url: imgLyrUrl
         });
 
-        var featureLayerUrl = "http://services.arcgis.com/WLhB60Nqwp4NnHz3/arcgis/rest/services/Kenyon_AgCensus_2012/FeatureServer/0";
+        var countyLyrUrl = "http://services.arcgis.com/WLhB60Nqwp4NnHz3/arcgis/rest/services/Kenyon_AgCensus_2012/FeatureServer/0";
         var cowLyr = new FeatureLayer({
-          url: featureLayerUrl,
+          url: countyLyrUrl,
           id: "cows",
           outFields: ['*']
-          // popupTemplate: {
-          //   title: "{NAME}",
-          //   content: '<b>USDA Census Year:</b> {census_yea} <br />' +
-          //   '<b>Number of Ranches:</b> {Ranches_11} <br />' +
-          //   '<b>Cattle Farms:</b> {cattle_far} <br />' +
-          //   '<b>Number of Cattle:</b> {cattle_num} <br />' +
-          //   '<b>Beef Farms:</b> {beef_farms} <br />' +
-          //   '<b>Number of Beef:</b> {beef_numbe} <br />'
-          // }
         });
 
         var legend = new Legend({
@@ -399,24 +414,24 @@ define([
 
 
         var countyNameLayer = new FeatureLayer({
-          url: featureLayerUrl,
+          url: countyLyrUrl,
           minScale: 0,
           maxScale: 0
         });
 
         var countyMarkerLayer = new FeatureLayer({
-          url: featureLayerUrl
+          url: countyLyrUrl
         });
 
 
-        var resetZoom = function() {
+        var resetZoom = function () {
           view.goTo({
             center: [-115, 45.6],
             zoom: 7
           });
         };
 
-        var setZoom = function(value, mapPoint) {
+        var setZoom = function (value, mapPoint) {
           view.goTo({
             target: mapPoint,
             zoom: value
@@ -424,14 +439,21 @@ define([
         };
 
 
-        var pdf = "<button class=\"btn btn-success export-pdf-btn\" onclick=\"exportResults(\'pdf\')\"><span class=\"glyphicon glyphicon-export\"></span>Export as PDF</button>";
+        var pdf = "<button class=\"btn btn-success export-pdf-btn\" onclick=\"exportResults(\'pdf\', \'cover\')\"><span class=\"glyphicon glyphicon-export\"></span>Export as PDF</button>";
         var csv = "<button class=\"btn btn-success export-pdf-btn\" onclick=\"exportResults(\'csv\')\"><span class=\"glyphicon glyphicon-export\"></span>Export as CSV</button>";
 
         var exportBtn = pdf + csv + "</table>";
 
         var printBtn = domConstruct.toDom('<button type="button" id="print-btn" class="btn btn-success" onclick="exportResults(\'pdf\')"><span class="glyphicon glyphicon-print"></span></button>');
 
-        var getCowResults = function(feature) {
+        var tbManagementHead = "<thead><tr><th class='header legend'></th><th class='header'>Manager</th><th data-sort='float' data-sort-default='desc' class='header default-sort text-center'>% of Rangeland</th><th class='header text-center' >% of County</th><th class='header text-center' >Acreage (acres)</th></tr></thead>";
+        var tbCoverHead = "<thead><tr><th class='header legend'></th><th class='header text-center'>Type of Land</th><th class='header default-sort text-center' data-sort='float' data-sort-default='desc'>% of County</th><th class='header text-center' >Acreage (acres)</th></tr></thead>";
+
+        /// TODO change the display of the results of ranches
+        /// by county and put year at the top of table
+        /// put headers at the top which will facilitate
+        /// the export as csv
+        var getCowResults = function (feature) {
           var results = "";
           var cowAttributes;
           var cowFields;
@@ -466,12 +488,12 @@ define([
             })
           });
 
-          cowLyr.then(function() {
-            cowLyr.queryFeatures().then(function(cowData) {
-              cowFields = cowData.features.filter(function(item) {
+          cowLyr.then(function () {
+            cowLyr.queryFeatures().then(function (cowData) {
+              cowFields = cowData.features.filter(function (item) {
                 return (item.attributes.NAME === countyName);
               });
-            }).then(function() {
+            }).then(function () {
               countyMarkerLayer.renderer = countyMarkerRenderer;
               countyNameLayer.renderer = countyNameRenderer;
               countyMarkerLayer.definitionExpression = "NAME = '" + countyName + "'";
@@ -489,121 +511,75 @@ define([
               results += '</tbody></table>';
               results += exportBtn;
               dom.byId("table-div").innerHTML = results;
-              $('#table').DataTable({
-                dom: 'Bfrtip',
-                buttons: [
-                  'copy', 'csv', 'excel', 'pdf'
-                ]
-              });
             });
           });
 
         };
 
-        var getLandResults = function(feature, choice) {
+        var getLandResults = function (feature, choice) {
           var results = "";
           var rasterAttributes;
           var fields;
           printBtn.style.display = 'block';
-          var tbManagementHead = "<thead><tr><th class='header legend'></th><th class='header'>Manager</th><th data-sort='float' data-sort-default='desc' class='header default-sort text-center'>% of Rangeland</th><th class='header text-center' >% of County</th><th class='header text-center' >Acreage (acres)</th></tr></thead>";
-          var tbCoverHead = "<thead><tr><th class='header legend'></th><th class='header text-center'>Type of Land</th><th class='header default-sort text-center' data-sort='float' data-sort-default='desc'>% of County</th><th class='header text-center' >Acreage (acres)</th></tr></thead>";
 
-          var colorize = function(pixelData) {
-            if (pixelData === null || pixelData.pixelBlock === null ||
-              pixelData.pixelBlock.pixels === null) {
-              return;
-            }
+          // apply a colormap for land cover types
+          var coverRF = new RasterFunction({
+            functionName: "Land Cover Type",
+            variableName: "Raster"
+          });
 
-            // The pixelBlock stores the values of all pixels visible in the view
-            var pixelBlock = pixelData.pixelBlock;
+          // apply a colormap for land cover types
+          var managementRF = new RasterFunction({
+            functionName: "Land Management Agency",
+            variableName: "Raster"
+          });
 
-            // The pixels visible in the view
-            var pixels = pixelBlock.pixels;
+          var rf = (choice === "cover") ? coverRF : managementRF;
 
-            // Get the pixels from the only band of the data
-            var band1 = pixels[0];
+          // Clips the image to only the county geometry
+          var clipRF = new RasterFunction({
+            functionName: "Clip",
+            functionArguments: {
+              ClippingGeometry: feature.geometry, //a polygon or envelope
+              ClippingType: 1, //int (1= clippingOutside, 2=clippingInside), use 1 to keep image inside of the geometry
+              raster: rf
+            },
+            outputPixelType: "U16",
+            variableName: "Raster"
+          });
 
-            // Create empty arrays for each of the RGB bands to set on the pixelBlock
-            var rBand = [];
-            var gBand = [];
-            var bBand = [];
 
-            // the mask will be used to filter unwanted data
-            var mask = [];
+          imgLayer.renderingRule = clipRF;
+          // imgLayer.renderingRule = clipCRF;
 
-            // The number of pixels in the pixelBlock
-            var numPixels = pixelBlock.width * pixelBlock.height;
-            var j;
-            var i;
-            // for each pixel in the block
-            for (i = 0; i < numPixels; i++) {
-              var val = band1[i]; // get the current pixel value
-              // if the pixel value matches the first field (Rangeland)
-              // cycle through array fields
-              // j = i % fields.length;
-
-              for (j = 0; j < fields.length; j++) {
-                // then assign it its preset RGB values
-                if (val === fields[j].attributes.Value) {
-
-                  if (fields[j].attributes.nlcd_name !== "Rangeland") {
-                    mask[i] = 1;
-                    rBand[i] = landTypeColors[fields[j].attributes.nlcd_name].color[0];
-                    gBand[i] = landTypeColors[fields[j].attributes.nlcd_name].color[1];
-                    bBand[i] = landTypeColors[fields[j].attributes.nlcd_name].color[2];
-                  } else {
-                    if (choice === "cover") {
-                      mask[i] = 1;
-                      rBand[i] = landTypeColors[fields[j].attributes.nlcd_name].color[0];
-                      gBand[i] = landTypeColors[fields[j].attributes.nlcd_name].color[1];
-                      bBand[i] = landTypeColors[fields[j].attributes.nlcd_name].color[2];
-                    } else {
-                      mask[i] = 1;
-                      rBand[i] = fields[j].attributes.red;
-                      gBand[i] = fields[j].attributes.green;
-                      bBand[i] = fields[j].attributes.blue;
-                    }
-                  }
-                  break;
-                } else {
-                  // if the pixel value does not match the desired values
-                  // then exclude it from the mask so it doesn't display
-                  mask[i] = 0;
-                  rBand[i] = 0;
-                  gBand[i] = 0;
-                  bBand[i] = 0;
-                }
-
-              }
-
-            }
-
-            // Set the new pixel values on the pixelBlock
-            pixelData.pixelBlock.pixels = [rBand, gBand, bBand];
-            pixelData.pixelBlock.statistics = null;
-            pixelData.pixelBlock.pixelType = "U8"; // U8 is used for color
-            pixelData.pixelBlock.mask = mask;
-          };
-
-          imgLayer.pixelFilter = colorize;
+          // imgLayer.pixelFilter = colorize;
 
           myMap.map.add(imgLayer);
 
-          imgLayer.then(function() {
+          imgLayer.then(function () {
             var totId = 0;
             rasterAttributes = imgLayer.rasterAttributeTable.features;
             for (var i = 0; i < rasterAttributes.length; i++) {
               totId += rasterAttributes[i].attributes.area_ac;
             }
-            fields = (choice === "management") ? rasterAttributes.filter(function(item, i) {
-                return (item.attributes.cnty_name === feature.attributes.NAME && item.attributes.nlcd_name === "Rangeland");
-              }) :
-              rasterAttributes.filter(function(item, i) {
+            fields = (choice === "management") ? rasterAttributes.filter(function (item, i) {
+              return (item.attributes.cnty_name === feature.attributes.NAME && item.attributes.nlcd_name === "Rangeland");
+            }) :
+              rasterAttributes.filter(function (item, i) {
                 return (item.attributes.cnty_name === feature.attributes.NAME);
               });
-          }).then(function() {
+          }).then(function () {
+            var countyLandTypes = [];
+            landTypes.forEach(function (landType) {
+              // countyLandTypes[landType] = fields.filter(function(field){
+              //   return field.attributes.nlcd_name === landType;
+              // });
+              countyLandTypes.push(fields.filter(function (field) {
+                return field.attributes.nlcd_name === landType;
+              }));
+            });
             if (choice === "management") {
-              fields.forEach(function(item, i) {
+              fields.forEach(function (item, i) {
                 var res = item.attributes;
                 var sma = colorTypes[res.sma_name].type;
                 var clrs = [res.red, res.green, res.blue];
@@ -615,16 +591,16 @@ define([
               var coverValue;
               var covers = [];
               for (var k = 0; k < landTypes.length; k++) {
-                coverValue = fields.filter(function(item) {
+                coverValue = fields.filter(function (item) {
                   return (item.attributes.nlcd_name === landTypes[k]);
                 });
                 covers.push(coverValue);
               }
-              covers.forEach(function(item, i) {
-                var totalAc = item.reduce(function(prev, curr) {
+              covers.forEach(function (item, i) {
+                var totalAc = item.reduce(function (prev, curr) {
                   return prev + curr.attributes.area_ac;
                 }, 0);
-                var totalPer = item.reduce(function(prev, curr) {
+                var totalPer = item.reduce(function (prev, curr) {
                   return prev + curr.attributes.per_cnty;
                 }, 0);
                 var nlcd_name = landTypes[i];
@@ -635,14 +611,8 @@ define([
               dom.byId("table-div").innerHTML = "<h4 class='text-center county-title'>" + feature.attributes.NAME + "</h4><table id='table' class='table table-bordered table-condensed text-center table-responsive table-fixed sortable table-result' cellspacing='0'>" + tbCoverHead + "<tbody>" + results + "</tbody></table>" + exportBtn;
             }
 
-          }).then(function() {
-            $('#table').DataTable({
-              dom: 'Bfrtip',
-              buttons: [
-                'copy', 'csv', 'excel', 'pdf'
-              ]
-            });
-            setTimeout(function() {
+          }).then(function () {
+            setTimeout(function () {
               var $table = $("table.sortable").stupidtable();
               var $th_to_sort = $table.find("thead th.default-sort").eq(0);
               $th_to_sort.stupidsort('desc');
@@ -650,6 +620,156 @@ define([
           });
         };
 
+        /// TODO use the total per_acr to calculate the %county
+        var stateWideLandResults = function(choice) {
+          var results = "";
+          var rasterAttributes;
+          var fields;
+          printBtn.style.display = 'block';
+
+
+          // apply a colormap for land cover types
+          var coverRF = new RasterFunction({
+            functionName: "Land Cover Type",
+            variableName: "Raster"
+          });
+
+          // apply a colormap for land cover types
+          var managementRF = new RasterFunction({
+            functionName: "Land Management Agency",
+            variableName: "Raster"
+          });
+
+          var rf = (choice === "cover") ? coverRF : managementRF;
+
+          imgLayer.renderingRule = rf;
+
+          myMap.map.add(imgLayer);
+
+          imgLayer.then(function () {
+            var totId = 0;
+            rasterAttributes = imgLayer.rasterAttributeTable.features;
+            for (var i = 0; i < rasterAttributes.length; i++) {
+              totId += rasterAttributes[i].attributes.area_ac;
+            }
+            fields = (choice === "management") ? rasterAttributes.filter(function (item, i) {
+              return (item.attributes.cnty_name && item.attributes.nlcd_name === "Rangeland");
+            }) : rasterAttributes;
+          }).then(function () {
+            var totalStatePer = fields
+              .reduce(function (prev, curr) {
+                return prev + curr.attributes.per_cnty;
+              }, 0);
+            if (choice === "management") {
+              var managementValue;
+              var managements = [];
+              for (var m = 0; m < agencyTypes.length; m++) {
+                managementValue = fields.filter(function (item) {
+                  return (item.attributes.sma_name === agencyTypes[m]);
+                });
+                managements.push(managementValue);
+              }
+
+
+              var totalStateRng = fields
+                .reduce(function (prev, curr) {
+                  return prev + curr.attributes.per_nlcd;
+                }, 0);
+              managements.forEach(function (item, i) {
+                var res = item[0].attributes;
+                var totalAc = item.reduce(function (prev, curr) {
+                  return prev + curr.attributes.area_ac;
+                }, 0);
+                var totalPer = (item.reduce(function (prev, curr) {
+                  return prev + curr.attributes.per_cnty;
+                }, 0) / totalStatePer) * 100.0;
+                var totalRng = (item.reduce(function (prev, curr) {
+                  return prev + curr.attributes.per_nlcd;
+                }, 0) / totalStateRng) * 100.0;
+                var sma = colorTypes[res.sma_name].type;
+                var clrs = [res.red, res.green, res.blue];
+                var clr = "rgb(" + clrs[0] + "," + clrs[1] + "," + clrs[2] + ")";
+                results += "<tr><td class='dlegend' style='background-color:" + clr + ";'>&nbsp;</td><td>" + sma + "</td><td>" + totalRng.toFixed(2) + "</td><td>" + totalPer.toFixed(2) + "</td><td>" + totalAc.toFixed(2) + "</td></tr>";
+              });
+              dom.byId("table-statewide-div").innerHTML = "<h4 class='text-center county-title'> STATEWIDE LAND MANAGEMENT</h4><table id='table' class='table table-bordered table-condensed text-center table-responsive table-fixed sortable table-result' cellspacing='0'>" + tbManagementHead + "<tbody>" + results + "</tbody></table>" + exportBtn;
+
+            } else if (choice === "cover") {
+
+              var coverValue;
+              var covers = [];
+              for (var k = 0; k < landTypes.length; k++) {
+                coverValue = fields.filter(function (item) {
+                  return (item.attributes.nlcd_name === landTypes[k]);
+                });
+                covers.push(coverValue);
+              }
+              console.log("fields: ", fields);
+              covers.forEach(function (item, i) {
+                var totalAc = item.reduce(function (prev, curr) {
+                  return prev + curr.attributes.area_ac;
+                }, 0);
+                var totalPer = (item.reduce(function (prev, curr) {
+                  return prev + curr.attributes.per_cnty;
+                }, 0) / totalStatePer) * 100.0;
+                var nlcd_name = landTypes[i];
+                var clrs = landTypeColors[nlcd_name].color;
+                var clr = "rgb(" + clrs[0] + "," + clrs[1] + "," + clrs[2] + ")";
+                results += "<tr><td class='dlegend' style='background-color:" + clr + ";'>&nbsp;</td><td>" + nlcd_name.toString() + "</td><td>" + totalPer.toFixed(2) + "</td><td>" + totalAc.toFixed(2) + "</td></tr>";
+              });
+              dom.byId("table-statewide-div").innerHTML = "<h4 class='text-center county-title'>STATEWIDE LAND COVER</h4><table id='table' class='table table-bordered table-condensed text-center table-responsive table-fixed sortable table-result' cellspacing='0'>" + tbCoverHead + "<tbody>" + results + "</tbody></table>" + exportBtn;
+            }
+
+          }).then(function () {
+            setTimeout(function () {
+              var $table = $("table.sortable").stupidtable();
+              var $th_to_sort = $table.find("thead th.default-sort").eq(0);
+              $th_to_sort.stupidsort('desc');
+            }, 1500);
+          });
+        };
+
+        var stateWideCowResults = function(choice){
+          var results = "";
+          var cowFields;
+          printBtn.style.display = 'block';
+          results += '<h4 class="text-center county-title">STATEWIDE RANCHES DATA</h4><table class="table table-bordered table-condensed text-center table-responsive table-fixed table-result" cellspacing="0"><tbody>';
+          
+          cowLyr.then(function () {
+            cowLyr.queryFeatures().then(function (cowData) {
+              cowFields = cowData.features;
+              console.log("cowFields: ", cowFields);
+              var totalRanges = cowFields.reduce(function (prev, curr) {
+                return prev + curr.attributes.Ranches_11;
+              }, 0);
+              var totalCattleFar = cowFields.reduce(function (prev, curr) {
+                return prev + curr.attributes.cattle_far;
+              }, 0);
+
+              var totalCattleNum = cowFields.reduce(function (prev, curr) {
+                return prev + curr.attributes.cattle_num;
+              }, 0);
+
+              var totalBeefFar= cowFields.reduce(function (prev, curr) {
+                return prev + curr.attributes.beef_farms;
+              }, 0);
+
+              var totalBeefNum= cowFields.reduce(function (prev, curr) {
+                return prev + curr.attributes.beef_numbe;
+              }, 0);
+
+              results += '<tr><th style="font-weight: normal;" class="text-center">USDA Census Year</th><td>' + cowFields[0].attributes.census_yea + '</td></tr>';
+              results += '<tr><th style="font-weight: normal;"  class="text-center">Ranches</th><td>' + totalRanges + '</td></tr>';
+              results += '<tr><th style="font-weight: normal;" class="text-center">Cattle Farms</th><td>' + totalCattleFar + '</td></tr>';
+              results += '<tr><th style="font-weight: normal;" class="text-center">Number of Cattle</th><td>' + totalCattleNum + '</td></tr>';
+              results += '<tr><th style="font-weight: normal;" class="text-center">Beef Farms</th><td>' + totalBeefFar + '</td></tr>';
+              results += '<tr><th style="font-weight: normal;" class="text-center">Number of Beef</th><td>' + totalBeefNum + '</td></tr>';
+              results += '</tbody></table>';
+              results += exportBtn;
+              dom.byId("table-statewide-div").innerHTML = results;
+            });
+          });
+        };
+        
         var searchWidget = myWidgets.searchWidget({
           view: view
         });
@@ -661,29 +781,32 @@ define([
         var landCover = dom.byId('land-cover');
         var landManagement = dom.byId('land-management');
         var cowManagement = dom.byId('cow-management');
-        on(landCover, 'click', function() {
+        on(landCover, 'click', function () {
           resetZoom();
           choice = "cover";
           view.popup.visible = false;
+          stateWideLandResults(choice);
           // view.popup.visible = !view.popup.visible;
         });
-        on(landManagement, 'click', function() {
+        on(landManagement, 'click', function () {
           resetZoom();
           choice = "management";
           view.popup.visible = false;
+          stateWideLandResults(choice);
           // view.popup.visible = !view.popup.visible;
         });
-        on(cowManagement, 'click', function() {
+        on(cowManagement, 'click', function () {
           resetZoom();
           choice = "cow";
           myMap.map.add(cowLyr);
+          stateWideCowResults(choice);
           view.ui.add(legend, "bottom-right");
           // view.popup.visible = !view.popup.visible;
           view.popup.visible = false;
         });
 
         var backBtn = dom.byId('back-button');
-        on(backBtn, 'click', function() {
+        on(backBtn, 'click', function () {
           printBtn.style.display = 'none';
           resetZoom();
           choice = "";
@@ -692,33 +815,34 @@ define([
           map.remove(countyNameLayer);
           map.remove(countyMarkerLayer);
           dom.byId("table-div").innerHTML = "";
+          dom.byId("table-statewide-div").innerHTML = "";
           view.ui.remove(legend);
           // view.popup.visible = !view.popup.visible;
           view.popup.visible = false;
         });
 
-        view.then(function() {
+        view.then(function () {
 
           view.ui.add(basemapToggle, "top-right");
 
-          view.on('click', function(event) {
+          view.on('click', function (event) {
             var params = new Query({
               returnGeometry: true,
               outFields: ["NAME"],
               geometry: event.mapPoint
             });
             // myMap.map.remove(imgLayer);
-            countyLyr.queryFeatures(params).then(function(results) {
+            countyLyr.queryFeatures(params).then(function (results) {
               var selectionOnMap = results.features[0];
               if (choice === "cow") {
                 getCowResults(selectionOnMap);
-                setZoom(7, event.mapPoint);
+                // setZoom(7, event.mapPoint);
               } else if (choice === "management") {
                 getLandResults(selectionOnMap, "management");
-                setZoom(9, event.mapPoint);
+                // setZoom(9, event.mapPoint);
               } else if (choice === "cover") {
                 getLandResults(selectionOnMap, "cover");
-                setZoom(9, event.mapPoint);
+                // setZoom(9, event.mapPoint);
               }
             });
 
@@ -763,7 +887,7 @@ define([
           var mapStyle = domStyle.getComputedStyle(mapCanvas);
           var mapDiv = dom.byId('map');
           var mapDivStyle = domStyle.getComputedStyle(mapDiv);
-          on(fullscreenBtn, 'click', function(evt) {
+          on(fullscreenBtn, 'click', function (evt) {
             if (full === true) {
               dom.byId('header').style.display = 'block';
               dom.byId('main-content').style.display = 'block';
@@ -794,10 +918,10 @@ define([
             }
           });
 
-          $('#select').on('select2:select', function(event) {
+          $('#select').on('select2:select', function (event) {
             var selectedText = event.target.selectedOptions["0"].text;
             searchWidget.search(selectedText).then(
-              function(success) {
+              function (success) {
                 myMap.map.remove(imgLayer);
                 var feature = success[0].results[0].feature;
                 if (choice === "cow") {
@@ -808,7 +932,7 @@ define([
                   getLandResults(feature, "cover");
                 }
               },
-              function(error) {
+              function (error) {
                 console.log(error);
               }
             );
@@ -818,4 +942,5 @@ define([
         });
       }
     })
-  });
+  })
+;
