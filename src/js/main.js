@@ -31,16 +31,13 @@ $(document)
       $('#select-county-hint').show();
     });
 
-    defaultTable = $('.table-result').tableExport();
-
   });
 
-
-const exportResults = function (format, choice) {
+const exportResults = function (format) {
   var countyName = document.getElementsByClassName('county-title')[0].textContent;
   var filename = countyName.toLowerCase() + " result.csv";
   if (format === "pdf") {
-    exportPDF("png", choice);
+    exportPDF("png");
   }
   else if (format === "csv") {
     exportCSV(filename);
@@ -48,32 +45,18 @@ const exportResults = function (format, choice) {
 
 };
 
-define("tableexport", function(TableExport){
-  $(function(){
-    $(".table").tableExport({
-      headings: true,                    // (Boolean), display table headings (th/td elements) in the <thead>
-      footers: true,                     // (Boolean), display table footers (th/td elements) in the <tfoot>
-      formats: ["xls", "csv", "txt"],    // (String[]), filetypes for the export
-      fileName: "id",                    // (id, String), filename for the downloaded file
-      bootstrap: true,                   // (Boolean), style buttons using bootstrap
-      position: "bottom",                 // (top, bottom), position of the caption element relative to table
-      ignoreRows: null,                  // (Number, Number[]), row indices to exclude from the exported file
-      ignoreCols: null,                  // (Number, Number[]), column indices to exclude from the exported file
-      ignoreCSS: ".tableexport-ignore"   // (selector, selector[]), selector(s) to exclude from the exported file
-    });
+function exportCSV() {
+  var filename = document.getElementsByClassName('result-title')[0].textContent.toLowerCase() + '.csv';
+  $('.table-result').tableToCSV({
+    filename: filename,
+    rowFilter: '.dlegend'
   });
-});
-
-function exportCSV(filename) {
-  // $('.table-result').tableToCSV({
-  //   filename: filename,
-  //   rowFilter: '.dlegend'
-  // });
-
+  console.log("export CSV");
 }
 
-const exportPDF = function (format, choice) {
-  var countyName = document.getElementsByClassName('county-title')[0].textContent;
+const exportPDF = function () {
+  var format = "png";
+  var countyName = document.getElementsByClassName('result-title')[0].textContent;
   var filename = countyName.toLowerCase() + " result.pdf";
   var doc = new jsPDF('p', 'mm');
   var elem = document.getElementsByClassName('table-result')[0];
