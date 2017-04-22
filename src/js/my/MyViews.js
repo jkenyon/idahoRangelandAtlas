@@ -214,7 +214,8 @@ define([
           "DOI"
         ];
 
-        var counties = [{
+        var counties = [
+          {
           id: 0,
           text: 'ADA'
         },
@@ -393,8 +394,8 @@ define([
         ];
 
         // var imgLyrUrl = "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/idaho_rangeland_atlas_201701/ImageServer";
-        var imgLyrUrl = "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/idaho_rangeland_atlas_201702/ImageServer";
-        // var imgLyrUrl = "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/idaho_rangeland_atlas_20170409/ImageServer";
+        // var imgLyrUrl = "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/idaho_rangeland_atlas_201702/ImageServer";
+        var imgLyrUrl = "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/idaho_rangeland_atlas_20170409/ImageServer";
 
         var imgLayer = new ImageryLayer({
           url: imgLyrUrl,
@@ -539,7 +540,7 @@ define([
 
           // apply a colormap for land cover types
           var managementRF = new RasterFunction({
-            functionName: "Land Management Agency for Rangeland",
+            functionName: "Land Management Agency",
             variableName: "Raster"
           });
 
@@ -553,7 +554,7 @@ define([
               ClippingType: 1, //int (1= clippingOutside, 2=clippingInside), use 1 to keep image inside of the geometry
               raster: rf
             },
-            outputPixelType: "U16",
+            outputPixelType: "U8",
             variableName: "Raster"
           });
 
@@ -712,7 +713,7 @@ define([
                 });
                 covers.push(coverValue);
               }
-              console.log("fields: ", fields);
+              // console.log("fields: ", fields);
               covers.forEach(function (item, i) {
                 var totalAc = item.reduce(function (prev, curr) {
                   return prev + curr.attributes.area_ac;
@@ -781,7 +782,31 @@ define([
               results += '<td>' + totalBeefNum + '</td></tr>';
               results += '</tbody></table>';
               results += exportBtn;
-              dom.byId("table-statewide-div").innerHTML = results;
+
+
+              // print a result table for counties
+              var countyResults = "";
+              countyResults += '<div><h4 class="text-center result-title">STATEWIDE RANCHES DATA FOR COUNTIES</h4>' +
+                '<h5> USDA Census Year: ' + cowFields[0].attributes.census_yea + '</h5>' +
+                '</div><table class="table table-bordered text-center table-responsive table-fixed table-result" cellspacing="0"><tbody>';
+              countyResults +=
+                '<tr><th></th>' +
+                '<th style="font-weight: normal;"  class="text-center">Ranches</th>' +
+                '<th style="font-weight: normal;" class="text-center">Cattle Farms</th>' +
+                '<th style="font-weight: normal;" class="text-center">Number of Cattle</th>' +
+                '<th style="font-weight: normal;" class="text-center">Beef Farms</th>' +
+                '<th style="font-weight: normal;" class="text-center">Number of Beef</th></tr>';
+              cowFields.forEach(function(field){
+                countyResults += '<tr><td>' + field.attributes.NAME + '</td>';
+                countyResults += '<td>' + field.attributes.Ranches_11 + '</td>';
+                countyResults += '<td>' + field.attributes.cattle_far + '</td>';
+                countyResults += '<td>' + field.attributes.cattle_num + '</td>';
+                countyResults += '<td>' + field.attributes.beef_farms + '</td>';
+                countyResults += '<td>' + field.attributes.beef_numbe + '</td></tr>';
+              });
+              results += '</tbody></table>';
+              results += exportBtn;
+              dom.byId("table-statewide-div").innerHTML = results.concat(countyResults);
             });
           });
         };
@@ -902,10 +927,11 @@ define([
           var mapStyle = domStyle.getComputedStyle(mapCanvas);
           var mapDiv = dom.byId('map');
           var mapDivStyle = domStyle.getComputedStyle(mapDiv);
-          on(fullscreenBtn, 'click', function (evt) {
+          on(fullscreenBtn, 'click', function () {
             if (full === true) {
               dom.byId('header').style.display = 'block';
               dom.byId('main-content').style.display = 'block';
+              dom.byId('select-county-hint').style.display = 'block';
               domClass.add(mapCanvas, "map-display");
               domClass.remove(mapCanvas, "fullscreen");
               domClass.add(mainDiv, "container-fluid");
@@ -919,6 +945,7 @@ define([
             } else {
               dom.byId('header').style.display = 'none';
               dom.byId('main-content').style.display = 'none';
+              dom.byId('select-county-hint').style.display = 'none';
               domClass.add(mapCanvas, "fullscreen");
               domClass.remove(mainDiv, "container-fluid");
               domClass.remove(mainDiv, "margin-top-55");

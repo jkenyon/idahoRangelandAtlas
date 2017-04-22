@@ -133,6 +133,13 @@ a:active {
   overflow-y: auto;
 }
 
+.table-div-scrollable {
+  max-height: 520px;
+  width: 100%;
+  margin-bottom: 5px;
+  overflow-y: auto;
+}
+
 
 .search-dropdown {
   z-index: 100;
@@ -483,6 +490,12 @@ a:active {
     max-height: 300px;
     overflow-y: auto;
   }
+
+  .table-div-scrollable {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
 }
 
 /* iPhone Landscape */
