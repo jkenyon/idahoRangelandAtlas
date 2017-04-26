@@ -34,8 +34,9 @@ $(document)
   });
 
 const exportResults = function (format) {
-  var countyName = document.getElementsByClassName('county-title')[0].textContent;
-  var filename = countyName.toLowerCase() + " result.csv";
+  // var countyName = document.getElementsByClassName('county-title')[0].textContent;
+  var countyName = "state wide ranches data";
+  var filename = countyName.toLowerCase() + ".csv";
   if (format === "pdf") {
     exportPDF("png");
   }
@@ -46,7 +47,8 @@ const exportResults = function (format) {
 };
 
 function exportCSV() {
-  var filename = document.getElementsByClassName('result-title')[0].textContent.toLowerCase() + '.csv';
+  // var filename = document.getElementsByClassName('result-title')[0].textContent.toLowerCase() + '.csv';
+  var filename = "state wide ranches data.csv";
   $('.table-result').tableToCSV({
     filename: filename,
     rowFilter: '.dlegend'
