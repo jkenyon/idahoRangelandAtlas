@@ -77,7 +77,7 @@ const exportPDF = function () {
     canvas.crossOrigin = 'Anonymous';
     canvas.allowTaint = true;
     imgData = canvas.toDataURL('image/' + format.toLowerCase());
-    doc.text(text + " for " + countyName + "County", 20, 20);
+    doc.text(text + " for " + countyName, 20, 20);
     doc.addImage(imgData, format.toUpperCase(), 15, 40, 180, 150);
     doc.addPage();
 
@@ -92,3 +92,30 @@ const exportPDF = function () {
     $('.esri-ui-top-right, .esri-ui-top-left, .esri-ui-bottom-left').show();
   });
 };
+
+function createModal(modalId, title, definition, description){
+  var modal =
+    '<div class="modal fade metadata-modal" id="' + modalId + '" tabindex="-1" role="dialog"aria-labelledby="myModalLabel">' +
+      '<div class="modal-dialog" role="document">' +
+        '<div class="modal-content">' +
+          '<div class="modal-header">' +
+          '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
+            '<span aria-hidden="true">&times;</span>' +
+          '</button><h4 class="modal-title" id="myModalLabel">'+ title +'</h4>' +
+          '</div>' +
+          '<div class="modal-body">' +
+              '<div>' + description + '<div><hr>' +
+              '<div>' + definition + '<div>' +
+          '</div>' +
+          '<div class="modal-footer">' +
+            '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>' +
+          '</div>' +
+        '</div>' +
+      '</div>'+
+    '</div>';
+  $('body').append(modal);
+}
+
+function removeModal(){
+  $('.modal.metadata-modal').remove();
+}

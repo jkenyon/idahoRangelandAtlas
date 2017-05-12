@@ -140,6 +140,14 @@ a:active {
   overflow-y: auto;
 }
 
+.table-statewide-div {
+}
+
+.statewide-table-full {
+  width: 1120px;
+  height: 100%;
+}
+
 
 .search-dropdown {
   z-index: 100;
