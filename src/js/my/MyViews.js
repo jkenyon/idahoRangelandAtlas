@@ -743,12 +743,25 @@ define([
                     return prev + curr.attributes.per_nlcd;
                   }, 0) / totalStateRng) * 100.0;
                 var sma = colorTypes[res.sma_name].type;
-                var clrs = [res.red, res.green, res.blue];
-                var clr = "rgb(" + clrs[0] + "," + clrs[1] + "," + clrs[2] + ")";
-                results += "<tr><td class='dlegend' style='background-color:" + clr + ";'></td><td>" + sma + "</td><td>" + totalRng.toFixed(2) + "</td><td>" + totalPer.toFixed(2) + "</td><td>" + totalAc.toFixed(2) + "</td></tr>";
-              });
-              dom.byId("table-statewide-div").innerHTML = "<h4 class='text-center result-title'> STATEWIDE LAND MANAGEMENT</h4><table id='table' class='table table-bordered table-condensed text-center table-responsive table-fixed sortable table-result' cellspacing='0'>" + tbManagementHead + "<tbody>" + results + "</tbody></table>" + exportBtn;
 
+                requestMetadata("sma_name", res.sma_name).then(function(response){
+                  return response;
+                }).then(function(metadata){
+                  console.log("metadata: ", metadata);
+                  var modalId = getModalId();
+                  var title = sma;
+                  var definition = metadata[1];
+                  var description = metadata[0];
+                  var modalIcon = "<span class='glyphicon glyphicon-info-sign' aria-hidden='true' data-toggle='modal' data-target='#"
+                    + modalId + "' style='padding-left: 5px;'></span>";
+                  createModal(modalId, title, definition, description);
+                  var clrs = [res.red, res.green, res.blue];
+                  var clr = "rgb(" + clrs[0] + "," + clrs[1] + "," + clrs[2] + ")";
+                  results += "<tr><td class='dlegend' style='background-color:" + clr + ";'></td><td>" + sma + modalIcon + "</td><td>" + totalRng.toFixed(2) + "</td><td>" + totalPer.toFixed(2) + "</td><td>" + totalAc.toFixed(2) + "</td></tr>";
+                }).then(function(){
+                  dom.byId("table-statewide-div").innerHTML = "<h4 class='text-center result-title'> STATEWIDE LAND MANAGEMENT</h4><table id='table' class='table table-bordered table-condensed text-center table-responsive table-fixed sortable table-result' cellspacing='0'>" + tbManagementHead + "<tbody>" + results + "</tbody></table>" + exportBtn;
+                });
+              });
             } else if (choice === "cover") {
               var coverValue;
               var covers = [];
@@ -768,8 +781,7 @@ define([
                 var nlcd_name = landTypes[i];
                 requestMetadata("nlcd_name", nlcd_name).then(function(response){
                   return response;
-                }).then(function(data) {
-                  var metadata = data;
+                }).then(function(metadata) {
                   console.log("metadata: ", metadata);
                   var modalId = getModalId();
                   var title = nlcd_name;
