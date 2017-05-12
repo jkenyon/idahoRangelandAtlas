@@ -67,6 +67,15 @@ a:active {
   text-align: center;
 }
 
+.modal-text {
+  color: #0c0c0c;
+}
+
+.text-underline {
+  text-decoration: underline;
+  color: black;
+}
+
 #myModal li {
   color: white;
 }

@@ -101,13 +101,12 @@ function createModal(modalId, title, definition, description){
           '<div class="modal-header">' +
           '<button type="button" class="close" data-dismiss="modal" aria-label="Close">' +
             '<span aria-hidden="true">&times;</span>' +
-          '</button><h4 class="modal-title" id="myModalLabel">'+ title +'</h4>' +
+          '</button><h2 class="modal-title" id="myModalLabel">'+ title +'</h2>' +
           '</div>' +
           '<div class="modal-body">' +
-              '<div>' + description + '<div><hr>' +
-              '<div>' + definition + '<div>' +
-          '</div>' +
+              '<h3 class="text-left modal-text-underline">Definition:</h3><p class="text-justify modal-text">' + description + '</p></div>' +
           '<div class="modal-footer">' +
+            '<div><h3 class="text-left modal-text-underline">Source: </h3><p class="text-justify modal-text">' + definition + '</p></div>' +
             '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>' +
           '</div>' +
         '</div>' +
