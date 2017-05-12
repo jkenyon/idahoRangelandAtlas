@@ -394,8 +394,6 @@ define([
           }
         ];
 
-        // var imgLyrUrl = "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/idaho_rangeland_atlas_201701/ImageServer";
-        // var imgLyrUrl = "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/idaho_rangeland_atlas_201702/ImageServer";
         var imgLyrUrl = "https://gis-sandbox.northwestknowledge.net/arcgis/rest/services/idaho_rangeland_atlas/idaho_rangeland_atlas_20170409/ImageServer";
 
         var imgLayer = new ImageryLayer({
@@ -417,7 +415,6 @@ define([
             title: "Legend"
           }]
         });
-
 
         var countyNameLayer = new FeatureLayer({
           url: countyLyrUrl,
@@ -470,8 +467,6 @@ define([
           }, 1500);
         };
 
-        // requestType (nlcd_name or sma_name)
-        // name of item to search for metadata
         var requestMetadata = function (requestType, name) {
           return esriRequest(imgLyrUrl + "/info/metadata", {
             responseType: "xml"
@@ -504,10 +499,6 @@ define([
           });
         };
 
-        /// TODO change the display of the results of ranches
-        /// by county and put year at the top of table
-        /// put headers at the top which will facilitate
-        /// the export as csv
         var getCowResults = function (feature) {
           var results = "";
           var cowAttributes;
@@ -590,16 +581,16 @@ define([
             variableName: "Raster"
           });
 
-          // apply a colormap for land cover types
+          // apply a colormap for land management types
           var managementRF = new RasterFunction({
-            functionName: "Land Management Agency For Rangeland",
+            functionName: "Land Management Agency for Rangeland",
             variableName: "Raster"
           });
 
           var rf = (choice === "cover") ? coverRF : managementRF;
 
           // Clips the image to only the county geometry
-          var clipRF = new RasterFunction({
+          imgLayer.renderingRule = new RasterFunction({
             functionName: "Clip",
             functionArguments: {
               ClippingGeometry: feature.geometry, //a polygon or envelope
@@ -609,12 +600,6 @@ define([
             outputPixelType: "U8",
             variableName: "Raster"
           });
-
-
-          imgLayer.renderingRule = clipRF;
-          // imgLayer.renderingRule = clipCRF;
-
-          // imgLayer.pixelFilter = colorize;
 
           myMap.map.add(imgLayer);
 
@@ -633,9 +618,6 @@ define([
           }).then(function () {
             var countyLandTypes = [];
             landTypes.forEach(function (landType) {
-              // countyLandTypes[landType] = fields.filter(function(field){
-              //   return field.attributes.nlcd_name === landType;
-              // });
               countyLandTypes.push(fields.filter(function (field) {
                 return field.attributes.nlcd_name === landType;
               }));
@@ -644,11 +626,24 @@ define([
               fields.forEach(function (item, i) {
                 var res = item.attributes;
                 var sma = colorTypes[res.sma_name].type;
-                var clrs = [res.red, res.green, res.blue];
-                var clr = "rgb(" + clrs[0] + "," + clrs[1] + "," + clrs[2] + ")";
-                results += "<tr><td class='dlegend' style='background-color:" + clr + ";'></td><td>" + sma + "</td><td>" + res.per_nlcd.toFixed(2) + "</td><td>" + res.per_cnty.toFixed(2) + "</td><td>" + res.area_ac.toFixed(2) + "</td></tr>";
+
+                requestMetadata("sma_name", res.sma_name).then(function(response){
+                  return response;
+                }).then(function(metadata){
+                  var modalId = getModalId();
+                  var title = sma;
+                  var definition = metadata[1];
+                  var description = metadata[0];
+                  var modalIcon = "<span class='glyphicon glyphicon-info-sign' aria-hidden='true' data-toggle='modal' data-target='#"
+                    + modalId + "' style='padding-left: 5px;'></span>";
+                  createModal(modalId, title, definition, description);
+                  var clrs = [res.red, res.green, res.blue];
+                  var clr = "rgb(" + clrs[0] + "," + clrs[1] + "," + clrs[2] + ")";
+                  results += "<tr><td class='dlegend' style='background-color:" + clr + ";'></td><td>" + sma + modalIcon + "</td><td>" + res.per_nlcd.toFixed(2) + "</td><td>" + res.per_cnty.toFixed(2) + "</td><td>" + res.area_ac.toFixed(2) + "</td></tr>";
+                }).then(function(){
+                  dom.byId("table-div").innerHTML = "<h4 class='text-center result-title'>" + feature.attributes.NAME + "</h4><table id='table' class='table table-bordered table-condensed text-center table-responsive table-fixed sortable table-result' cellspacing='0'>" + tbManagementHead + "<tbody>" + results + "</tbody></table>" + exportBtn;
+                });
               });
-              dom.byId("table-div").innerHTML = "<h4 class='text-center result-title'>" + feature.attributes.NAME + "</h4><table id='table' class='table table-bordered table-condensed text-center table-responsive table-fixed sortable table-result' cellspacing='0'>" + tbManagementHead + "<tbody>" + results + "</tbody></table>" + exportBtn;
             } else if (choice === "cover") {
               var coverValue;
               var covers = [];
@@ -666,13 +661,26 @@ define([
                   return prev + curr.attributes.per_cnty;
                 }, 0);
                 var nlcd_name = landTypes[i];
-                var clrs = landTypeColors[nlcd_name].color;
-                var clr = "rgb(" + clrs[0] + "," + clrs[1] + "," + clrs[2] + ")";
-                results += "<tr><td class='dlegend' style='background-color:" + clr + ";'></td><td>" + nlcd_name.toString() + "</td><td>" + totalPer.toFixed(2) + "</td><td>" + totalAc.toFixed(2) + "</td></tr>";
-              });
-              dom.byId("table-div").innerHTML = "<h4 class='text-center result-title'>" + feature.attributes.NAME + "</h4><table id='table' class='table table-bordered table-condensed text-center table-responsive table-fixed sortable table-result' cellspacing='0'>" + tbCoverHead + "<tbody>" + results + "</tbody></table>" + exportBtn;
-            }
 
+                requestMetadata("nlcd_name", nlcd_name).then(function(response){
+                  return response;
+                }).then(function(metadata) {
+                  var modalId = getModalId();
+                  var title = nlcd_name;
+                  var definition = metadata[1];
+                  var description = metadata[0];
+                  var modalIcon = "<span class='glyphicon glyphicon-info-sign' aria-hidden='true' data-toggle='modal' data-target='#"
+                    + modalId + "' style='padding-left: 5px;'></span>";
+                  createModal(modalId, title, definition, description);
+                  var clrs = landTypeColors[nlcd_name].color;
+                  var clr = "rgb(" + clrs[0] + "," + clrs[1] + "," + clrs[2] + ")";
+                  results += "<tr><td class='dlegend' style='background-color:" + clr + ";'></td><td>" + nlcd_name.toString() + modalIcon  + "</td><td>" + totalPer.toFixed(2) + "</td><td>" + totalAc.toFixed(2) + "</td></tr>";
+                }).then(function(){
+                  dom.byId("table-div").innerHTML = "<h4 class='text-center result-title'>" + feature.attributes.NAME + "</h4><table id='table' class='table table-bordered table-condensed text-center table-responsive table-fixed sortable table-result' cellspacing='0'>" + tbCoverHead + "<tbody>" + results + "</tbody></table>" + exportBtn;
+                });
+
+              });
+            }
           });
         };
 
@@ -699,8 +707,6 @@ define([
           imgLayer.renderingRule = (choice === "cover") ? coverRF : managementRF;
 
           myMap.map.add(imgLayer);
-
-          requestMetadata();
 
           imgLayer.then(function () {
             var totId = 0;
@@ -747,7 +753,6 @@ define([
                 requestMetadata("sma_name", res.sma_name).then(function(response){
                   return response;
                 }).then(function(metadata){
-                  console.log("metadata: ", metadata);
                   var modalId = getModalId();
                   var title = sma;
                   var definition = metadata[1];
@@ -782,13 +787,10 @@ define([
                 requestMetadata("nlcd_name", nlcd_name).then(function(response){
                   return response;
                 }).then(function(metadata) {
-                  console.log("metadata: ", metadata);
                   var modalId = getModalId();
                   var title = nlcd_name;
                   var definition = metadata[1];
                   var description = metadata[0];
-                  console.log("description: ", description);
-                  console.log("definition: ", definition);
                   var modalIcon = "<span class='glyphicon glyphicon-info-sign' aria-hidden='true' data-toggle='modal' data-target='#"
                     + modalId + "' style='padding-left: 5px;'></span>";
                   createModal(modalId, title, definition, description);
