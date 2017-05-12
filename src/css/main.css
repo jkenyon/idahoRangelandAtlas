@@ -34,7 +34,7 @@ a:active {
   margin: 0;
 }
 
-.modal-dialog {
+.modal-dialog-full {
   width: 100%;
   height: 100%;
   margin: 0;
@@ -42,7 +42,7 @@ a:active {
   color: whitesmoke;
 }
 
-.modal-content {
+.modal-content-full {
   height: auto;
   min-height: 100%;
   border-radius: 0;
@@ -51,15 +51,20 @@ a:active {
   border: 0;
 }
 
-.modal-body {
+.modal-body-full {
   padding-top: 0;
 }
 
-.modal-footer {
+.modal-footer-full {
   position: absolute;
   top: 80%;
   padding: 70px;
   background-color: white;
+}
+
+.modal-title {
+  color: black;
+  text-align: center;
 }
 
 #myModal li {
